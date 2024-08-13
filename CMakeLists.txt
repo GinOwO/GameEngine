@@ -39,6 +39,7 @@ set(SOURCES
 	${PROJECT_SOURCE_DIR}/src/Timer.cpp
 	${PROJECT_SOURCE_DIR}/src/Input.cpp
 	${PROJECT_SOURCE_DIR}/src/Vector2f.cpp
+	${PROJECT_SOURCE_DIR}/src/Vector3f.cpp
 	
 	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
 )
