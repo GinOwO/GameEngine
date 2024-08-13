@@ -1,6 +1,7 @@
 #include <Vector3f.h>
 
 #include <cmath>
+#include <array>
 
 const double PI = 3.14159;
 
@@ -44,6 +45,11 @@ double Vector3f::getY() const noexcept
 double Vector3f::getZ() const noexcept
 {
 	return this->z;
+}
+
+std::array<double, 3> Vector3f::get() const noexcept
+{
+	return { x, y, z };
 }
 
 double Vector3f::length() const noexcept

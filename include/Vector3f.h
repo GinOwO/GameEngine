@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 class Vector3f {
     private:
 	double x;
@@ -16,6 +17,7 @@ class Vector3f {
 	double getX() const noexcept;
 	double getY() const noexcept;
 	double getZ() const noexcept;
+	std::array<double, 3> get() const noexcept;
 
 	double length() const noexcept;
 	double dot(const Vector3f &v) noexcept;

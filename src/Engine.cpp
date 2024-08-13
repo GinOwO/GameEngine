@@ -6,6 +6,7 @@
 #include <Timer.h>
 #include <Input.h>
 #include <game/Game.h>
+#include <RenderUtil.h>
 
 #include <iostream>
 
@@ -53,7 +54,7 @@ Engine::~Engine()
 void Engine::run()
 {
 	Timer timer = Timer();
-	Game game = Game();
+	Game game = Game(input_handler);
 
 	int frames = 0;
 	double frame_counter = 0;
@@ -111,6 +112,7 @@ void Engine::start()
 		std::cerr << "Failed to set window context\n";
 		exit(EXIT_FAILURE);
 	}
+	RenderUtil::init_graphics();
 
 	window.set_key_callback(key_callback);
 	window.set_mouse_callback(mouse_motion_callback, mouse_button_callback,
@@ -137,10 +139,7 @@ Window Engine::get_window() const noexcept
 
 void Engine::render()
 {
-	glClearColor(.25f, .5f, .75f, 1.0f);
 	glfwPollEvents();
-
-	glClear(GL_COLOR_BUFFER_BIT);
 
 	window.swap_buffers();
 }

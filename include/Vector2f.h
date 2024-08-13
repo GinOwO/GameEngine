@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 class Vector2f {
     private:
 	double x;
@@ -13,6 +15,7 @@ class Vector2f {
 	void setY(double b) noexcept;
 	double getX() const noexcept;
 	double getY() const noexcept;
+	std::array<double, 2> get() const noexcept;
 
 	double length() const noexcept;
 	double dot(const Vector2f &v) noexcept;

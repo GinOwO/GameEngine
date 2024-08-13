@@ -42,6 +42,9 @@ SET(GAME_SOURCES
 )
 
 set(SOURCES
+	${MATH_SOURCES}
+	${GAME_SOURCES}
+
 	${PROJECT_SOURCE_DIR}/main.cpp
 	${PROJECT_SOURCE_DIR}/src/glad.c
 	${PROJECT_SOURCE_DIR}/src/shaderIO.cpp
@@ -49,9 +52,9 @@ set(SOURCES
 	${PROJECT_SOURCE_DIR}/src/Engine.cpp
 	${PROJECT_SOURCE_DIR}/src/Timer.cpp
 	${PROJECT_SOURCE_DIR}/src/Input.cpp
-	
-	${MATH_SOURCES}
-	${GAME_SOURCES}
+	${PROJECT_SOURCE_DIR}/src/RenderUtil.cpp
+	${PROJECT_SOURCE_DIR}/src/Vertex.cpp
+	${PROJECT_SOURCE_DIR}/src/Mesh.cpp
 )
 
 # Add executable target

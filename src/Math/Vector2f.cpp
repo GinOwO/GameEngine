@@ -1,6 +1,7 @@
 #include <Vector2f.h>
 
 #include <cmath>
+#include <array>
 
 const double PI = 3.14159;
 
@@ -33,6 +34,11 @@ double Vector2f::getX() const noexcept
 double Vector2f::getY() const noexcept
 {
 	return this->y;
+}
+
+std::array<double, 2> Vector2f::get() const noexcept
+{
+	return { x, y };
 }
 
 double Vector2f::length() const noexcept
