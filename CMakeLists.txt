@@ -34,17 +34,23 @@ set(SOURCES
 	${PROJECT_SOURCE_DIR}/main.cpp
 	${PROJECT_SOURCE_DIR}/src/glad.c
 	${PROJECT_SOURCE_DIR}/src/shaderIO.cpp
-	${PROJECT_SOURCE_DIR}/src/triangle_mesh.cpp
+	${PROJECT_SOURCE_DIR}/src/Window.cpp
+	${PROJECT_SOURCE_DIR}/src/Engine.cpp
+	${PROJECT_SOURCE_DIR}/src/Timer.cpp
+	${PROJECT_SOURCE_DIR}/src/Input.cpp
+	${PROJECT_SOURCE_DIR}/src/Vector2f.cpp
+	
+	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
 )
 
 # Add executable target
-add_executable(MandelbrotSet ${SOURCES})
+add_executable(GameEngine ${SOURCES})
 
 # Add include directories
-target_include_directories(MandelbrotSet PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(GameEngine PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 # Link libraries
-target_link_libraries(MandelbrotSet glfw OpenGL::GL)
+target_link_libraries(GameEngine glfw OpenGL::GL)
 
 add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
 

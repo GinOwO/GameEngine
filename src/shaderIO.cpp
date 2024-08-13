@@ -21,14 +21,13 @@ std::string read_shader(const std::string &filepath)
 	file.close();
 
 	std::string source = bufferedLines.str();
-	////std::cout << "Source (" << filepath << "):\n" << source << '\n';
+
 	return source;
 }
 
 GLuint create_shader_module(const std::string &shader_source,
 			    GLuint module_type)
 {
-	////std::cout << shader_source << '\n';
 	const char *shader_source_char = shader_source.c_str();
 	GLuint shader_module = glCreateShader(module_type);
 	glShaderSource(shader_module, 1, &shader_source_char, NULL);
