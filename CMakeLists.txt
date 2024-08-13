@@ -30,6 +30,17 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add source files
+SET(MATH_SOURCES
+	${PROJECT_SOURCE_DIR}/src/Math/Vector2f.cpp
+	${PROJECT_SOURCE_DIR}/src/Math/Vector3f.cpp
+	${PROJECT_SOURCE_DIR}/src/Math/Matrix4f.cpp
+	${PROJECT_SOURCE_DIR}/src/Math/Quaternion.cpp
+)
+
+SET(GAME_SOURCES
+	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
+)
+
 set(SOURCES
 	${PROJECT_SOURCE_DIR}/main.cpp
 	${PROJECT_SOURCE_DIR}/src/glad.c
@@ -38,10 +49,9 @@ set(SOURCES
 	${PROJECT_SOURCE_DIR}/src/Engine.cpp
 	${PROJECT_SOURCE_DIR}/src/Timer.cpp
 	${PROJECT_SOURCE_DIR}/src/Input.cpp
-	${PROJECT_SOURCE_DIR}/src/Vector2f.cpp
-	${PROJECT_SOURCE_DIR}/src/Vector3f.cpp
 	
-	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
+	${MATH_SOURCES}
+	${GAME_SOURCES}
 )
 
 # Add executable target
