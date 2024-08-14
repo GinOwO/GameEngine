@@ -4,14 +4,14 @@
 
 #include <cmath>
 
-const double PI = 3.14159;
+const float PI = 3.14159;
 
 Quaternion::Quaternion()
 {
 	x = y = z = w = 0;
 }
 
-Quaternion::Quaternion(double a, double b, double c, double d)
+Quaternion::Quaternion(float a, float b, float c, float d)
 {
 	x = a;
 	y = b;
@@ -19,54 +19,54 @@ Quaternion::Quaternion(double a, double b, double c, double d)
 	w = d;
 }
 
-void Quaternion::setX(double a) noexcept
+void Quaternion::setX(float a) noexcept
 {
 	this->x = a;
 }
 
-void Quaternion::setY(double b) noexcept
+void Quaternion::setY(float b) noexcept
 {
 	this->y = b;
 }
 
-void Quaternion::setZ(double c) noexcept
+void Quaternion::setZ(float c) noexcept
 {
 	this->z = c;
 }
 
-void Quaternion::setW(double d) noexcept
+void Quaternion::setW(float d) noexcept
 {
 	this->w = d;
 }
 
-double Quaternion::getX() const noexcept
+float Quaternion::getX() const noexcept
 {
 	return this->x;
 }
 
-double Quaternion::getY() const noexcept
+float Quaternion::getY() const noexcept
 {
 	return this->y;
 }
 
-double Quaternion::getZ() const noexcept
+float Quaternion::getZ() const noexcept
 {
 	return this->z;
 }
 
-double Quaternion::getW() const noexcept
+float Quaternion::getW() const noexcept
 {
 	return this->w;
 }
 
-double Quaternion::length() const noexcept
+float Quaternion::length() const noexcept
 {
 	return std::sqrtl(x * x + y * y + z * z + w * w);
 }
 
 Quaternion Quaternion::normalize()
 {
-	double len = length();
+	float len = length();
 	return { x / len, y / len, z / len, w / len };
 }
 
@@ -106,22 +106,22 @@ Quaternion Quaternion::operator/(const Quaternion &v)
 	return { x / v.x, y / v.y, z / v.z, w / v.w };
 }
 
-Quaternion Quaternion::operator+(const double r)
+Quaternion Quaternion::operator+(const float r)
 {
 	return { x + r, y + r, z + r, w + r };
 }
 
-Quaternion Quaternion::operator-(const double r)
+Quaternion Quaternion::operator-(const float r)
 {
 	return { x - r, y - r, z - r, w - r };
 }
 
-Quaternion Quaternion::operator*(const double r)
+Quaternion Quaternion::operator*(const float r)
 {
 	return { x * r, y * r, z * r, w * r };
 }
 
-Quaternion Quaternion::operator/(const double r)
+Quaternion Quaternion::operator/(const float r)
 {
 	return { x / r, y / r, z / r, w / r };
 }
@@ -146,10 +146,10 @@ Quaternion &Quaternion::operator-=(const Quaternion &v)
 
 Quaternion &Quaternion::operator*=(const Quaternion &v)
 {
-	double a = x * v.y + w * v.x + y * v.z - z * v.y,
-	       b = y * v.w + w * v.y + z * v.x - x * v.z,
-	       c = w * v.w + w * v.z + x * v.y - y * v.x,
-	       d = w * v.w - x * v.x - y * v.y - z * v.z;
+	float a = x * v.y + w * v.x + y * v.z - z * v.y,
+	      b = y * v.w + w * v.y + z * v.x - x * v.z,
+	      c = w * v.w + w * v.z + x * v.y - y * v.x,
+	      d = w * v.w - x * v.x - y * v.y - z * v.z;
 	x = a;
 	y = b;
 	z = c;
@@ -159,10 +159,10 @@ Quaternion &Quaternion::operator*=(const Quaternion &v)
 
 Quaternion &Quaternion::operator*=(const Vector3f &v)
 {
-	double a = w * v.getX() + y * v.getZ() - z * v.getY(),
-	       b = w * v.getY() + z * v.getX() - x * v.getZ(),
-	       c = w * v.getZ() + x * v.getY() - y * v.getX(),
-	       d = -x * v.getX() - y * v.getY() - z * v.getZ();
+	float a = w * v.getX() + y * v.getZ() - z * v.getY(),
+	      b = w * v.getY() + z * v.getX() - x * v.getZ(),
+	      c = w * v.getZ() + x * v.getY() - y * v.getX(),
+	      d = -x * v.getX() - y * v.getY() - z * v.getZ();
 
 	x = a;
 	y = b;
@@ -180,7 +180,7 @@ Quaternion &Quaternion::operator/=(const Quaternion &v)
 	return *this;
 }
 
-Quaternion &Quaternion::operator+=(const double r)
+Quaternion &Quaternion::operator+=(const float r)
 {
 	x += r;
 	y += r;
@@ -189,7 +189,7 @@ Quaternion &Quaternion::operator+=(const double r)
 	return *this;
 }
 
-Quaternion &Quaternion::operator-=(const double r)
+Quaternion &Quaternion::operator-=(const float r)
 {
 	x -= r;
 	y -= r;
@@ -198,7 +198,7 @@ Quaternion &Quaternion::operator-=(const double r)
 	return *this;
 }
 
-Quaternion &Quaternion::operator*=(const double r)
+Quaternion &Quaternion::operator*=(const float r)
 {
 	x *= r;
 	y *= r;
@@ -207,7 +207,7 @@ Quaternion &Quaternion::operator*=(const double r)
 	return *this;
 }
 
-Quaternion &Quaternion::operator/=(const double r)
+Quaternion &Quaternion::operator/=(const float r)
 {
 	x /= r;
 	y /= r;

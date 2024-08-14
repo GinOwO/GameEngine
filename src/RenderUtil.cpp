@@ -11,14 +11,16 @@ void RenderUtil::clear_screen()
 
 void RenderUtil::init_graphics()
 {
-	glClearColor(.0f, .0f, .0f, .0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glFrontFace(GL_CW);
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 
 	// TODO: Depth Clamp
 
 	glEnable(GL_FRAMEBUFFER_SRGB);
+	RenderUtil::clear_screen();
 }

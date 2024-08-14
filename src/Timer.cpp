@@ -1,36 +1,36 @@
 #include <Timer.h>
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <chrono>
 
 Timer::Timer()
+	: last_time(std::chrono::high_resolution_clock::now())
 {
-	Timer::reset();
 }
 
 void Timer::reset()
 {
+	last_time = std::chrono::high_resolution_clock::now();
 	passed_time = 0.0;
-	start_time = 0.0;
-	last_time = 0.0;
+	delta_time = 0.0;
 }
 
 void Timer::update_delta_time() noexcept
 {
-	this->start_time = glfwGetTime();
-	this->delta_time = start_time - last_time;
-	this->last_time = start_time;
+	auto current_time = std::chrono::high_resolution_clock::now();
+	delta_time =
+		std::chrono::duration<double>(current_time - last_time).count();
+	last_time = current_time;
 }
 
 double Timer::get_delta_time() const noexcept
 {
-	return this->delta_time;
+	return delta_time;
 }
 
 bool Timer::can_render_frame(const double FRAME_TIME) noexcept
 {
-	this->update_delta_time();
-	passed_time += this->get_delta_time();
+	update_delta_time();
+	passed_time += delta_time;
 	if (passed_time >= FRAME_TIME) {
 		passed_time -= FRAME_TIME;
 		return true;

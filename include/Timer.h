@@ -1,20 +1,18 @@
 #pragma once
 
-class Timer {
-    private:
-	double start_time;
-	double last_time;
-	double passed_time;
-	double delta_time;
-	void update_delta_time() noexcept;
+#include <chrono>
 
+class Timer {
     public:
 	Timer();
 
-	const double SECOND = 1e9;
-
 	void reset();
+	void update_delta_time() noexcept;
+	double get_delta_time() const noexcept;
 	bool can_render_frame(const double FRAME_TIME) noexcept;
 
-	double get_delta_time() const noexcept;
+    private:
+	std::chrono::high_resolution_clock::time_point last_time;
+	double delta_time = 0.0;
+	double passed_time = 0.0;
 };

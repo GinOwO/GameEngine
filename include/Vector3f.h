@@ -3,43 +3,43 @@
 #include <array>
 class Vector3f {
     private:
-	double x;
-	double y;
-	double z;
+	float x;
+	float y;
+	float z;
 
     public:
 	Vector3f();
-	Vector3f(double a, double b, double c);
+	Vector3f(float a, float b, float c);
 
-	void setX(double a) noexcept;
-	void setY(double b) noexcept;
-	void setZ(double c) noexcept;
-	double getX() const noexcept;
-	double getY() const noexcept;
-	double getZ() const noexcept;
-	std::array<double, 3> get() const noexcept;
+	void setX(float a) noexcept;
+	void setY(float b) noexcept;
+	void setZ(float c) noexcept;
+	float getX() const noexcept;
+	float getY() const noexcept;
+	float getZ() const noexcept;
+	std::array<float, 3> get() const noexcept;
 
-	double length() const noexcept;
-	double dot(const Vector3f &v) noexcept;
+	float length() const noexcept;
+	float dot(const Vector3f &v) noexcept;
 	Vector3f normalize();
 
 	Vector3f operator+(const Vector3f &v);
 	Vector3f operator-(const Vector3f &v);
 	Vector3f operator*(const Vector3f &v);
 	Vector3f operator/(const Vector3f &v);
-	Vector3f operator+(const double r);
-	Vector3f operator-(const double r);
-	Vector3f operator*(const double r);
-	Vector3f operator/(const double r);
+	Vector3f operator+(const float r);
+	Vector3f operator-(const float r);
+	Vector3f operator*(const float r);
+	Vector3f operator/(const float r);
 
 	Vector3f &operator+=(const Vector3f &v);
 	Vector3f &operator-=(const Vector3f &v);
 	Vector3f &operator*=(const Vector3f &v);
 	Vector3f &operator/=(const Vector3f &v);
-	Vector3f &operator+=(const double r);
-	Vector3f &operator-=(const double r);
-	Vector3f &operator*=(const double r);
-	Vector3f &operator/=(const double r);
+	Vector3f &operator+=(const float r);
+	Vector3f &operator-=(const float r);
+	Vector3f &operator*=(const float r);
+	Vector3f &operator/=(const float r);
 
 	Vector3f cross(const Vector3f &v) const noexcept;
 };

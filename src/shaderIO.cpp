@@ -15,9 +15,15 @@ std::string read_shader(const std::string &filepath)
 	std::string line;
 
 	file.open(filepath);
+	if (!file.good()) {
+		std::cerr << "File Does not exist: " << filepath << '\n';
+		exit(EXIT_FAILURE);
+	}
+
 	while (std::getline(file, line)) {
 		bufferedLines << line << '\n';
 	}
+
 	file.close();
 
 	std::string source = bufferedLines.str();

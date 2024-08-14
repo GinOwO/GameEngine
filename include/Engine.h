@@ -10,7 +10,6 @@ class Engine {
 	bool running;
 
 	void run();
-	void render();
 
     public:
 	Engine();

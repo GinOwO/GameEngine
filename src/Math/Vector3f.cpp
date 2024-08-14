@@ -3,68 +3,68 @@
 #include <cmath>
 #include <array>
 
-const double PI = 3.14159;
+const float PI = 3.14159;
 
 Vector3f::Vector3f()
 {
 	x = y = z = 0;
 }
 
-Vector3f::Vector3f(double a, double b, double c)
+Vector3f::Vector3f(float a, float b, float c)
 {
 	x = a;
 	y = b;
 	z = c;
 }
 
-void Vector3f::setX(double a) noexcept
+void Vector3f::setX(float a) noexcept
 {
 	this->x = a;
 }
 
-void Vector3f::setY(double b) noexcept
+void Vector3f::setY(float b) noexcept
 {
 	this->y = b;
 }
 
-void Vector3f::setZ(double c) noexcept
+void Vector3f::setZ(float c) noexcept
 {
 	this->z = c;
 }
 
-double Vector3f::getX() const noexcept
+float Vector3f::getX() const noexcept
 {
 	return this->x;
 }
 
-double Vector3f::getY() const noexcept
+float Vector3f::getY() const noexcept
 {
 	return this->y;
 }
 
-double Vector3f::getZ() const noexcept
+float Vector3f::getZ() const noexcept
 {
 	return this->z;
 }
 
-std::array<double, 3> Vector3f::get() const noexcept
+std::array<float, 3> Vector3f::get() const noexcept
 {
 	return { x, y, z };
 }
 
-double Vector3f::length() const noexcept
+float Vector3f::length() const noexcept
 {
 	return std::sqrtl(x * x + y * y + z * z);
 }
 
-double Vector3f::dot(const Vector3f &v) noexcept
+float Vector3f::dot(const Vector3f &v) noexcept
 {
 	return x * v.x + y * v.y + z * v.z;
 }
 
 Vector3f Vector3f::normalize()
 {
-	double len = length();
+	float len = length();
 	return { x / len, y / len, z / len };
 }
 
@@ -88,22 +88,22 @@ Vector3f Vector3f::operator/(const Vector3f &v)
 	return { x / v.x, y / v.y, z / v.z };
 }
 
-Vector3f Vector3f::operator+(const double r)
+Vector3f Vector3f::operator+(const float r)
 {
 	return { x + r, y + r, z + r };
 }
 
-Vector3f Vector3f::operator-(const double r)
+Vector3f Vector3f::operator-(const float r)
 {
 	return { x - r, y - r, z - r };
 }
 
-Vector3f Vector3f::operator*(const double r)
+Vector3f Vector3f::operator*(const float r)
 {
 	return { x * r, y * r, z * r };
 }
 
-Vector3f Vector3f::operator/(const double r)
+Vector3f Vector3f::operator/(const float r)
 {
 	return { x / r, y / r, z / r };
 }
@@ -140,7 +140,7 @@ Vector3f &Vector3f::operator/=(const Vector3f &v)
 	return *this;
 }
 
-Vector3f &Vector3f::operator+=(const double r)
+Vector3f &Vector3f::operator+=(const float r)
 {
 	x += r;
 	y += r;
@@ -148,7 +148,7 @@ Vector3f &Vector3f::operator+=(const double r)
 	return *this;
 }
 
-Vector3f &Vector3f::operator-=(const double r)
+Vector3f &Vector3f::operator-=(const float r)
 {
 	x -= r;
 	y -= r;
@@ -156,7 +156,7 @@ Vector3f &Vector3f::operator-=(const double r)
 	return *this;
 }
 
-Vector3f &Vector3f::operator*=(const double r)
+Vector3f &Vector3f::operator*=(const float r)
 {
 	x *= r;
 	y *= r;
@@ -164,7 +164,7 @@ Vector3f &Vector3f::operator*=(const double r)
 	return *this;
 }
 
-Vector3f &Vector3f::operator/=(const double r)
+Vector3f &Vector3f::operator/=(const float r)
 {
 	x /= r;
 	y /= r;

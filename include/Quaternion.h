@@ -4,25 +4,25 @@
 
 class Quaternion {
     private:
-	double x;
-	double y;
-	double z;
-	double w;
+	float x;
+	float y;
+	float z;
+	float w;
 
     public:
 	Quaternion();
-	Quaternion(double a, double b, double c, double d);
+	Quaternion(float a, float b, float c, float d);
 
-	void setX(double a) noexcept;
-	void setY(double b) noexcept;
-	void setZ(double c) noexcept;
-	void setW(double d) noexcept;
-	double getX() const noexcept;
-	double getY() const noexcept;
-	double getZ() const noexcept;
-	double getW() const noexcept;
+	void setX(float a) noexcept;
+	void setY(float b) noexcept;
+	void setZ(float c) noexcept;
+	void setW(float d) noexcept;
+	float getX() const noexcept;
+	float getY() const noexcept;
+	float getZ() const noexcept;
+	float getW() const noexcept;
 
-	double length() const noexcept;
+	float length() const noexcept;
 	Quaternion normalize();
 	Quaternion conjugate();
 
@@ -31,18 +31,18 @@ class Quaternion {
 	Quaternion operator*(const Quaternion &v);
 	Quaternion operator*(const Vector3f &v);
 	Quaternion operator/(const Quaternion &v);
-	Quaternion operator+(const double r);
-	Quaternion operator-(const double r);
-	Quaternion operator*(const double r);
-	Quaternion operator/(const double r);
+	Quaternion operator+(const float r);
+	Quaternion operator-(const float r);
+	Quaternion operator*(const float r);
+	Quaternion operator/(const float r);
 
 	Quaternion &operator+=(const Quaternion &v);
 	Quaternion &operator-=(const Quaternion &v);
 	Quaternion &operator*=(const Quaternion &v);
 	Quaternion &operator*=(const Vector3f &v);
 	Quaternion &operator/=(const Quaternion &v);
-	Quaternion &operator+=(const double r);
-	Quaternion &operator-=(const double r);
-	Quaternion &operator*=(const double r);
-	Quaternion &operator/=(const double r);
+	Quaternion &operator+=(const float r);
+	Quaternion &operator-=(const float r);
+	Quaternion &operator*=(const float r);
+	Quaternion &operator/=(const float r);
 };

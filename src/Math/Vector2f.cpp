@@ -3,57 +3,57 @@
 #include <cmath>
 #include <array>
 
-const double PI = 3.14159;
+const float PI = 3.14159;
 
 Vector2f::Vector2f()
 {
 	x = y = 0;
 }
 
-Vector2f::Vector2f(double a, double b)
+Vector2f::Vector2f(float a, float b)
 {
 	x = a;
 	y = b;
 }
 
-void Vector2f::setX(double a) noexcept
+void Vector2f::setX(float a) noexcept
 {
 	this->x = a;
 }
 
-void Vector2f::setY(double b) noexcept
+void Vector2f::setY(float b) noexcept
 {
 	this->y = b;
 }
 
-double Vector2f::getX() const noexcept
+float Vector2f::getX() const noexcept
 {
 	return this->x;
 }
 
-double Vector2f::getY() const noexcept
+float Vector2f::getY() const noexcept
 {
 	return this->y;
 }
 
-std::array<double, 2> Vector2f::get() const noexcept
+std::array<float, 2> Vector2f::get() const noexcept
 {
 	return { x, y };
 }
 
-double Vector2f::length() const noexcept
+float Vector2f::length() const noexcept
 {
 	return std::sqrtl(x * x + y * y);
 }
 
-double Vector2f::dot(const Vector2f &v) noexcept
+float Vector2f::dot(const Vector2f &v) noexcept
 {
 	return x * v.x + y * v.y;
 }
 
 Vector2f Vector2f::normalize()
 {
-	double len = length();
+	float len = length();
 	return { x / len, y / len };
 }
 
@@ -77,22 +77,22 @@ Vector2f Vector2f::operator/(const Vector2f &v)
 	return { x / v.x, y / v.y };
 }
 
-Vector2f Vector2f::operator+(const double r)
+Vector2f Vector2f::operator+(const float r)
 {
 	return { x + r, y + r };
 }
 
-Vector2f Vector2f::operator-(const double r)
+Vector2f Vector2f::operator-(const float r)
 {
 	return { x - r, y - r };
 }
 
-Vector2f Vector2f::operator*(const double r)
+Vector2f Vector2f::operator*(const float r)
 {
 	return { x * r, y * r };
 }
 
-Vector2f Vector2f::operator/(const double r)
+Vector2f Vector2f::operator/(const float r)
 {
 	return { x / r, y / r };
 }
@@ -125,39 +125,39 @@ Vector2f &Vector2f::operator/=(const Vector2f &v)
 	return *this;
 }
 
-Vector2f &Vector2f::operator+=(const double r)
+Vector2f &Vector2f::operator+=(const float r)
 {
 	x += r;
 	y += r;
 	return *this;
 }
 
-Vector2f &Vector2f::operator-=(const double r)
+Vector2f &Vector2f::operator-=(const float r)
 {
 	x -= r;
 	y -= r;
 	return *this;
 }
 
-Vector2f &Vector2f::operator*=(const double r)
+Vector2f &Vector2f::operator*=(const float r)
 {
 	x *= r;
 	y *= r;
 	return *this;
 }
 
-Vector2f &Vector2f::operator/=(const double r)
+Vector2f &Vector2f::operator/=(const float r)
 {
 	x /= r;
 	y /= r;
 	return *this;
 }
 
-Vector2f Vector2f::rotate(double degrees) const noexcept
+Vector2f Vector2f::rotate(float degrees) const noexcept
 {
-	double rad = degrees * (PI / 180);
-	double c = cos(rad);
-	double s = sin(rad);
+	float rad = degrees * (PI / 180);
+	float c = cos(rad);
+	float s = sin(rad);
 
 	return { x * c - y * s, x * s + y * c };
 }
