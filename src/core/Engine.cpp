@@ -1,13 +1,15 @@
-#include <Engine.h>
+#include <core/Engine.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <Timer.h>
-#include <Input.h>
+#include <graphics/ShaderIO.h>
+
+#include <core/Timer.h>
+#include <core/Input.h>
+#include <core/RenderUtil.h>
+
 #include <game/Game.h>
-#include <RenderUtil.h>
-#include <shaderIO.h>
 
 #include <iostream>
 
@@ -20,6 +22,9 @@ bool paused = false;
 void handle_window_focus(GLFWwindow *window, int focused)
 {
 	paused = focused != GLFW_TRUE;
+#ifdef _DEBUG_FPS_ON
+	std::cout << "Paused: " << paused << '\n';
+#endif
 }
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action,

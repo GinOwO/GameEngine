@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Window.h>
-#include <Input.h>
+#include <core/Window.h>
+#include <core/Input.h>
 
 class Engine {
     private:

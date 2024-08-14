@@ -41,20 +41,32 @@ SET(GAME_SOURCES
 	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
 )
 
+SET(CORE_SOURCES
+	${PROJECT_SOURCE_DIR}/src/core/Window.cpp
+	${PROJECT_SOURCE_DIR}/src/core/Engine.cpp
+	${PROJECT_SOURCE_DIR}/src/core/Timer.cpp
+	${PROJECT_SOURCE_DIR}/src/core/Input.cpp
+	${PROJECT_SOURCE_DIR}/src/core/RenderUtil.cpp
+)
+
+SET(GRAPHICS_SOURCES
+	${PROJECT_SOURCE_DIR}/src/graphics/ShaderIO.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/Vertex.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
+)
+
+SET(MISC_SOURCES
+	${PROJECT_SOURCE_DIR}/src/misc/glad.c
+)
+
 set(SOURCES
 	${MATH_SOURCES}
+	${CORE_SOURCES}
+	${MISC_SOURCES}
 	${GAME_SOURCES}
+	${GRAPHICS_SOURCES}
 
 	${PROJECT_SOURCE_DIR}/main.cpp
-	${PROJECT_SOURCE_DIR}/src/glad.c
-	${PROJECT_SOURCE_DIR}/src/shaderIO.cpp
-	${PROJECT_SOURCE_DIR}/src/Window.cpp
-	${PROJECT_SOURCE_DIR}/src/Engine.cpp
-	${PROJECT_SOURCE_DIR}/src/Timer.cpp
-	${PROJECT_SOURCE_DIR}/src/Input.cpp
-	${PROJECT_SOURCE_DIR}/src/RenderUtil.cpp
-	${PROJECT_SOURCE_DIR}/src/Vertex.cpp
-	${PROJECT_SOURCE_DIR}/src/Mesh.cpp
 )
 
 # Add executable target

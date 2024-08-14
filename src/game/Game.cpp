@@ -1,11 +1,13 @@
 #include <game/Game.h>
 
-#include <Mesh.h>
-#include <Vertex.h>
-#include <Input.h>
-#include <Window.h>
-#include <RenderUtil.h>
-#include <shaderIO.h>
+#include <graphics/ShaderIO.h>
+
+#include <graphics/Mesh.h>
+#include <graphics/Vertex.h>
+
+#include <core/Input.h>
+#include <core/Window.h>
+#include <core/RenderUtil.h>
 
 #include <iostream>
 

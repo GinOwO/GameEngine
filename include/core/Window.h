@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <Input.h>
+#include <core/Input.h>
 
 class Window {
     private:

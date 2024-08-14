@@ -1,6 +1,6 @@
-#include <Vertex.h>
+#include <graphics/Vertex.h>
 
-#include <Vector3f.h>
+#include <Math/Vector3f.h>
 
 Vertex::Vertex()
 {

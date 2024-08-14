@@ -1,4 +1,4 @@
-#include <Mesh.h>
+#include <graphics/Mesh.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

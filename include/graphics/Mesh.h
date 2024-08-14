@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <Vertex.h>
+#include <graphics/Vertex.h>
 
 #include <vector>
 

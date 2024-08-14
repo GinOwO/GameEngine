@@ -1,8 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <Engine.h>
-#include <shaderIO.h>
+#include <core/Engine.h>
+#include <graphics/ShaderIO.h>
 
 #include <cstdlib>
 
