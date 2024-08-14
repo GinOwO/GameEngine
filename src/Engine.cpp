@@ -15,6 +15,12 @@
 #define _DEBUG_FPS_ON
 
 Input input_handler = Input();
+bool paused = false;
+
+void handle_window_focus(GLFWwindow *window, int focused)
+{
+	paused = focused != GLFW_TRUE;
+}
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action,
 		  int mods)
@@ -45,6 +51,7 @@ Engine::Engine()
 	}
 	running = false;
 	this->window = Window();
+	paused = false;
 }
 
 Engine::~Engine()
@@ -63,6 +70,10 @@ void Engine::run()
 
 	timer.reset();
 	while (this->running) {
+		glfwPollEvents();
+		if (paused) {
+			continue;
+		}
 		bool render_frame = false;
 
 		while (timer.can_render_frame(frame_time)) {
@@ -117,6 +128,7 @@ void Engine::start()
 	window.set_key_callback(key_callback);
 	window.set_mouse_callback(mouse_motion_callback, mouse_button_callback,
 				  mouse_scroll_callback);
+	window.set_focus_callback(handle_window_focus);
 	running = true;
 	this->run();
 }

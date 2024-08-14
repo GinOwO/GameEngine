@@ -74,6 +74,11 @@ void Window::set_mouse_callback(
 	glfwSetScrollCallback(window, mouse_scroll_callback);
 }
 
+void Window::set_focus_callback(void (*handle_window_focus)(GLFWwindow *, int))
+{
+	glfwSetWindowFocusCallback(window, handle_window_focus);
+}
+
 Window::Window()
 {
 	if (!glfwInit()) {

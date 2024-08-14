@@ -36,16 +36,13 @@ bool Input::is_key_up(int key_code) const noexcept
 void Input::key_callback(int key, int scancode, int action, int mods)
 {
 	if (key >= 0 && key < NUM_KEYS) {
-		pressed_keys[key] = false;
-		if (down_keys[key] && action == GLFW_PRESS) {
-			pressed_keys[key] = true;
-		}
-
-		down_keys[key] = up_keys[key] = false;
 		if (action == GLFW_PRESS) {
+			pressed_keys[key] = true;
 			down_keys[key] = true;
 		} else if (action == GLFW_RELEASE) {
+			pressed_keys[key] = false;
 			up_keys[key] = true;
+			down_keys[key] = false;
 		}
 	}
 }
@@ -62,9 +59,9 @@ void Input::mouse_motion_callback(double xpos, double ypos) noexcept
 
 void Input::mouse_button_callback(int button, int action, int mods) noexcept
 {
-	mouse_buttons_press[button] = false;
+	mouse_buttons_pressed[button] = false;
 	if (action == GLFW_PRESS && mouse_buttons_down[button]) {
-		mouse_buttons_press[button] = true;
+		mouse_buttons_pressed[button] = true;
 	}
 
 	mouse_buttons_up[button] = mouse_buttons_down[button] = false;
@@ -91,4 +88,34 @@ void Input::mouse_scroll_callback(double xoffset, double yoffset) noexcept
 const bool *Input::get_pressed() const noexcept
 {
 	return pressed_keys;
+}
+
+bool Input::is_mouse_pressed(int mouse_code) const noexcept
+{
+	return mouse_buttons_pressed[mouse_code];
+}
+
+bool Input::is_mouse_down(int mouse_code) const noexcept
+{
+	return mouse_buttons_down[mouse_code];
+}
+
+bool Input::is_mouse_up(int mouse_code) const noexcept
+{
+	return mouse_buttons_up[mouse_code];
+}
+
+const double *Input::get_mouse_scroll() const noexcept
+{
+	return mouse_scroll;
+}
+
+const double *Input::get_mouse_pos() const noexcept
+{
+	return mouse_pos;
+}
+
+const bool *Input::get_mouse_pressed() const noexcept
+{
+	return mouse_buttons_pressed;
 }
