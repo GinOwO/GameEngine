@@ -1,6 +1,6 @@
-#include <Math/Quaternion.h>
+#include <math/Quaternion.h>
 
-#include <Math/Vector3f.h>
+#include <math/Vector3f.h>
 
 #include <cmath>
 

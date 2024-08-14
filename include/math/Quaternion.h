@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Math/Vector3f.h>
+#include <math/Vector3f.h>
 
 class Quaternion {
     private:

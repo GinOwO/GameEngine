@@ -31,15 +31,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add source files
 SET(MATH_SOURCES
-	${PROJECT_SOURCE_DIR}/src/Math/Vector2f.cpp
-	${PROJECT_SOURCE_DIR}/src/Math/Vector3f.cpp
-	${PROJECT_SOURCE_DIR}/src/Math/Matrix4f.cpp
-	${PROJECT_SOURCE_DIR}/src/Math/Quaternion.cpp
+	${PROJECT_SOURCE_DIR}/src/math/Vector2f.cpp
+	${PROJECT_SOURCE_DIR}/src/math/Vector3f.cpp
+	${PROJECT_SOURCE_DIR}/src/math/Matrix4f.cpp
+	${PROJECT_SOURCE_DIR}/src/math/Quaternion.cpp
 )
 
-SET(GAME_SOURCES
-	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
-)
 
 SET(CORE_SOURCES
 	${PROJECT_SOURCE_DIR}/src/core/Window.cpp
@@ -53,6 +50,10 @@ SET(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/ShaderIO.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Vertex.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
+)
+
+SET(GAME_SOURCES
+	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
 )
 
 SET(MISC_SOURCES
