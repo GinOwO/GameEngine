@@ -7,7 +7,87 @@
 #include <graphics/Shader.h>
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 #include <cstdlib>
+#include <regex>
+
+// #define _DEBUG_LOADER_ON
+
+// clang-format off
+std::regex extension_regex(R"(.*\.obj$)");
+// clang-format on
+
+Mesh Mesh::load_mesh(const std::string &file_path)
+{
+	if (!std::regex_match(file_path, extension_regex)) {
+		std::cerr << "Error: File type is not supported: " << file_path
+			  << '\n';
+		exit(EXIT_FAILURE);
+	}
+
+	std::ifstream file(file_path);
+	if (!file.good()) {
+		std::cerr << "File does not exist: " << file_path << '\n';
+		exit(EXIT_FAILURE);
+	}
+
+	std::vector<Vertex> vertices;
+	std::vector<int> indices;
+	std::string line;
+
+	while (std::getline(file, line)) {
+		std::stringstream ss(line);
+		std::string prefix;
+		ss >> prefix;
+
+		if (prefix == "v") {
+			float x, y, z;
+			ss >> x >> y >> z;
+			vertices.push_back(Vector3f{ x, y, z });
+		} else if (prefix == "f") {
+			std::vector<int> face_indices;
+			int index;
+			char slash;
+			while (ss >> index) {
+				face_indices.push_back(index - 1);
+			}
+
+			if (face_indices.size() == 3) {
+				indices.push_back(face_indices[0]);
+				indices.push_back(face_indices[1]);
+				indices.push_back(face_indices[2]);
+			} else if (face_indices.size() == 4) {
+				indices.push_back(face_indices[0]);
+				indices.push_back(face_indices[1]);
+				indices.push_back(face_indices[2]);
+
+				indices.push_back(face_indices[0]);
+				indices.push_back(face_indices[2]);
+				indices.push_back(face_indices[3]);
+			}
+		}
+	}
+
+	file.close();
+#ifdef _DEBUG_LOADER_ON
+	for (Vertex &v : vertices) {
+		Vector3f vv = v.getPos();
+		std::cout << vv.getX() << ' ' << vv.getY() << ' ' << vv.getZ()
+			  << '\n';
+	}
+	int _i = 0;
+	for (int &i : indices) {
+		std::cout << i << ' ';
+		if (++_i % 3 == 0)
+			std::cout << '\n';
+	}
+#endif
+	Mesh mesh;
+	mesh.add_vertices(vertices, indices);
+	return mesh;
+}
 
 Mesh::Mesh()
 {
@@ -39,6 +119,7 @@ void Mesh::add_vertices(const std::vector<Vertex> &vertices,
 	}
 
 	size = vertices.size();
+	isize = indices.size();
 
 	std::vector<float> buffer(size * Vertex::SIZE);
 
@@ -86,7 +167,7 @@ void Mesh::draw() const
 	shader.use_program();
 
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, isize, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 

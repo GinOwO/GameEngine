@@ -18,18 +18,12 @@ Game::Game(Input &input_handler, Window &window, Timer &timer)
 	, window(window)
 	, timer(timer)
 {
-	std::vector<Vertex> vertices{
-		Vertex(Vector3f(-1, -1, 0)),
-		Vertex(Vector3f(0, 1, 0)),
-		Vertex(Vector3f(1, -1, 0)),
-		Vertex(Vector3f(0, -1, 1)),
-	};
-
-	std::vector<int> indices{ 0, 1, 3, 3, 1, 2, 2, 1, 0, 0, 2, 3 };
-
+	Mesh mesh = Mesh::load_mesh("./assets/objects/cube.obj");
 	Shader sh("./shaders/vertShader.vert", "./shaders/fragShader.frag");
 	sh.add_uniform("transform");
-	meshes.push_back({ vertices, indices, sh });
+	mesh.set_shader_program(sh);
+
+	meshes.push_back(mesh);
 	render_order = { 0 };
 }
 
@@ -52,8 +46,8 @@ void Game::update()
 
 	float sint = std::sinf(temp);
 	transform.set_translation({ sint, 0, 0 });
-	transform.set_rotation({ 0, 0, sint * 180 });
-	transform.set_scale({ sint, sint, sint });
+	transform.set_rotation({ sint * 180, sint * 180, 0 });
+	transform.set_scale({ .5, .5, .5 });
 
 	meshes[0].get_shader_program().set_uniform(
 		"transform", transform.get_transformation());

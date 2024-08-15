@@ -83,6 +83,7 @@ void Engine::run()
 	while (this->running) {
 		glfwPollEvents();
 		if (paused) {
+			timer.reset();
 			continue;
 		}
 		bool render_frame = false;
@@ -138,7 +139,7 @@ void Engine::start()
 		std::cerr << "Error: Engine Already Running\n";
 		exit(EXIT_FAILURE);
 	}
-	RenderUtil ::init_graphics();
+	RenderUtil::init_graphics();
 
 	window.set_key_callback(key_callback);
 	window.set_mouse_callback(mouse_motion_callback, mouse_button_callback,

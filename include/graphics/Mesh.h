@@ -7,6 +7,7 @@
 #include <graphics/Shader.h>
 
 #include <vector>
+#include <string>
 
 class Mesh {
     private:
@@ -16,9 +17,12 @@ class Mesh {
 	Shader shader;
 
 	int size;
+	int isize;
 
     public:
 	Mesh();
+	Mesh(const std::vector<Vertex> &vertices,
+	     const std::vector<int> &indices);
 	Mesh(const std::vector<Vertex> &vertices,
 	     const std::vector<int> &indices, Shader shader);
 
@@ -28,4 +32,6 @@ class Mesh {
 	Shader &get_shader_program() noexcept;
 	void draw() const;
 	void delete_mesh();
+
+	static Mesh load_mesh(const std::string &file_path);
 };
