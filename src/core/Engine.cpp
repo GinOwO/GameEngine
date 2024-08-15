@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <graphics/ShaderIO.h>
+#include <graphics/Shader.h>
 
 #include <core/Timer.h>
 #include <core/Input.h>
@@ -18,6 +18,7 @@
 
 Input input_handler = Input();
 bool paused = false;
+bool Engine::created = false;
 
 void handle_window_focus(GLFWwindow *window, int focused)
 {
@@ -51,10 +52,15 @@ void mouse_scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 Engine::Engine()
 {
 	if (!glfwInit()) {
-		std::cerr << "Failed to initialize GLFW\n";
+		std::cerr << "Error: Failed to initialize GLFW\n";
+		exit(EXIT_FAILURE);
+	}
+	if (Engine::created) {
+		std::cerr << "Error: Engine Already Created\n";
 		exit(EXIT_FAILURE);
 	}
 	running = false;
+	Engine::created = true;
 	this->window = Window();
 	paused = false;
 }
@@ -67,7 +73,7 @@ Engine::~Engine()
 void Engine::run()
 {
 	Timer timer = Timer();
-	Game game = Game(input_handler, window);
+	Game game = Game(input_handler, window, timer);
 
 	int frames = 0;
 	double frame_counter = 0;
@@ -121,11 +127,15 @@ void Engine::run()
 void Engine::start()
 {
 	if (!window.gl_create_window()) {
-		std::cerr << "Failed to create window\n";
+		std::cerr << "Error: Failed to create window\n";
 		exit(EXIT_FAILURE);
 	}
 	if (!window.set_window_context()) {
-		std::cerr << "Failed to set window context\n";
+		std::cerr << "Error: Failed to set window context\n";
+		exit(EXIT_FAILURE);
+	}
+	if (running) {
+		std::cerr << "Error: Engine Already Running\n";
 		exit(EXIT_FAILURE);
 	}
 	RenderUtil ::init_graphics();

@@ -14,4 +14,6 @@ class Matrix4f {
 	static Matrix4f Identity_Matrix();
 	Matrix4f operator*(const Matrix4f &m) const noexcept;
 	Matrix4f &operator*=(const Matrix4f &m) noexcept;
+
+	const float *get_matrix() const noexcept;
 };

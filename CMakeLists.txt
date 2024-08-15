@@ -47,7 +47,7 @@ SET(CORE_SOURCES
 )
 
 SET(GRAPHICS_SOURCES
-	${PROJECT_SOURCE_DIR}/src/graphics/ShaderIO.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/Shader.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Vertex.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
 )

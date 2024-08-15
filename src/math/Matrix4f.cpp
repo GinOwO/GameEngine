@@ -59,3 +59,8 @@ Matrix4f &Matrix4f::operator*=(const Matrix4f &m) noexcept
 	std::memcpy(matrix, tmp, sizeof(tmp));
 	return *this;
 }
+
+const float *Matrix4f::get_matrix() const noexcept
+{
+	return &matrix[0][0];
+}

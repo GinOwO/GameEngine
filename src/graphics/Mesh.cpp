@@ -3,18 +3,21 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <graphics/Vertex.h>
+#include <graphics/Shader.h>
+
 #include <iostream>
 #include <cstdlib>
 
 Mesh::Mesh()
 {
-	vao = vbo = ebo = size = shader_program = 0;
+	vao = vbo = ebo = size = 0;
 }
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, GLuint shader)
+Mesh::Mesh(const std::vector<Vertex> &vertices, Shader shader_program)
 {
-	vao = vbo = ebo = size = shader_program = 0;
-	this->set_shader_program(shader);
+	vao = vbo = ebo = size = 0;
+	shader = shader_program;
 	this->add_vertices(vertices);
 }
 
@@ -22,8 +25,8 @@ void Mesh::delete_mesh()
 {
 	glDeleteBuffers(size * Vertex::SIZE, &vbo);
 	glDeleteVertexArrays(1, &vao);
-	glDeleteShader(shader_program);
-	vao = vbo = ebo = size = shader_program = 0;
+	shader.delete_program();
+	vao = vbo = ebo = size = 0;
 }
 
 void Mesh::add_vertices(const std::vector<Vertex> &vertices)
@@ -62,19 +65,19 @@ void Mesh::add_vertices(const std::vector<Vertex> &vertices)
 	glBindVertexArray(0);
 }
 
-void Mesh::set_shader_program(GLuint program)
+void Mesh::set_shader_program(Shader shader_program)
 {
-	shader_program = program;
+	shader = shader_program;
 }
 
 void Mesh::draw() const
 {
-	if (vao == 0 || shader_program == 0) {
-		std::cerr << "VAO or Shader not initialized\n";
+	if (vao == 0) {
+		std::cerr << "VAO not initialized\n";
 		exit(EXIT_FAILURE);
 	}
 
-	glUseProgram(shader_program);
+	shader.use_program();
 
 	glBindVertexArray(vao);
 	if (ebo) {
@@ -83,4 +86,9 @@ void Mesh::draw() const
 		glDrawArrays(GL_TRIANGLES, 0, size);
 	}
 	glBindVertexArray(0);
+}
+
+Shader &Mesh::get_shader_program() noexcept
+{
+	return shader;
 }
