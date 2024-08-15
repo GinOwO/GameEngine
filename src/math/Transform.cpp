@@ -58,6 +58,6 @@ void Transform::set_scale(Vector3f scale)
 Matrix4f Transform::get_transformation()
 {
 	return Matrix4f::Translation_Matrix(translation) *
-	       // Matrix4f::Rotation_Matrix(rotation)) *
-	       Matrix4f::Scale_Matrix(scale);
+	       (Matrix4f::Rotation_Matrix(rotation) *
+		Matrix4f::Scale_Matrix(scale));
 }

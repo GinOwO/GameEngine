@@ -64,14 +64,14 @@ Matrix4f Matrix4f::Rotation_Matrix(float x, float y, float z)
 	y = to_radians(y);
 	z = to_radians(z);
 
-	rx.set(0, 0, cos(z)), rx.set(0, 1, -sin(z));
-	rx.set(1, 0, sin(z)), rx.set(1, 1, cos(z));
+	rx.set(0, 0, std::cosf(z)), rx.set(0, 1, -std::sinf(z));
+	rx.set(1, 0, std::sinf(z)), rx.set(1, 1, std::cosf(z));
 
-	ry.set(1, 1, cos(x)), ry.set(1, 2, -sin(x));
-	ry.set(2, 1, sin(x)), ry.set(2, 2, cos(x));
+	ry.set(1, 1, std::cosf(x)), ry.set(1, 2, -std::sinf(x));
+	ry.set(2, 1, std::sinf(x)), ry.set(2, 2, std::cosf(x));
 
-	rz.set(0, 0, cos(y)), rz.set(0, 0, -sin(y));
-	rz.set(2, 0, sin(y)), rz.set(2, 0, cos(y));
+	rz.set(0, 0, std::cosf(y)), rz.set(0, 2, -std::sinf(y));
+	rz.set(2, 0, std::sinf(y)), rz.set(2, 2, std::cosf(y));
 
 	return rz * (ry * rx);
 }

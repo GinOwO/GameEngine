@@ -64,8 +64,8 @@ void Game::update()
 
 	float sint = std::sinf(temp);
 	transform.set_translation({ sint, 0, 0 });
-	// transform.set_rotation({ 0, 0, sint * 180 });
-	// transform.set_scale({ sint, sint, sint });
+	transform.set_rotation({ 0, 0, sint * 180 });
+	transform.set_scale({ sint, sint, sint });
 
 	meshes[0].get_shader_program().set_uniform(
 		"transform", transform.get_transformation());
