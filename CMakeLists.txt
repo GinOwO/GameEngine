@@ -52,6 +52,10 @@ SET(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/Shader.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Vertex.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/Texture.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/Material.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/BasicShader.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/PhongShader.cpp
 )
 
 SET(GAME_SOURCES

@@ -1,6 +1,6 @@
 #include <graphics/Shader.h>
 
-#include <glad/glad.h>
+#include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>

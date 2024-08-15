@@ -1,10 +1,11 @@
 #include <graphics/Mesh.h>
 
-#include <glad/glad.h>
+#include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <graphics/Vertex.h>
-#include <graphics/Shader.h>
+#include <graphics/BasicShader.h>
+#include <graphics/Material.h>
 
 #include <iostream>
 #include <fstream>
@@ -94,11 +95,9 @@ Mesh::Mesh()
 	vao = vbo = ebo = size = 0;
 }
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<int> &indices,
-	   Shader shader_program)
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<int> &indices)
 {
 	vao = vbo = ebo = size = 0;
-	shader = shader_program;
 	this->add_vertices(vertices, indices);
 }
 
@@ -106,7 +105,6 @@ void Mesh::delete_mesh()
 {
 	glDeleteBuffers(size * Vertex::SIZE, &vbo);
 	glDeleteVertexArrays(1, &vao);
-	shader.delete_program();
 	vao = vbo = ebo = size = 0;
 }
 
@@ -117,6 +115,7 @@ void Mesh::add_vertices(const std::vector<Vertex> &vertices,
 		std::cerr << "Delete Existing Mesh first\n";
 		return;
 	}
+	this->calculate_normals(vertices, indices);
 
 	size = vertices.size();
 	isize = indices.size();
@@ -125,14 +124,25 @@ void Mesh::add_vertices(const std::vector<Vertex> &vertices,
 
 	int i = 0;
 	for (const Vertex &v : vertices) {
-		Vector3f v3 = v.getPos();
-		buffer[i++] = v3.getX();
-		buffer[i++] = v3.getY();
-		buffer[i++] = v3.getZ();
+		Vector3f pos = v.get_pos();
+		Vector3f normal = v.get_normal();
+		Vector2f texCoord = v.get_texCoord();
+		buffer[i++] = pos.getX();
+		buffer[i++] = pos.getY();
+		buffer[i++] = pos.getZ();
+		buffer[i++] = texCoord.getX();
+		buffer[i++] = texCoord.getY();
+		buffer[i++] = normal.getX();
+		buffer[i++] = normal.getY();
+		buffer[i++] = normal.getZ();
 	}
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -141,7 +151,10 @@ void Mesh::add_vertices(const std::vector<Vertex> &vertices,
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
 			      Vertex::SIZE * sizeof(float), (void *)0);
-	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+			      Vertex::SIZE * sizeof(float), (void *)12);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,
+			      Vertex::SIZE * sizeof(float), (void *)20);
 
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -152,11 +165,6 @@ void Mesh::add_vertices(const std::vector<Vertex> &vertices,
 	glBindVertexArray(0);
 }
 
-void Mesh::set_shader_program(Shader shader_program)
-{
-	shader = shader_program;
-}
-
 void Mesh::draw() const
 {
 	if (vao == 0) {
@@ -164,14 +172,38 @@ void Mesh::draw() const
 		exit(EXIT_FAILURE);
 	}
 
-	shader.use_program();
+	material.get_texture().bind();
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, isize, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 
-Shader &Mesh::get_shader_program() noexcept
+void Mesh::set_material(const Material &texture)
 {
-	return shader;
+	this->material = Material(texture);
+}
+
+Material &Mesh::get_material() noexcept
+{
+	return this->material;
+}
+
+void Mesh::calculate_normals(std::vector<Vertex> vertices,
+			     std::vector<int> indices)
+{
+	for (int i = 0; i < indices.size(); i += 3) {
+		int a = indices[i], b = indices[i + 1], c = indices[i + 2];
+		Vector3f v1 = vertices[b].get_pos() - vertices[a].get_pos();
+		Vector3f v2 = vertices[c].get_pos() - vertices[a].get_pos();
+
+		Vector3f normal = v1.cross(v2).normalize();
+
+		vertices[a].set_normal(vertices[a].get_normal() + normal);
+		vertices[b].set_normal(vertices[b].get_normal() + normal);
+		vertices[c].set_normal(vertices[c].get_normal() + normal);
+	}
+	for (Vertex &v : vertices) {
+		v.set_normal(v.get_normal().normalize());
+	}
 }

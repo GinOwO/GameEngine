@@ -16,6 +16,7 @@ class Game {
 	Input &input_handler;
 	Window &window;
 	Timer &timer;
+	Camera &camera;
 
 	std::vector<Mesh> meshes;
 	std::vector<int> render_order;
@@ -23,7 +24,8 @@ class Game {
 	Transform transform;
 
     public:
-	Game(Input &input_handler, Window &window, Timer &timer);
+	Game(Input &input_handler, Window &window, Timer &timer,
+	     Camera &camera);
 
 	void input();
 	void update();

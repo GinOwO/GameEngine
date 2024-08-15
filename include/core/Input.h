@@ -10,8 +10,10 @@ class Input {
 	bool mouse_buttons_pressed[8];
 	bool mouse_buttons_down[8];
 	bool mouse_buttons_up[8];
-	double mouse_scroll[2];
-	double mouse_pos[2];
+	double mouse_scroll_delta[2];
+	double mouse_scroll[2][2];
+	double mouse_pos_delta[2];
+	double mouse_pos[2][2];
 
     public:
 	const int NUM_KEYS = KB_SIZE;
@@ -25,8 +27,11 @@ class Input {
 	bool is_mouse_pressed(int mouse_code) const noexcept;
 	bool is_mouse_down(int mouse_code) const noexcept;
 	bool is_mouse_up(int mouse_code) const noexcept;
-	const double *get_mouse_scroll() const noexcept;
-	const double *get_mouse_pos() const noexcept;
+
+	const double (*get_mouse_scroll() const noexcept)[2];
+	const double (*get_mouse_pos() const noexcept)[2];
+	const double *get_mouse_scroll_delta() noexcept;
+	const double *get_mouse_pos_delta() noexcept;
 	const bool *get_mouse_pressed() const noexcept;
 
 	void key_callback(int key, int scancode, int action, int mods);

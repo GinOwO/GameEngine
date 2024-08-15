@@ -106,6 +106,32 @@ Matrix4f Matrix4f::Projection_Matrix(float fov, float width, float height,
 	return { matrix };
 }
 
+Matrix4f Matrix4f::Camera_Matrix(const Vector3f &forward, const Vector3f &up)
+{
+	Vector3f f = forward.normalize();
+	Vector3f r = up.normalize();
+
+	r = r.cross(f);
+	Vector3f u{ f.cross(r) };
+
+	float matrix[4][4] = { 0 };
+
+	matrix[0][0] = r.getX();
+	matrix[0][1] = r.getY();
+	matrix[0][2] = r.getZ();
+
+	matrix[1][0] = u.getX();
+	matrix[1][1] = u.getY();
+	matrix[1][2] = u.getZ();
+
+	matrix[2][0] = f.getX();
+	matrix[2][1] = f.getY();
+	matrix[2][2] = f.getZ();
+
+	matrix[3][3] = 1;
+	return { matrix };
+}
+
 void Matrix4f::set(int x, int y, float a) noexcept
 {
 	if (x > 3 || y > 3 || x < 0 || y < 0) {

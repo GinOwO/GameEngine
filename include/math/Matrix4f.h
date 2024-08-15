@@ -27,6 +27,9 @@ class Matrix4f {
 	static Matrix4f Projection_Matrix(float fov, float width, float height,
 					  float zNear, float zFar);
 
+	static Matrix4f Camera_Matrix(const Vector3f &forward,
+				      const Vector3f &up);
+
 	static Matrix4f flip_matrix(const Matrix4f &m);
 
 	Matrix4f operator*(const Matrix4f &m) const noexcept;

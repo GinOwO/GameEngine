@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glad/glad.h>
+#include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <core/Input.h>
@@ -29,4 +29,6 @@ class Window {
 
 	int get_window_height() const noexcept;
 	int get_window_width() const noexcept;
+
+	void set_mouse_position(double x, double y);
 };

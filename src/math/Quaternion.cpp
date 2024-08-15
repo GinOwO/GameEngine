@@ -4,8 +4,6 @@
 
 #include <cmath>
 
-const float PI = 3.14159;
-
 Quaternion::Quaternion()
 {
 	x = y = z = w = 0;
@@ -64,36 +62,38 @@ float Quaternion::length() const noexcept
 	return std::sqrtl(x * x + y * y + z * z + w * w);
 }
 
-Quaternion Quaternion::normalize()
+Quaternion Quaternion::normalize() const noexcept
 {
 	float len = length();
+	if (len == 0)
+		len = 1;
 	return { x / len, y / len, z / len, w / len };
 }
 
-Quaternion Quaternion::conjugate()
+Quaternion Quaternion::conjugate() const noexcept
 {
 	return { -x, -y, -z, w };
 }
 
-Quaternion Quaternion::operator+(const Quaternion &v)
+Quaternion Quaternion::operator+(const Quaternion &v) const noexcept
 {
 	return { x + v.x, y + v.y, z + v.z, w + v.w };
 }
 
-Quaternion Quaternion::operator-(const Quaternion &v)
+Quaternion Quaternion::operator-(const Quaternion &v) const noexcept
 {
 	return { x - v.x, y - v.y, z - v.z, w - v.w };
 }
 
-Quaternion Quaternion::operator*(const Quaternion &v)
+Quaternion Quaternion::operator*(const Quaternion &v) const noexcept
 {
-	return { x * v.y + w * v.x + y * v.z - z * v.y,
-		 y * v.w + w * v.y + z * v.x - x * v.z,
-		 w * v.w + w * v.z + x * v.y - y * v.x,
+	return { w * v.x + x * v.w + y * v.z - z * v.y,
+		 w * v.y - x * v.z + y * v.w + z * v.x,
+		 w * v.z + x * v.y - y * v.x + z * v.w,
 		 w * v.w - x * v.x - y * v.y - z * v.z };
 }
 
-Quaternion Quaternion::operator*(const Vector3f &v)
+Quaternion Quaternion::operator*(const Vector3f &v) const noexcept
 {
 	return { w * v.getX() + y * v.getZ() - z * v.getY(),
 		 w * v.getY() + z * v.getX() - x * v.getZ(),
@@ -101,27 +101,27 @@ Quaternion Quaternion::operator*(const Vector3f &v)
 		 -x * v.getX() - y * v.getY() - z * v.getZ() };
 }
 
-Quaternion Quaternion::operator/(const Quaternion &v)
+Quaternion Quaternion::operator/(const Quaternion &v) const noexcept
 {
 	return { x / v.x, y / v.y, z / v.z, w / v.w };
 }
 
-Quaternion Quaternion::operator+(const float r)
+Quaternion Quaternion::operator+(const float r) const noexcept
 {
 	return { x + r, y + r, z + r, w + r };
 }
 
-Quaternion Quaternion::operator-(const float r)
+Quaternion Quaternion::operator-(const float r) const noexcept
 {
 	return { x - r, y - r, z - r, w - r };
 }
 
-Quaternion Quaternion::operator*(const float r)
+Quaternion Quaternion::operator*(const float r) const noexcept
 {
 	return { x * r, y * r, z * r, w * r };
 }
 
-Quaternion Quaternion::operator/(const float r)
+Quaternion Quaternion::operator/(const float r) const noexcept
 {
 	return { x / r, y / r, z / r, w / r };
 }

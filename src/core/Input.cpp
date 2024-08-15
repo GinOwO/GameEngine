@@ -2,7 +2,7 @@
 
 // #define _DEBUG_INPUT_ON
 
-#include <glad/glad.h>
+#include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <cstring>
@@ -49,8 +49,11 @@ void Input::key_callback(int key, int scancode, int action, int mods)
 
 void Input::mouse_motion_callback(double xpos, double ypos) noexcept
 {
-	mouse_pos[0] = xpos;
-	mouse_pos[1] = ypos;
+	mouse_pos[0][0] = mouse_pos[1][0];
+	mouse_pos[0][1] = mouse_pos[1][1];
+
+	mouse_pos[1][0] = xpos;
+	mouse_pos[1][1] = ypos;
 
 #ifdef _DEBUG_INPUT_ON
 	std::cout << mouse_pos[0] << ' ' << mouse_pos[1] << '\n';
@@ -78,8 +81,12 @@ void Input::mouse_button_callback(int button, int action, int mods) noexcept
 
 void Input::mouse_scroll_callback(double xoffset, double yoffset) noexcept
 {
-	mouse_scroll[0] += xoffset;
-	mouse_scroll[1] += yoffset;
+	mouse_scroll[0][0] = mouse_scroll[1][0];
+	mouse_scroll[0][1] = mouse_scroll[1][1];
+
+	mouse_scroll[1][0] += xoffset;
+	mouse_scroll[1][1] += yoffset;
+
 #ifdef _DEBUG_INPUT_ON
 	std::cout << mouse_scroll[1] << '\n';
 #endif
@@ -105,12 +112,12 @@ bool Input::is_mouse_up(int mouse_code) const noexcept
 	return mouse_buttons_up[mouse_code];
 }
 
-const double *Input::get_mouse_scroll() const noexcept
+const double (*Input::get_mouse_scroll() const noexcept)[2]
 {
 	return mouse_scroll;
 }
 
-const double *Input::get_mouse_pos() const noexcept
+const double (*Input::get_mouse_pos() const noexcept)[2]
 {
 	return mouse_pos;
 }
@@ -118,4 +125,24 @@ const double *Input::get_mouse_pos() const noexcept
 const bool *Input::get_mouse_pressed() const noexcept
 {
 	return mouse_buttons_pressed;
+}
+
+const double *Input::get_mouse_pos_delta() noexcept
+{
+	mouse_pos_delta[0] = mouse_pos[1][0] - mouse_pos[0][0];
+	mouse_pos_delta[1] = mouse_pos[1][1] - mouse_pos[0][1];
+
+	mouse_pos[0][0] = mouse_pos[1][0];
+	mouse_pos[0][1] = mouse_pos[1][1];
+	return mouse_pos_delta;
+}
+
+const double *Input::get_mouse_scroll_delta() noexcept
+{
+	mouse_scroll_delta[0] = mouse_scroll[1][0] - mouse_scroll[0][0];
+	mouse_scroll_delta[1] = mouse_scroll[1][1] - mouse_scroll[0][1];
+
+	mouse_scroll[0][0] = mouse_scroll[1][0];
+	mouse_scroll[0][1] = mouse_scroll[1][1];
+	return mouse_scroll_delta;
 }

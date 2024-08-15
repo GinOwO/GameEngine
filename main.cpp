@@ -1,4 +1,4 @@
-#include <glad/glad.h>
+#include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <core/Engine.h>

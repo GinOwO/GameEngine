@@ -1,12 +1,13 @@
 #include <core/Engine.h>
 
-#include <glad/glad.h>
+#include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <graphics/Shader.h>
 
 #include <core/Timer.h>
 #include <core/Input.h>
+#include <core/Camera.h>
 #include <core/RenderUtil.h>
 
 #include <game/Game.h>
@@ -73,7 +74,8 @@ Engine::~Engine()
 void Engine::run()
 {
 	Timer timer = Timer();
-	Game game = Game(input_handler, window, timer);
+	Camera camera = Camera();
+	Game game = Game(input_handler, window, timer, camera);
 
 	int frames = 0;
 	double frame_counter = 0;

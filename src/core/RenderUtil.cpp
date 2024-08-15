@@ -1,7 +1,9 @@
 #include <core/RenderUtil.h>
 
-#include <glad/glad.h>
+#include <misc/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <math/Vector3f.h>
 
 void RenderUtil::clear_screen()
 {
@@ -21,6 +23,25 @@ void RenderUtil::init_graphics()
 
 	// TODO: Depth Clamp
 
+	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_FRAMEBUFFER_SRGB);
 	RenderUtil::clear_screen();
+}
+
+void RenderUtil::texture_enable(bool enable)
+{
+	if (enable)
+		glEnable(GL_TEXTURE_2D);
+	else
+		glDisable(GL_TEXTURE_2D);
+}
+
+void RenderUtil::set_clear_color(const Vector3f &color)
+{
+	glClearColor(color.getX(), color.getY(), color.getZ(), 1.0f);
+}
+
+void RenderUtil::unbind_textures()
+{
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

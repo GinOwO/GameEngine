@@ -1,6 +1,6 @@
 #include <core/Window.h>
 
-#include <glad/glad.h>
+#include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -105,4 +105,9 @@ int Window::get_window_width() const noexcept
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
 	return width;
+}
+
+void Window::set_mouse_position(double x, double y)
+{
+	glfwSetCursorPos(window, x, y);
 }

@@ -3,6 +3,8 @@
 #include <math/Vector3f.h>
 #include <math/Matrix4f.h>
 
+#include <core/Camera.h>
+
 class Transform {
     private:
 	static float zNear;
@@ -34,6 +36,7 @@ class Transform {
 	static void set_projection(float fov, float width, float height,
 				   float zNear, float zFar);
 
-	Matrix4f get_transformation();
-	Matrix4f get_projected_transformation();
+	Matrix4f get_transformation() const noexcept;
+	Matrix4f get_projected_transformation() const noexcept;
+	Matrix4f get_projected_camera(Camera &camera) const noexcept;
 };

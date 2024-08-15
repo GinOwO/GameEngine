@@ -46,53 +46,53 @@ float Vector2f::length() const noexcept
 	return std::sqrtl(x * x + y * y);
 }
 
-float Vector2f::dot(const Vector2f &v) noexcept
+float Vector2f::dot(const Vector2f &v) const noexcept
 {
 	return x * v.x + y * v.y;
 }
 
-Vector2f Vector2f::normalize()
+Vector2f Vector2f::normalize() const noexcept
 {
 	float len = length();
 	return { x / len, y / len };
 }
 
-Vector2f Vector2f::operator+(const Vector2f &v)
+Vector2f Vector2f::operator+(const Vector2f &v) const noexcept
 {
 	return { x + v.x, y + v.y };
 }
 
-Vector2f Vector2f::operator-(const Vector2f &v)
+Vector2f Vector2f::operator-(const Vector2f &v) const noexcept
 {
 	return { x - v.x, y - v.y };
 }
 
-Vector2f Vector2f::operator*(const Vector2f &v)
+Vector2f Vector2f::operator*(const Vector2f &v) const noexcept
 {
 	return { x * v.x, y * v.y };
 }
 
-Vector2f Vector2f::operator/(const Vector2f &v)
+Vector2f Vector2f::operator/(const Vector2f &v) const noexcept
 {
 	return { x / v.x, y / v.y };
 }
 
-Vector2f Vector2f::operator+(const float r)
+Vector2f Vector2f::operator+(const float r) const noexcept
 {
 	return { x + r, y + r };
 }
 
-Vector2f Vector2f::operator-(const float r)
+Vector2f Vector2f::operator-(const float r) const noexcept
 {
 	return { x - r, y - r };
 }
 
-Vector2f Vector2f::operator*(const float r)
+Vector2f Vector2f::operator*(const float r) const noexcept
 {
 	return { x * r, y * r };
 }
 
-Vector2f Vector2f::operator/(const float r)
+Vector2f Vector2f::operator/(const float r) const noexcept
 {
 	return { x / r, y / r };
 }

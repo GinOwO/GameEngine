@@ -18,17 +18,17 @@ class Vector2f {
 	std::array<float, 2> get() const noexcept;
 
 	float length() const noexcept;
-	float dot(const Vector2f &v) noexcept;
-	Vector2f normalize();
+	float dot(const Vector2f &v) const noexcept;
+	Vector2f normalize() const noexcept;
 
-	Vector2f operator+(const Vector2f &v);
-	Vector2f operator-(const Vector2f &v);
-	Vector2f operator*(const Vector2f &v);
-	Vector2f operator/(const Vector2f &v);
-	Vector2f operator+(const float r);
-	Vector2f operator-(const float r);
-	Vector2f operator*(const float r);
-	Vector2f operator/(const float r);
+	Vector2f operator+(const Vector2f &v) const noexcept;
+	Vector2f operator-(const Vector2f &v) const noexcept;
+	Vector2f operator*(const Vector2f &v) const noexcept;
+	Vector2f operator/(const Vector2f &v) const noexcept;
+	Vector2f operator+(const float r) const noexcept;
+	Vector2f operator-(const float r) const noexcept;
+	Vector2f operator*(const float r) const noexcept;
+	Vector2f operator/(const float r) const noexcept;
 
 	Vector2f &operator+=(const Vector2f &v);
 	Vector2f &operator-=(const Vector2f &v);

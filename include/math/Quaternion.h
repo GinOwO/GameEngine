@@ -23,18 +23,18 @@ class Quaternion {
 	float getW() const noexcept;
 
 	float length() const noexcept;
-	Quaternion normalize();
-	Quaternion conjugate();
+	Quaternion normalize() const noexcept;
+	Quaternion conjugate() const noexcept;
 
-	Quaternion operator+(const Quaternion &v);
-	Quaternion operator-(const Quaternion &v);
-	Quaternion operator*(const Quaternion &v);
-	Quaternion operator*(const Vector3f &v);
-	Quaternion operator/(const Quaternion &v);
-	Quaternion operator+(const float r);
-	Quaternion operator-(const float r);
-	Quaternion operator*(const float r);
-	Quaternion operator/(const float r);
+	Quaternion operator+(const Quaternion &v) const noexcept;
+	Quaternion operator-(const Quaternion &v) const noexcept;
+	Quaternion operator*(const Quaternion &v) const noexcept;
+	Quaternion operator*(const Vector3f &v) const noexcept;
+	Quaternion operator/(const Quaternion &v) const noexcept;
+	Quaternion operator+(const float r) const noexcept;
+	Quaternion operator-(const float r) const noexcept;
+	Quaternion operator*(const float r) const noexcept;
+	Quaternion operator/(const float r) const noexcept;
 
 	Quaternion &operator+=(const Quaternion &v);
 	Quaternion &operator-=(const Quaternion &v);

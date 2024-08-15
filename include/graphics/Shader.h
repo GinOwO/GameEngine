@@ -1,10 +1,11 @@
 #pragma once
 
-#include <glad/glad.h>
+#include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <math/Matrix4f.h>
 #include <math/Vector3f.h>
+#include <graphics/Material.h>
 
 #include <string>
 #include <unordered_map>
