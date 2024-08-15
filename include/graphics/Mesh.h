@@ -22,8 +22,6 @@ class Mesh {
     public:
 	Mesh();
 	Mesh(const std::vector<Vertex> &vertices,
-	     const std::vector<int> &indices);
-	Mesh(const std::vector<Vertex> &vertices,
 	     const std::vector<int> &indices, Shader shader);
 
 	void add_vertices(const std::vector<Vertex> &vertices,

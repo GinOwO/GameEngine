@@ -42,19 +42,21 @@ float temp = 0.0f;
 
 void Game::update()
 {
-	transform.set_projection(90.0f, window.get_window_width(),
-				 window.get_window_height(), 0.1f, 1000.0f);
+	transform.set_projection(70.0f, window.get_window_width(),
+				 window.get_window_height(), .1f, 1000.0f);
 
 	temp += timer.get_delta_time();
 
 	float sint = std::sinf(temp);
 
-	transform.set_translation({ sint, 0, 0 });
+	transform.set_translation({ 0, 0, 5 });
 	transform.set_rotation({ 0, sint * 180, 0 });
 	// transform.set_scale({ .5, .5, .5 });
 
-	meshes[0].get_shader_program().set_uniform(
-		"transform", transform.get_projected_transformation());
+	Matrix4f transformation =
+		Matrix4f::flip_matrix(transform.get_projected_transformation());
+
+	meshes[0].get_shader_program().set_uniform("transform", transformation);
 }
 
 void Game::render()

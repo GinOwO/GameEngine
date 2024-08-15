@@ -27,6 +27,8 @@ class Matrix4f {
 	static Matrix4f Projection_Matrix(float fov, float width, float height,
 					  float zNear, float zFar);
 
+	static Matrix4f flip_matrix(const Matrix4f &m);
+
 	Matrix4f operator*(const Matrix4f &m) const noexcept;
 	Matrix4f &operator*=(const Matrix4f &m) noexcept;
 

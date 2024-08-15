@@ -28,7 +28,6 @@ Matrix4f::Matrix4f(const float m[4][4])
 Matrix4f Matrix4f::Identity_Matrix()
 {
 	float matrix[4][4] = { 0 };
-	std::memset(matrix, 0, sizeof(matrix));
 	matrix[0][0] = matrix[1][1] = matrix[2][2] = matrix[3][3] = 1;
 	return { matrix };
 }
@@ -41,11 +40,10 @@ Matrix4f Matrix4f::Translation_Matrix(Vector3f vec)
 Matrix4f Matrix4f::Translation_Matrix(float x, float y, float z)
 {
 	float matrix[4][4] = { 0 };
-	std::memset(matrix, 0, sizeof(matrix));
 	matrix[0][0] = matrix[1][1] = matrix[2][2] = matrix[3][3] = 1;
-	matrix[3][0] = x;
-	matrix[3][1] = y;
-	matrix[3][2] = z;
+	matrix[0][3] = x;
+	matrix[1][3] = y;
+	matrix[2][3] = z;
 	return { matrix };
 }
 
@@ -84,7 +82,6 @@ Matrix4f Matrix4f::Scale_Matrix(Vector3f vec)
 Matrix4f Matrix4f::Scale_Matrix(float x, float y, float z)
 {
 	float matrix[4][4] = { 0 };
-	std::memset(matrix, 0, sizeof(matrix));
 	matrix[0][0] = x;
 	matrix[1][1] = y;
 	matrix[2][2] = z;
@@ -100,7 +97,6 @@ Matrix4f Matrix4f::Projection_Matrix(float fov, float width, float height,
 	float zRange = zNear - zFar;
 
 	float matrix[4][4] = { 0.0f };
-	std::memset(matrix, 0, sizeof(matrix));
 	matrix[0][0] = 1.0f / (tan_half_fov * aspect_ratio);
 	matrix[1][1] = 1.0f / tan_half_fov;
 	matrix[2][2] = (-zNear - zFar) / zRange;
@@ -146,6 +142,17 @@ Matrix4f &Matrix4f::operator*=(const Matrix4f &m) noexcept
 	}
 	std::memcpy(matrix, tmp, sizeof(tmp));
 	return *this;
+}
+
+Matrix4f Matrix4f::flip_matrix(const Matrix4f &m)
+{
+	float tmp[4][4];
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			tmp[i][j] = m.get(j, i);
+		}
+	}
+	return Matrix4f(tmp);
 }
 
 const float *Matrix4f::get_matrix() const noexcept
