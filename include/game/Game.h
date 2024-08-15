@@ -17,7 +17,6 @@ class Game {
 	Window &window;
 	Timer &timer;
 
-	std::vector<Vertex> vertices;
 	std::vector<Mesh> meshes;
 	std::vector<int> render_order;
 

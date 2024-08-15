@@ -18,30 +18,18 @@ Game::Game(Input &input_handler, Window &window, Timer &timer)
 	, window(window)
 	, timer(timer)
 {
-	vertices = {
-		Vertex(Vector3f(0.0f, 0.5f, 0.0f)), // Top vertex
-		Vertex(Vector3f(0.5f, -0.5f, 0.0f)), // Bottom right vertex
-		Vertex(Vector3f(-0.5f, -0.5f, 0.0f)), // Bottom left vertex
+	std::vector<Vertex> vertices{
+		Vertex(Vector3f(-1, -1, 0)),
+		Vertex(Vector3f(0, 1, 0)),
+		Vertex(Vector3f(1, -1, 0)),
+		Vertex(Vector3f(0, -1, 1)),
 	};
+
+	std::vector<int> indices{ 0, 1, 3, 3, 1, 2, 2, 1, 0, 0, 2, 3 };
+
 	Shader sh("./shaders/vertShader.vert", "./shaders/fragShader.frag");
 	sh.add_uniform("transform");
-	meshes.push_back({ vertices, sh });
-
-	// vertices = {
-	// 	Vertex(Vector3f(0.0f, 0.5f, 0.0f)), // Top vertex
-	// 	Vertex(Vector3f(0.5f, -0.5f, 0.0f)), // Bottom right vertex
-	// 	Vertex(Vector3f(-1.0f, -0.5f, 0.0f)), // Bottom left vertex
-	// };
-	// meshes.push_back({ vertices, Shader("./shaders/vertShader.vert",
-	// 				    "./shaders/fragShader1.frag") });
-
-	// vertices = {
-	// 	Vertex(Vector3f(0.0f, 0.5f, 0.0f)), // Top vertex
-	// 	Vertex(Vector3f(0.5f, -1.0f, 0.0f)), // Bottom right vertex
-	// 	Vertex(Vector3f(-0.0f, -0.5f, 0.0f)), // Bottom left vertex
-	// };
-	// meshes.push_back({ vertices, Shader("./shaders/vertShader.vert",
-	// 				    "./shaders/fragShader2.frag") });
+	meshes.push_back({ vertices, indices, sh });
 	render_order = { 0 };
 }
 
