@@ -7,6 +7,8 @@
 #include <core/Window.h>
 #include <core/Timer.h>
 
+#include <math/Transform.h>
+
 #include <vector>
 
 class Game {
@@ -14,9 +16,12 @@ class Game {
 	Input &input_handler;
 	Window &window;
 	Timer &timer;
+
 	std::vector<Vertex> vertices;
 	std::vector<Mesh> meshes;
 	std::vector<int> render_order;
+
+	Transform transform;
 
     public:
 	Game(Input &input_handler, Window &window, Timer &timer);

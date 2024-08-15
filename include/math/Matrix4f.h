@@ -1,5 +1,7 @@
 #pragma once
 
+#include <math/Vector3f.h>
+
 class Matrix4f {
     private:
 	float matrix[4][4];
@@ -12,6 +14,16 @@ class Matrix4f {
 	float get(int x, int y) const noexcept;
 
 	static Matrix4f Identity_Matrix();
+
+	static Matrix4f Translation_Matrix(Vector3f vec);
+	static Matrix4f Translation_Matrix(float x, float y, float z);
+
+	static Matrix4f Rotation_Matrix(Vector3f vec);
+	static Matrix4f Rotation_Matrix(float x, float y, float z);
+
+	static Matrix4f Scale_Matrix(Vector3f vec);
+	static Matrix4f Scale_Matrix(float x, float y, float z);
+
 	Matrix4f operator*(const Matrix4f &m) const noexcept;
 	Matrix4f &operator*=(const Matrix4f &m) noexcept;
 

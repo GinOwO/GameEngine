@@ -35,6 +35,7 @@ SET(MATH_SOURCES
 	${PROJECT_SOURCE_DIR}/src/math/Vector3f.cpp
 	${PROJECT_SOURCE_DIR}/src/math/Matrix4f.cpp
 	${PROJECT_SOURCE_DIR}/src/math/Quaternion.cpp
+	${PROJECT_SOURCE_DIR}/src/math/Transform.cpp
 )
 
 

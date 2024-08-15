@@ -24,7 +24,7 @@ Game::Game(Input &input_handler, Window &window, Timer &timer)
 		Vertex(Vector3f(-0.5f, -0.5f, 0.0f)), // Bottom left vertex
 	};
 	Shader sh("./shaders/vertShader.vert", "./shaders/fragShader.frag");
-	sh.add_uniform("uniformTimerDelta");
+	sh.add_uniform("transform");
 	meshes.push_back({ vertices, sh });
 
 	// vertices = {
@@ -61,10 +61,14 @@ float temp = 0.0f;
 void Game::update()
 {
 	temp += timer.get_delta_time();
-	meshes[0].get_shader_program().set_uniform("uniformTimerDelta",
-						   std::sin(temp));
-	if (temp > 3.14f)
-		temp = -3.14;
+
+	float sint = std::sinf(temp);
+	transform.set_translation({ sint, 0, 0 });
+	// transform.set_rotation({ 0, 0, sint * 180 });
+	// transform.set_scale({ sint, sint, sint });
+
+	meshes[0].get_shader_program().set_uniform(
+		"transform", transform.get_transformation());
 }
 
 void Game::render()

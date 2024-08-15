@@ -1,12 +1,12 @@
 #version 460 core
 layout(location = 0) in vec3 position;
 
-out vec3 color;
+out vec4 color;
 
-uniform float uniformTimerDelta;
+uniform mat4 transform;
 
 void main()
 {
-	color = vec3(clamp(position * uniformTimerDelta, 0.0, 1.0));
-	gl_Position = vec4(position, 1.0);
+	color = vec4(clamp(position, 0.0, 1.0), 1.0);
+	gl_Position = transform * vec4(position, 1.0);
 }
