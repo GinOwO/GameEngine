@@ -44,6 +44,7 @@ SET(CORE_SOURCES
 	${PROJECT_SOURCE_DIR}/src/core/Engine.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Timer.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Input.cpp
+	${PROJECT_SOURCE_DIR}/src/core/Camera.cpp
 	${PROJECT_SOURCE_DIR}/src/core/RenderUtil.cpp
 )
 

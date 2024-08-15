@@ -18,7 +18,7 @@ Game::Game(Input &input_handler, Window &window, Timer &timer)
 	, window(window)
 	, timer(timer)
 {
-	Mesh mesh = Mesh::load_mesh("./assets/objects/cube.obj");
+	Mesh mesh = Mesh::load_mesh("./assets/objects/vergil_chair.obj");
 	Shader sh("./shaders/vertShader.vert", "./shaders/fragShader.frag");
 	sh.add_uniform("transform");
 	mesh.set_shader_program(sh);
@@ -49,8 +49,8 @@ void Game::update()
 
 	float sint = std::sinf(temp);
 
-	transform.set_translation({ 0, 0, 5 });
-	transform.set_rotation({ 0, sint * 180, 0 });
+	transform.set_translation({ 0, 0, 10 });
+	transform.set_rotation({ 0, 270, -35 });
 	// transform.set_scale({ .5, .5, .5 });
 
 	Matrix4f transformation =
