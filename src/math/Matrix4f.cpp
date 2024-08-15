@@ -92,6 +92,24 @@ Matrix4f Matrix4f::Scale_Matrix(float x, float y, float z)
 	return { matrix };
 }
 
+Matrix4f Matrix4f::Projection_Matrix(float fov, float width, float height,
+				     float zNear, float zFar)
+{
+	float aspect_ratio = width / height;
+	float tan_half_fov = std::tan(to_radians(fov / 2.0f));
+	float zRange = zNear - zFar;
+
+	float matrix[4][4] = { 0.0f };
+	std::memset(matrix, 0, sizeof(matrix));
+	matrix[0][0] = 1.0f / (tan_half_fov * aspect_ratio);
+	matrix[1][1] = 1.0f / tan_half_fov;
+	matrix[2][2] = (-zNear - zFar) / zRange;
+	matrix[2][3] = (2.0f * zFar * zNear) / zRange;
+	matrix[3][2] = 1.0f;
+
+	return { matrix };
+}
+
 void Matrix4f::set(int x, int y, float a) noexcept
 {
 	if (x > 3 || y > 3 || x < 0 || y < 0) {

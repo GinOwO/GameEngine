@@ -26,4 +26,7 @@ class Window {
 		void (*mouse_scroll_callback)(GLFWwindow *, double, double));
 
 	void set_focus_callback(void (*handle_window_focus)(GLFWwindow *, int));
+
+	int get_window_height() const noexcept;
+	int get_window_width() const noexcept;
 };

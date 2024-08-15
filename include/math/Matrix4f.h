@@ -24,6 +24,9 @@ class Matrix4f {
 	static Matrix4f Scale_Matrix(Vector3f vec);
 	static Matrix4f Scale_Matrix(float x, float y, float z);
 
+	static Matrix4f Projection_Matrix(float fov, float width, float height,
+					  float zNear, float zFar);
+
 	Matrix4f operator*(const Matrix4f &m) const noexcept;
 	Matrix4f &operator*=(const Matrix4f &m) noexcept;
 

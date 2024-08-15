@@ -92,3 +92,17 @@ Window::~Window()
 {
 	this->terminate_window();
 }
+
+int Window::get_window_height() const noexcept
+{
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+	return height;
+}
+
+int Window::get_window_width() const noexcept
+{
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+	return width;
+}
