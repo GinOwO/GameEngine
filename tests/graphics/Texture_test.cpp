@@ -28,9 +28,3 @@ TEST_F(TextureTest, ParameterizedConstructor)
 {
 	EXPECT_EQ(texture.get_id(), textureID);
 }
-
-TEST_F(TextureTest, BindTexture)
-{
-	// Mock the bind function behavior
-	// You may need to use a mock framework or check OpenGL state changes here
-}

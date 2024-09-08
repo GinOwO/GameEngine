@@ -47,3 +47,18 @@ add_test(NAME MaterialTest COMMAND MaterialTest)
 add_executable(BasicShaderTest ${PROJECT_SOURCE_DIR}/tests/graphics/BasicShader_test.cpp)
 target_link_libraries(BasicShaderTest GTest::gtest GTest::gtest_main GameEngineLib)
 add_test(NAME BasicShaderTest COMMAND BasicShaderTest)
+
+# Input
+add_executable(InputTest ${PROJECT_SOURCE_DIR}/tests/core/Input_test.cpp)
+target_link_libraries(InputTest GTest::gtest GTest::gtest_main GameEngineLib)
+add_test(NAME InputTest COMMAND InputTest)
+
+# RenderUtil
+add_executable(RenderUtilTest ${PROJECT_SOURCE_DIR}/tests/core/RenderUtil_test.cpp)
+target_link_libraries(RenderUtilTest GTest::gtest GTest::gtest_main GameEngineLib)
+add_test(NAME RenderUtilTest COMMAND RenderUtilTest)
+
+# Timer
+add_executable(TimerTest ${PROJECT_SOURCE_DIR}/tests/core/Timer_test.cpp)
+target_link_libraries(TimerTest GTest::gtest GTest::gtest_main GameEngineLib)
+add_test(NAME TimerTest COMMAND TimerTest)
