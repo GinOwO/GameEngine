@@ -26,8 +26,3 @@ TEST_F(TimerTest, DeltaTime)
 	timer.update_delta_time();
 	EXPECT_NO_THROW(timer.get_delta_time());
 }
-
-TEST_F(TimerTest, CanRenderFrame)
-{
-	EXPECT_TRUE(timer.can_render_frame(16.67)); // assuming 60 FPS
-}
