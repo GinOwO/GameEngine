@@ -185,3 +185,14 @@ const float *Matrix4f::get_matrix() const noexcept
 {
 	return &matrix[0][0];
 }
+
+bool Matrix4f::operator==(const Matrix4f &m) const noexcept
+{
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (this->matrix[i][j] != m.matrix[i][j])
+				return false;
+		}
+	}
+	return true;
+}

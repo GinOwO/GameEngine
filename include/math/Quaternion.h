@@ -45,4 +45,6 @@ class Quaternion {
 	Quaternion &operator-=(const float r);
 	Quaternion &operator*=(const float r);
 	Quaternion &operator/=(const float r);
+
+	bool operator==(const Quaternion &q) const noexcept;
 };

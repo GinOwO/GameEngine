@@ -41,6 +41,8 @@ class Vector3f {
 	Vector3f &operator*=(const float r);
 	Vector3f &operator/=(const float r);
 
+	bool operator==(const Vector3f &v) const noexcept;
+
 	Vector3f cross(const Vector3f &v) const noexcept;
 	Vector3f rotate(const float angle, const Vector3f &axis) const noexcept;
 };

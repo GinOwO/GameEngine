@@ -215,3 +215,9 @@ Quaternion &Quaternion::operator/=(const float r)
 	w /= r;
 	return *this;
 }
+
+bool Quaternion::operator==(const Quaternion &q) const noexcept
+{
+	return this->x == q.x && this->y == q.y && this->z == q.z &&
+	       this->w == q.w;
+}

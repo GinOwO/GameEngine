@@ -153,6 +153,11 @@ Vector2f &Vector2f::operator/=(const float r)
 	return *this;
 }
 
+bool Vector2f::operator==(const Vector2f &v) const noexcept
+{
+	return this->x == v.x && this->y == v.y;
+}
+
 Vector2f Vector2f::rotate(float degrees) const noexcept
 {
 	float rad = degrees * (PI / 180);

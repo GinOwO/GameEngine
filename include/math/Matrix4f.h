@@ -35,5 +35,7 @@ class Matrix4f {
 	Matrix4f operator*(const Matrix4f &m) const noexcept;
 	Matrix4f &operator*=(const Matrix4f &m) noexcept;
 
+	bool operator==(const Matrix4f &m) const noexcept;
+
 	const float *get_matrix() const noexcept;
 };

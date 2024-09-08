@@ -210,3 +210,8 @@ Vector3f Vector3f::rotate(const float angle,
 
 	return { rotated.getX(), rotated.getY(), rotated.getZ() };
 }
+
+bool Vector3f::operator==(const Vector3f &v) const noexcept
+{
+	return this->x == v.x && this->y == v.y && this->z == v.z;
+}

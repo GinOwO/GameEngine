@@ -3,11 +3,27 @@
 # Add include directories
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-# Add test executable
+# Vector3f
 add_executable(Vector3fTest ${PROJECT_SOURCE_DIR}/tests/math/Vector3f_test.cpp)
-
-# Link GoogleTest and the GameEngineLib library
 target_link_libraries(Vector3fTest GTest::gtest GTest::gtest_main GameEngineLib)
-
-# Add tests
 add_test(NAME Vector3fTest COMMAND Vector3fTest)
+
+# Vector2f
+add_executable(Vector2fTest ${PROJECT_SOURCE_DIR}/tests/math/Vector2f_test.cpp)
+target_link_libraries(Vector2fTest GTest::gtest GTest::gtest_main GameEngineLib)
+add_test(NAME Vector2fTest COMMAND Vector2fTest)
+
+# Transform
+add_executable(TransformTest ${PROJECT_SOURCE_DIR}/tests/math/Transform_test.cpp)
+target_link_libraries(TransformTest GTest::gtest GTest::gtest_main GameEngineLib)
+add_test(NAME TransformTest COMMAND TransformTest)
+
+# Quaternion Test
+add_executable(QuaternionTest ${PROJECT_SOURCE_DIR}/tests/math/Quaternion_test.cpp)
+target_link_libraries(QuaternionTest GTest::gtest GTest::gtest_main GameEngineLib)
+add_test(NAME QuaternionTest COMMAND QuaternionTest)
+
+# Matrix4f Test
+add_executable(Matrix4fTest ${PROJECT_SOURCE_DIR}/tests/math/Matrix4f_test.cpp)
+target_link_libraries(Matrix4fTest GTest::gtest GTest::gtest_main GameEngineLib)
+add_test(NAME Matrix4fTest COMMAND Matrix4fTest)

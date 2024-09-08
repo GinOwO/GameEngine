@@ -39,5 +39,7 @@ class Vector2f {
 	Vector2f &operator*=(const float r);
 	Vector2f &operator/=(const float r);
 
+	bool operator==(const Vector2f &v) const noexcept;
+
 	Vector2f rotate(float degrees) const noexcept;
 };
