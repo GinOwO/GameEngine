@@ -9,7 +9,7 @@
 #include <math/Vector3f.h>
 
 class PhongShader : public Shader {
-	Vector3f ambient_light{ 0.1, 0.1, 0.1 };
+	Vector3f ambient_light{ 0.8, 0.8, 0.8 };
 	DirectionalLight directional_light{ BaseLight{ { 1, 1, 1 }, 0 },
 					    { 0, 0, 0 } };
 

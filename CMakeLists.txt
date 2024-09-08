@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project name and version
-project(MandelbrotSet VERSION 1.0)
+project(GameEngine VERSION 1.0)
 
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
@@ -29,8 +29,8 @@ find_package(OpenGL REQUIRED)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Add source files
-SET(MATH_SOURCES
+# Set source files for the library
+set(MATH_SOURCES
 	${PROJECT_SOURCE_DIR}/src/math/Vector2f.cpp
 	${PROJECT_SOURCE_DIR}/src/math/Vector3f.cpp
 	${PROJECT_SOURCE_DIR}/src/math/Matrix4f.cpp
@@ -38,8 +38,7 @@ SET(MATH_SOURCES
 	${PROJECT_SOURCE_DIR}/src/math/Transform.cpp
 )
 
-
-SET(CORE_SOURCES
+set(CORE_SOURCES
 	${PROJECT_SOURCE_DIR}/src/core/Window.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Engine.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Timer.cpp
@@ -48,7 +47,7 @@ SET(CORE_SOURCES
 	${PROJECT_SOURCE_DIR}/src/core/RenderUtil.cpp
 )
 
-SET(GRAPHICS_SOURCES
+set(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/Shader.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Vertex.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
@@ -58,34 +57,41 @@ SET(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/PhongShader.cpp
 )
 
-SET(GAME_SOURCES
+set(GAME_SOURCES
 	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
 )
 
-SET(MISC_SOURCES
+set(MISC_SOURCES
 	${PROJECT_SOURCE_DIR}/src/misc/glad.c
 )
 
-set(SOURCES
+# Create a static library for common sources
+add_library(GameEngineLib STATIC
 	${MATH_SOURCES}
 	${CORE_SOURCES}
+	${GRAPHICS_SOURCES}
 	${MISC_SOURCES}
 	${GAME_SOURCES}
-	${GRAPHICS_SOURCES}
-
-	${PROJECT_SOURCE_DIR}/main.cpp
 )
 
 # Add executable target
-add_executable(GameEngine ${SOURCES})
+add_executable(GameEngine ${PROJECT_SOURCE_DIR}/main.cpp)
+
+# Link the static library to the executable
+target_link_libraries(GameEngine GameEngineLib glfw OpenGL::GL)
 
 # Add include directories
+target_include_directories(GameEngineLib PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_include_directories(GameEngine PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
-# Link libraries
-target_link_libraries(GameEngine glfw OpenGL::GL)
-
 add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
+
+# Add GoogleTest
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+
+# Add test directory
+add_subdirectory(tests)
 
 SET(GCC_COMPILE_FLAGS "-g -O0")
 SET(GCC_LINK_FLAGS    "")

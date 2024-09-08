@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Set the project directory (change this if needed)
+PROJECT_DIR=$(pwd)
+
+# Run CMake to build the project
+echo "Running CMake to build the project..."
+cmake --build build
+
+# Check if the build was successful
+if [ $? -ne 0 ]; then
+    echo "Build failed. Aborting commit."
+    exit 1
+fi
+
+# Run ctest to execute tests
+echo "Running tests..."
+ctest --rerun-failed --output-on-failure --test-dir build/tests
+
+# Check if tests passed
+if [ $? -ne 0 ]; then
+    echo "Tests failed. Aborting commit."
+    exit 1
+fi
+
+echo "Build and tests successful. Proceeding with commit."

@@ -122,7 +122,7 @@ void Game::update()
 	}
 	std::cout << "-----------------------------------\n";
 #endif
-	sh.get_directional_light().base_light.intensity = 0.1;
+	sh.get_directional_light().base_light.intensity = 1.0;
 	sh.update_uniforms(transformation_matrix, projection_matrix,
 			   meshes[0].get_material());
 }

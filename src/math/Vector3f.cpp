@@ -192,14 +192,21 @@ Vector3f Vector3f::cross(const Vector3f &v) const noexcept
 Vector3f Vector3f::rotate(const float angle,
 			  const Vector3f &axis) const noexcept
 {
-	float sin_half_angle = std::sinf(to_radians(angle / 2.0f));
-	float cos_half_angle = std::cosf(to_radians(angle / 2.0f));
+	// Convert angle from degrees to radians
+	float rad_angle = to_radians(angle);
+	float sin_half_angle = std::sinf(rad_angle / 2.0f);
+	float cos_half_angle = std::cosf(rad_angle / 2.0f);
 
+	// Create the rotation quaternion
 	Quaternion rotation{ axis.getX() * sin_half_angle,
 			     axis.getY() * sin_half_angle,
 			     axis.getZ() * sin_half_angle, cos_half_angle };
 
-	Quaternion w = (rotation * (*this)) * rotation.conjugate();
+	// Create a quaternion for the vector to be rotated
+	Quaternion v_as_quat{ this->x, this->y, this->z, 0.0f };
 
-	return { w.getX(), w.getY(), w.getZ() };
+	// Perform rotation: q * v * q^*
+	Quaternion rotated = rotation * v_as_quat * rotation.conjugate();
+
+	return { rotated.getX(), rotated.getY(), rotated.getZ() };
 }
