@@ -1,0 +1,70 @@
+name: CMake Build and Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        build_type: [Release]
+        c_compiler: [gcc]
+        cpp_compiler: [g++]
+
+    steps:
+    - uses: actions/checkout@v4
+          
+    - name: Install Dependencies
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          cmake pkg-config \
+          libgl1-mesa-dev libwayland-dev wayland-protocols \
+          libgtest-dev libxkbcommon-dev libxrandr-dev \
+          libxinerama-dev libxcursor-dev libxi-dev
+
+
+    - name: Install Dependencies
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install mingw
+        choco install cmake
+        choco install git # Ensure git is available to clone repos
+
+        git clone https://github.com/google/googletest.git
+        cd googletest
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build . --config Release
+        cmake --install . --prefix C:/googletest
+    
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: echo "build-output-dir=${{ github.workspace }}/build" >> $GITHUB_ENV
+
+    - name: Configure CMake
+      run: cmake -B ${{ env.build-output-dir }} \
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+        -G "MinGW Makefiles" \
+        -S ${{ github.workspace }} \
+        -DGTEST_ROOT=C:/googletest
+
+    - name: Build
+      run: cmake --build ${{ env.build-output-dir }} --config ${{ matrix.build_type }}
+
+    - name: Test
+      working-directory: ${{ env.build-output-dir }}
+      run: ctest --rerun-failed --output-on-failure --build-config ${{ matrix.build_type }}
+
