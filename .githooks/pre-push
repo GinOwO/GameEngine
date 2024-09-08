@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Set the project directory (change this if needed)
-PROJECT_DIR=$(pwd)
-
 # Run CMake to build the project
 echo "Running CMake to build the project..."
 cmake --build build
