@@ -64,7 +64,7 @@ std::array<float, 3> Vector3f::get() const noexcept
 
 float Vector3f::length() const noexcept
 {
-	return std::sqrtl(x * x + y * y + z * z);
+	return std::sqrt(x * x + y * y + z * z);
 }
 
 float Vector3f::dot(const Vector3f &v) noexcept

@@ -59,7 +59,7 @@ float Quaternion::getW() const noexcept
 
 float Quaternion::length() const noexcept
 {
-	return std::sqrtl(x * x + y * y + z * z + w * w);
+	return std::sqrt(x * x + y * y + z * z + w * w);
 }
 
 Quaternion Quaternion::normalize() const noexcept

@@ -43,7 +43,7 @@ std::array<float, 2> Vector2f::get() const noexcept
 
 float Vector2f::length() const noexcept
 {
-	return std::sqrtl(x * x + y * y);
+	return std::sqrt(x * x + y * y);
 }
 
 float Vector2f::dot(const Vector2f &v) const noexcept
