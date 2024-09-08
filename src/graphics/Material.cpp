@@ -1,6 +1,6 @@
 #include <graphics/Material.h>
 
-#include <graphics/Textures.h>
+#include <graphics/Texture.h>
 #include <math/Vector3f.h>
 
 Material::Material()

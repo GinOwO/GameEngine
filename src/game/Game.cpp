@@ -6,7 +6,7 @@
 #include <graphics/Mesh.h>
 #include <graphics/Vertex.h>
 #include <graphics/Material.h>
-#include <graphics/Textures.h>
+#include <graphics/Texture.h>
 
 #include <graphics/BasicShader.h>
 #include <graphics/PhongShader.h>

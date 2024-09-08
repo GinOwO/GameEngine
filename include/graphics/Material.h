@@ -2,7 +2,7 @@
 
 #include <math/Vector3f.h>
 
-#include <graphics/Textures.h>
+#include <graphics/Texture.h>
 
 class Material {
 	Texture texture;
