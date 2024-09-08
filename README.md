@@ -66,7 +66,7 @@ cd build
 ```
 
 ## Tests
-Git pre-push hooks can be started by running the following command:
+Git pre-push hooks can be enabled by running the following command:
 ```bash
 ./.githooks/init-hooks.sh
 ```
@@ -76,6 +76,14 @@ To run the tests, you can use the following command:
 cd build/tests
 ctest --rerun-failed --output-on-failure --verbose
 ```
+
+## Contributing
+Style guidelines are enforced using clang-format. To format the code, you can run the following command:
+```bash
+clang-format -i -style=file $(find . -name "*.cpp" -o -name "*.h")
+```
+
+A modified version of the LKML coding style is used in this project.
 
 ## License
 This project is licensed under the GPL-2.0 License - see the [LICENSE](LICENSE) file for details
