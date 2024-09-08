@@ -56,13 +56,26 @@ cd GameEng
 ```bash
 mkdir -p build
 cmake -B build -S .
+```
+
+3. Get submodules and build GLFW
+```bash
+git submodule update --init --recursive
+cd include/glfw
+cmake -B build
+cmake --build build
+sudo cmake --install build
+cd ../../
+```
+
+4. Build the project
+```bash
 cmake --build /home/gin/Desktop/GameEngine/build --config Debug --target all --
 ```
 
-3. Built files can be found in the `build` directory
+5. Run the project from the build directory
 ```bash
-cd build
-./GameEngine
+./build/GameEngine
 ```
 
 ## Tests
