@@ -101,7 +101,7 @@ void Game::update()
 
 	temp += timer.get_delta_time();
 
-	float sint = std::sinf(temp);
+	float sint = std::sin(temp);
 
 	// transform.set_translation({ 0, 0, 0 });
 	transform.set_rotation({ 0, sint * 180, 0 });

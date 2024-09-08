@@ -194,8 +194,8 @@ Vector3f Vector3f::rotate(const float angle,
 {
 	// Convert angle from degrees to radians
 	float rad_angle = to_radians(angle);
-	float sin_half_angle = std::sinf(rad_angle / 2.0f);
-	float cos_half_angle = std::cosf(rad_angle / 2.0f);
+	float sin_half_angle = std::sin(rad_angle / 2.0f);
+	float cos_half_angle = std::cos(rad_angle / 2.0f);
 
 	// Create the rotation quaternion
 	Quaternion rotation{ axis.getX() * sin_half_angle,
