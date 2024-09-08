@@ -14,14 +14,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        build_type: [Release]
-        c_compiler: [gcc]
-        cpp_compiler: [g++]
 
     steps:
     - uses: actions/checkout@v4
-          
-    - name: Install Dependencies
+      with:
+        submodules: true
+
+    - name: Install Dependencies (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
@@ -31,8 +30,7 @@ jobs:
           libgtest-dev libxkbcommon-dev libxrandr-dev \
           libxinerama-dev libxcursor-dev libxi-dev
 
-
-    - name: Install Dependencies
+    - name: Install Dependencies (Windows)
       if: matrix.os == 'windows-latest'
       run: |
         choco install mingw
@@ -46,25 +44,25 @@ jobs:
         cmake ..
         cmake --build . --config Release
         cmake --install . --prefix C:/googletest
-    
-    - name: Set reusable strings
-      id: strings
-      shell: bash
-      run: echo "build-output-dir=${{ github.workspace }}/build" >> $GITHUB_ENV
+        
+    - name: Initialize and Update Submodules
+      run: |
+        git submodule update --init --recursive
+        
+    - name: Install GLFW (if necessary)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        cd include/glfw
+        cmake -B build
+        cmake --build build
+        sudo cmake --install build
 
-    - name: Configure CMake
-      run: cmake -B ${{ env.build-output-dir }} \
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-        -G "MinGW Makefiles" \
-        -S ${{ github.workspace }} \
-        -DGTEST_ROOT=C:/googletest
-
-    - name: Build
-      run: cmake --build ${{ env.build-output-dir }} --config ${{ matrix.build_type }}
+    - name: Configure CMake & Build
+      run: |
+        mkdir -p build
+        cmake -B build
+        cmake --build ${{ github.workspace }}/build --config Debug --target all
 
     - name: Test
-      working-directory: ${{ env.build-output-dir }}
-      run: ctest --rerun-failed --output-on-failure --build-config ${{ matrix.build_type }}
-
+      working-directory: ${{ github.workspace }}/build/tests
+      run: ctest --rerun-failed --output-on-failure --verbose

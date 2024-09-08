@@ -89,6 +89,7 @@ add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
 # Add GoogleTest
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
+enable_testing()
 
 # Add test directory
 add_subdirectory(tests)
