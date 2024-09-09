@@ -20,7 +20,8 @@ class PhongShader : public Shader {
 
 	void update_uniforms(const Matrix4f &world_matrix,
 			     const Matrix4f &projected_matrix,
-			     const Material &material);
+			     const Material &material,
+			     const Vector3f &camera_position);
 
 	Vector3f &get_ambient_light() noexcept;
 	void set_ambient_light(const Vector3f &ambient_light) noexcept;
@@ -31,7 +32,9 @@ class PhongShader : public Shader {
 
 	using Shader::set_uniform;
 	void set_uniform(const std::string &uniform,
+			 const BaseLight &base_light) noexcept;
+	void set_uniform(const std::string &uniform,
 			 const DirectionalLight &directional_light) noexcept;
 	void set_uniform(const std::string &uniform,
-			 const BaseLight &directional_light) noexcept;
+			 const Specular &specular) noexcept;
 };

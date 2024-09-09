@@ -60,7 +60,7 @@ Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 	camera.set_position({ 0, 0, -15 });
 
 	sh.set_ambient_light({ .1 });
-	sh.set_directional_light({ { 1.0f, 0.8f }, 1 });
+	sh.set_directional_light({ { 1.0f, 0.8f }, 1.0f });
 }
 
 void Game::input()
@@ -127,7 +127,7 @@ void Game::update()
 	std::cout << "-----------------------------------\n";
 #endif
 	sh.update_uniforms(transformation_matrix, projection_matrix,
-			   meshes[0].get_material());
+			   meshes[0].get_material(), camera.get_position());
 }
 
 void Game::render()
