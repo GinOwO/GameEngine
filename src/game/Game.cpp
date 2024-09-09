@@ -10,6 +10,7 @@
 
 #include <graphics/BasicShader.h>
 #include <graphics/PhongShader.h>
+#include <graphics/DirectionalLight.h>
 
 #include <core/Input.h>
 #include <core/Window.h>
@@ -35,12 +36,12 @@ Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 	//     "./assets/objects/cube_texture.png");
 	Mesh mesh;
 	std::vector<Vertex> vertices{
-		{ { -1, -1, 0 }, { 0.0, 0.0 } },
-		{ { 0, 1, 0 }, { 0.5, 0.0 } },
-		{ { 1, -1, 0 }, { 1.0, 0.0 } },
-		{ { 0, -1, 1 }, { 0.0, 0.5 } },
+		{ { -1.0f, -1.0f, 0.5773f }, { 0.0f, 0.0f } },
+		{ { 0.0f, -1.0f, -1.15475f }, { 0.5f, 0.0f } },
+		{ { 1.0f, -1.0f, 0.5773f }, { 0.5f, 0.0f } },
+		{ { 0.0f, 1.0f, 0.0f }, { 0.5f, 1.0f } },
 	};
-	std::vector<int> indices{ 0, 1, 3, 3, 1, 2, 2, 1, 0, 0, 2, 3 };
+	std::vector<int> indices{ 0, 3, 1, 1, 3, 2, 2, 3, 0, 1, 2, 0 };
 
 	material = Material(
 		Texture::load_texture("./assets/objects/test_texture.png"),
@@ -49,7 +50,7 @@ Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 	sh = PhongShader("./shaders/phongVertShader.vert",
 			 "./shaders/phongFragShader.frag");
 
-	mesh.add_vertices(vertices, indices);
+	mesh.add_vertices(vertices, indices, true);
 
 	mesh.set_material(material);
 
@@ -57,6 +58,9 @@ Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 	render_order = { 0 };
 
 	camera.set_position({ 0, 0, -15 });
+
+	sh.set_ambient_light({ .1 });
+	sh.set_directional_light({ { 1.0f, 0.8f }, 1 });
 }
 
 void Game::input()
@@ -122,7 +126,6 @@ void Game::update()
 	}
 	std::cout << "-----------------------------------\n";
 #endif
-	sh.get_directional_light().base_light.intensity = 1.0;
 	sh.update_uniforms(transformation_matrix, projection_matrix,
 			   meshes[0].get_material());
 }

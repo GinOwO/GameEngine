@@ -45,7 +45,6 @@ void main()
 {
 	vec4 total_light = vec4(ambient_light, 1.0);
 	vec4 color = vec4(base_color, 1.0);
-
 	vec4 texColor = texture(sampler, texCoord0.xy);
 
 	if (texColor != vec4(0)) {

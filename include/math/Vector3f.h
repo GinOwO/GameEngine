@@ -9,6 +9,7 @@ class Vector3f {
 
     public:
 	Vector3f();
+	Vector3f(float a);
 	Vector3f(float a, float b, float c);
 
 	void setX(float a) noexcept;

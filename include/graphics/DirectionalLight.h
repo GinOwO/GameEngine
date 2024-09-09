@@ -10,7 +10,10 @@ struct DirectionalLight {
 
 	DirectionalLight(const BaseLight &b, const Vector3f &d)
 		: base_light(b)
-		, direction(d)
+		, direction(d.normalize())
+	{
+	}
+	DirectionalLight()
 	{
 	}
 };

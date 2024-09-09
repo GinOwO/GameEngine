@@ -95,10 +95,11 @@ Mesh::Mesh()
 	vao = vbo = ebo = size = 0;
 }
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<int> &indices)
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<int> &indices,
+	   bool normals)
 {
 	vao = vbo = ebo = size = 0;
-	this->add_vertices(vertices, indices);
+	this->add_vertices(vertices, indices, normals);
 }
 
 void Mesh::delete_mesh()
@@ -108,14 +109,16 @@ void Mesh::delete_mesh()
 	vao = vbo = ebo = size = 0;
 }
 
-void Mesh::add_vertices(const std::vector<Vertex> &vertices,
-			const std::vector<int> &indices)
+void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
+			bool normals)
 {
 	if (size) {
-		std::cerr << "Delete Existing Mesh first\n";
-		return;
+		std::cerr << "Deleting Existing Mesh\n";
+		this->delete_mesh();
 	}
-	this->calculate_normals(vertices, indices);
+	if (normals) {
+		this->calculate_normals(vertices, indices);
+	}
 
 	size = vertices.size();
 	isize = indices.size();
@@ -189,8 +192,8 @@ Material &Mesh::get_material() noexcept
 	return this->material;
 }
 
-void Mesh::calculate_normals(std::vector<Vertex> vertices,
-			     std::vector<int> indices)
+void Mesh::calculate_normals(std::vector<Vertex> &vertices,
+			     std::vector<int> &indices)
 {
 	for (int i = 0; i < indices.size(); i += 3) {
 		int a = indices[i], b = indices[i + 1], c = indices[i + 2];

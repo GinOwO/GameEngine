@@ -20,6 +20,11 @@ Vector3f::Vector3f()
 	x = y = z = 0;
 }
 
+Vector3f::Vector3f(float a)
+{
+	x = y = z = a;
+}
+
 Vector3f::Vector3f(float a, float b, float c)
 {
 	x = a;

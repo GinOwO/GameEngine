@@ -20,19 +20,19 @@ class Mesh {
 	int size;
 	int isize;
 
-	void calculate_normals(std::vector<Vertex> vertices,
-			       std::vector<int> indices);
+	void calculate_normals(std::vector<Vertex> &vertices,
+			       std::vector<int> &indices);
 
     public:
 	Mesh();
 	Mesh(const std::vector<Vertex> &vertices,
-	     const std::vector<int> &indices);
+	     const std::vector<int> &indices, bool normals = false);
 
 	void draw() const;
 	void delete_mesh();
 
-	void add_vertices(const std::vector<Vertex> &vertices,
-			  const std::vector<int> &indices);
+	void add_vertices(std::vector<Vertex> vertices,
+			  std::vector<int> indices, bool normals = false);
 
 	void set_material(const Material &texture);
 	Material &get_material() noexcept;

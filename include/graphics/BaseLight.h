@@ -11,4 +11,7 @@ struct BaseLight {
 		, intensity(i)
 	{
 	}
+	BaseLight()
+	{
+	}
 };
