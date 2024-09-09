@@ -21,10 +21,9 @@ void RenderUtil::init_graphics()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	// TODO: Depth Clamp
-
+	glEnable(GL_DEPTH_CLAMP);
 	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_FRAMEBUFFER_SRGB);
+
 	RenderUtil::clear_screen();
 }
 
