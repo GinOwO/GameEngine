@@ -13,6 +13,7 @@
 #include <string>
 #include <cstdlib>
 #include <regex>
+#include <exception>
 
 // #define _DEBUG_LOADER_ON
 
@@ -25,13 +26,13 @@ Mesh Mesh::load_mesh(const std::string &file_path)
 	if (!std::regex_match(file_path, extension_regex)) {
 		std::cerr << "Error: File type is not supported: " << file_path
 			  << '\n';
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("File type is not supported");
 	}
 
 	std::ifstream file(file_path);
 	if (!file.good()) {
 		std::cerr << "File does not exist: " << file_path << '\n';
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("File does not exist");
 	}
 
 	std::vector<Vertex> vertices;
@@ -172,7 +173,7 @@ void Mesh::draw() const
 {
 	if (vao == 0) {
 		std::cerr << "VAO not initialized\n";
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("VAO not initialized\n");
 	}
 
 	material.get_texture().bind();

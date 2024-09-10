@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cmath>
 #include <iostream>
+#include <exception>
 
 template <typename T> inline float to_degrees(T radians)
 {
@@ -132,20 +133,22 @@ Matrix4f Matrix4f::Camera_Matrix(const Vector3f &forward, const Vector3f &up)
 	return { matrix };
 }
 
-void Matrix4f::set(int x, int y, float a) noexcept
+void Matrix4f::set(int x, int y, float a)
 {
 	if (x > 3 || y > 3 || x < 0 || y < 0) {
-		std::cerr << "Setting out of bounds, exiting\n";
-		exit(EXIT_FAILURE);
+		std::cerr << "Matrix setting out of bounds, exiting\n";
+		throw std::invalid_argument(
+			"Matrix setting out of bounds, exiting\n");
 	}
 	matrix[x][y] = a;
 }
 
-float Matrix4f::get(int x, int y) const noexcept
+float Matrix4f::get(int x, int y) const
 {
 	if (x > 3 || y > 3 || x < 0 || y < 0) {
-		std::cerr << "Getting out of bounds, exiting\n";
-		exit(EXIT_FAILURE);
+		std::cerr << "Matrix getting out of bounds, exiting\n";
+		throw std::invalid_argument(
+			"Matrix getting out of bounds, exiting\n");
 	}
 	return matrix[x][y];
 }

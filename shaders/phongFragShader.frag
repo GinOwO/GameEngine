@@ -1,12 +1,13 @@
 #version 460 core
 
-const int MAX_POINT_LIGHTS = 4;
-
 in vec2 texCoord0;
 in vec3 normal0;
 in vec3 worldPos0;
 
 out vec4 finalColor;
+
+const int MAX_POINT_LIGHTS = 4;
+const int MAX_SPOT_LIGHTS = 4;
 
 struct BaseLight {
 	vec3 color;
@@ -36,6 +37,12 @@ struct PointLight {
 	float range;
 };
 
+struct SpotLight {
+	PointLight point_light;
+	vec3 direction;
+	float cutoff;
+};
+
 uniform vec3 base_color;
 uniform vec3 ambient_light;
 uniform sampler2D sampler;
@@ -45,6 +52,7 @@ uniform vec3 eyePos;
 uniform DirectionalLight directional_light;
 uniform Specular specular;
 uniform PointLight point_lights[MAX_POINT_LIGHTS];
+uniform SpotLight spot_lights[MAX_SPOT_LIGHTS];
 
 vec4 calc_light(BaseLight base_color, vec3 direction, vec3 normal)
 {
@@ -100,6 +108,23 @@ vec4 calc_point_light(PointLight point_light, vec3 normal)
 	return color / attenuation;
 }
 
+vec4 calc_spot_light(SpotLight spot_light, vec3 normal)
+{
+	vec3 light_direction =
+		normalize(worldPos0 - spot_light.point_light.position);
+	float spot_factor = dot(light_direction, spot_light.direction);
+
+	vec4 color = vec4(0);
+
+	if (spot_factor > spot_light.cutoff) {
+		color = calc_point_light(spot_light.point_light, normal) *
+			(1.0 - (1.0000001 - spot_factor) /
+				       (1.0000001 - spot_light.cutoff));
+	}
+
+	return color;
+}
+
 void main()
 {
 	vec4 total_light = vec4(ambient_light, 1.0);
@@ -118,6 +143,12 @@ void main()
 		if (point_lights[i].base_light.intensity > 0) {
 			total_light +=
 				calc_point_light(point_lights[i], normal);
+		}
+	}
+
+	for (int i = 0; i < MAX_SPOT_LIGHTS; i++) {
+		if (spot_lights[i].point_light.base_light.intensity > 0) {
+			total_light += calc_spot_light(spot_lights[i], normal);
 		}
 	}
 

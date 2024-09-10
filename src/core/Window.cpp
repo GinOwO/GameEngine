@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <exception>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
@@ -83,7 +84,7 @@ Window::Window()
 {
 	if (!glfwInit()) {
 		std::cerr << "Failed to initialize GLFW\n";
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("Failed to initialize GLFW\n");
 	}
 	this->window = nullptr;
 }

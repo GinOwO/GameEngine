@@ -10,8 +10,8 @@ class Matrix4f {
 	Matrix4f();
 	Matrix4f(const float m[4][4]);
 
-	void set(int x, int y, float a) noexcept;
-	float get(int x, int y) const noexcept;
+	void set(int x, int y, float a);
+	float get(int x, int y) const;
 
 	static Matrix4f Identity_Matrix();
 
