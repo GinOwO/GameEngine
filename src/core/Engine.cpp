@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <exception>
 
 // #define _DEBUG_INPUT_ON
 #define _DEBUG_FPS_ON
@@ -55,11 +56,11 @@ Engine::Engine()
 {
 	if (!glfwInit()) {
 		std::cerr << "Error: Failed to initialize GLFW\n";
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("Error: Failed to initialize GLFW\n");
 	}
 	if (Engine::created) {
 		std::cerr << "Error: Engine Already Created\n";
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("Error: Engine Already Created\n");
 	}
 	running = false;
 	Engine::created = true;
@@ -131,15 +132,15 @@ void Engine::start()
 {
 	if (!window.gl_create_window()) {
 		std::cerr << "Error: Failed to create window\n";
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("Failed to create window\n");
 	}
 	if (!window.set_window_context()) {
 		std::cerr << "Error: Failed to set window context\n";
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("Failed to set window context\n");
 	}
 	if (running) {
 		std::cerr << "Error: Engine Already Running\n";
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("Engine Already Running\n");
 	}
 	RenderUtil::init_graphics();
 

@@ -33,10 +33,10 @@ class Shader {
 	void use_program() const noexcept;
 
 	void add_uniform(const std::string &uniform);
-	GLuint get_uniform(const std::string &uniform) const noexcept;
+	GLuint get_uniform(const std::string &uniform) const;
 
-	void set_uniform(const std::string &uniform, int value) noexcept;
-	void set_uniform(const std::string &uniform, float value) noexcept;
-	void set_uniform(const std::string &uniform, Vector3f value) noexcept;
-	void set_uniform(const std::string &uniform, Matrix4f value) noexcept;
+	void set_uniform(const std::string &uniform, int value);
+	void set_uniform(const std::string &uniform, float value);
+	void set_uniform(const std::string &uniform, Vector3f value);
+	void set_uniform(const std::string &uniform, Matrix4f value);
 };

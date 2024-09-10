@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <cstdlib>
+#include <exception>
 
 Texture::Texture()
 {
@@ -40,7 +41,7 @@ Texture Texture::load_texture(const std::string &file_path)
 
 	if (!data) {
 		std::cerr << "Failed to load texture: " << file_path << '\n';
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("Failed to load texture");
 	}
 
 	GLuint texture;

@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <vector>
+#include <exception>
 
 PhongShader::PhongShader()
 	: Shader()
@@ -52,6 +53,19 @@ void PhongShader::load_shaders(const std::string &vertex_path,
 		add_uniform(prefix + "].position");
 		add_uniform(prefix + "].range");
 	}
+
+	for (int i = 0; i < MAX_SPOT_LIGHTS; i++) {
+		const std::string prefix = "spot_lights[" + std::to_string(i);
+		add_uniform(prefix + "].point_light.base_light.color");
+		add_uniform(prefix + "].point_light.base_light.intensity");
+		add_uniform(prefix + "].point_light.attenuation.constant");
+		add_uniform(prefix + "].point_light.attenuation.linear");
+		add_uniform(prefix + "].point_light.attenuation.exponent");
+		add_uniform(prefix + "].point_light.position");
+		add_uniform(prefix + "].point_light.range");
+		add_uniform(prefix + "].direction");
+		add_uniform(prefix + "].cutoff");
+	}
 }
 
 void PhongShader::update_uniforms(const Matrix4f &world_matrix,
@@ -70,7 +84,17 @@ void PhongShader::update_uniforms(const Matrix4f &world_matrix,
 
 	this->set_uniform("ambient_light", ambient_light);
 	this->set_uniform("directional_light", directional_light);
-	this->set_uniform("point_lights", point_lights);
+
+	for (int i = 0; i < point_lights.size(); i++) {
+		const std::string uniform =
+			"point_lights[" + std::to_string(i) + "]";
+		this->set_uniform(uniform, point_lights[i]);
+	}
+	for (int i = 0; i < spot_lights.size(); i++) {
+		const std::string uniform =
+			"spot_lights[" + std::to_string(i) + "]";
+		this->set_uniform(uniform, spot_lights[i]);
+	}
 
 	this->set_uniform("base_color", material.get_color());
 	this->set_uniform("specular", material.get_specular());
@@ -106,10 +130,22 @@ void PhongShader::set_point_lights(const std::vector<PointLight> &point_lights)
 		std::cerr << "Error: Too Many Point Lights:\tCurrent: "
 			  << point_lights.size()
 			  << "\tMax: " << MAX_POINT_LIGHTS << '\n';
-		exit(EXIT_FAILURE);
+		throw std::invalid_argument("Too many Point Lights");
 	}
 
-	PhongShader::point_lights = point_lights;
+	this->point_lights = point_lights;
+}
+
+void PhongShader::set_spot_lights(const std::vector<SpotLight> &spot_lights)
+{
+	if (point_lights.size() > MAX_SPOT_LIGHTS) {
+		std::cerr << "Error: Too Many Spot Lights:\tCurrent: "
+			  << spot_lights.size() << "\tMax: " << MAX_SPOT_LIGHTS
+			  << '\n';
+		throw std::invalid_argument("Too many Spot Lights");
+	}
+
+	this->spot_lights = spot_lights;
 }
 
 void PhongShader::set_uniform(const std::string &uniform,
@@ -133,21 +169,24 @@ void PhongShader::set_uniform(const std::string &uniform,
 	set_uniform(uniform + ".exponent", specular.exponent);
 }
 
-void PhongShader::set_uniform(
-	const std::string &uniform,
-	const std::vector<PointLight> &point_lights) noexcept
+void PhongShader::set_uniform(const std::string &uniform,
+			      const PointLight &point_light) noexcept
 {
-	for (int i = 0; i < point_lights.size(); i++) {
-		const std::string prefix = "point_lights[" + std::to_string(i);
-		set_uniform(prefix + "].base_light",
-			    point_lights[i].base_light);
-		set_uniform(prefix + "].attenuation.constant",
-			    point_lights[i].attenuation.constant);
-		set_uniform(prefix + "].attenuation.linear",
-			    point_lights[i].attenuation.linear);
-		set_uniform(prefix + "].attenuation.exponent",
-			    point_lights[i].attenuation.exponent);
-		set_uniform(prefix + "].position", point_lights[i].position);
-		set_uniform(prefix + "].range", point_lights[i].range);
-	}
+	set_uniform(uniform + ".base_light", point_light.base_light);
+	set_uniform(uniform + ".attenuation.constant",
+		    point_light.attenuation.constant);
+	set_uniform(uniform + ".attenuation.linear",
+		    point_light.attenuation.linear);
+	set_uniform(uniform + ".attenuation.exponent",
+		    point_light.attenuation.exponent);
+	set_uniform(uniform + ".position", point_light.position);
+	set_uniform(uniform + ".range", point_light.range);
+}
+
+void PhongShader::set_uniform(const std::string &uniform,
+			      const SpotLight &spot_light) noexcept
+{
+	set_uniform(uniform + ".point_light", spot_light.point_light);
+	set_uniform(uniform + ".direction", spot_light.direction);
+	set_uniform(uniform + ".cutoff", spot_light.cutoff);
 }
