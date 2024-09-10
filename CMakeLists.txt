@@ -59,6 +59,8 @@ set(GRAPHICS_SOURCES
 
 set(GAME_SOURCES
 	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
+	${PROJECT_SOURCE_DIR}/src/game/GameObject.cpp
+	${PROJECT_SOURCE_DIR}/src/game/MeshRenderer.cpp
 )
 
 set(MISC_SOURCES

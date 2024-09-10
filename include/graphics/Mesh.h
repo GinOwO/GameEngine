@@ -15,7 +15,6 @@ class Mesh {
 	GLuint vao;
 	GLuint vbo;
 	GLuint ebo;
-	Material material;
 
 	int size;
 	int isize;
@@ -33,9 +32,6 @@ class Mesh {
 
 	void add_vertices(std::vector<Vertex> vertices,
 			  std::vector<int> indices, bool normals = false);
-
-	void set_material(const Material &texture);
-	Material &get_material() noexcept;
 
 	static Mesh load_mesh(const std::string &file_path);
 };

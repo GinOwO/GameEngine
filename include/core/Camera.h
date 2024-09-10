@@ -3,6 +3,12 @@
 #include <math/Vector3f.h>
 
 class Camera {
+    public:
+	Camera(const Camera &) = delete;
+	Camera &operator=(const Camera &) = delete;
+
+	static Camera &get_instance();
+
     private:
 	static const Vector3f y_axis;
 
@@ -10,10 +16,12 @@ class Camera {
 	Vector3f forward;
 	Vector3f up;
 
-    public:
 	Camera();
 	Camera(const Vector3f &position, const Vector3f &forward,
 	       const Vector3f &up);
+
+    public:
+	void input();
 
 	void set_position(const Vector3f &vec) noexcept;
 	void set_forward(const Vector3f &vec) noexcept;

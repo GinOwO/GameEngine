@@ -3,9 +3,18 @@
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <core/Input.h>
+
 #include <iostream>
 #include <cstdlib>
 #include <exception>
+#include <string>
+
+Window &Window::get_instance()
+{
+	static Window instance;
+	return instance;
+}
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
@@ -18,7 +27,7 @@ bool Window::gl_create_window()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	this->window = glfwCreateWindow(1920, 1080, "test", nullptr, nullptr);
+	this->window = glfwCreateWindow(1920, 1080, "Engine", nullptr, nullptr);
 
 	if (window == nullptr) {
 		std::cerr << "Failed to create GLFW window\n";

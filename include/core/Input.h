@@ -3,6 +3,12 @@
 #define KB_SIZE 350
 
 class Input {
+    public:
+	Input(const Input &) = delete;
+	Input &operator=(const Input &) = delete;
+
+	static Input &get_instance();
+
     private:
 	bool pressed_keys[KB_SIZE];
 	bool down_keys[KB_SIZE];
@@ -15,10 +21,11 @@ class Input {
 	double mouse_pos_delta[2];
 	double mouse_pos[2][2];
 
+	Input();
+
     public:
 	const int NUM_KEYS = KB_SIZE;
 
-	Input();
 	bool is_key_pressed(int key_code) const noexcept;
 	bool is_key_down(int key_code) const noexcept;
 	bool is_key_up(int key_code) const noexcept;

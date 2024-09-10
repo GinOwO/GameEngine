@@ -2,6 +2,12 @@
 
 #include <chrono>
 
+Timer &Timer::get_instance()
+{
+	static Timer instance;
+	return instance;
+}
+
 Timer::Timer()
 	: last_time(std::chrono::high_resolution_clock::now())
 {

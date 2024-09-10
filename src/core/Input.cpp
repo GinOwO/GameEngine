@@ -11,6 +11,12 @@
 #include <iostream>
 #endif
 
+Input &Input::get_instance()
+{
+	static Input instance;
+	return instance;
+}
+
 Input::Input()
 {
 	std::memset(pressed_keys, 0, sizeof(pressed_keys));

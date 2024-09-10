@@ -176,21 +176,9 @@ void Mesh::draw() const
 		throw std::runtime_error("VAO not initialized\n");
 	}
 
-	material.get_texture().bind();
-
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, isize, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-}
-
-void Mesh::set_material(const Material &texture)
-{
-	this->material = Material(texture);
-}
-
-Material &Mesh::get_material() noexcept
-{
-	return this->material;
 }
 
 void Mesh::calculate_normals(std::vector<Vertex> &vertices,

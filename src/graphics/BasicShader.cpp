@@ -12,6 +12,12 @@ BasicShader::BasicShader()
 {
 }
 
+BasicShader &BasicShader::get_instance()
+{
+	static BasicShader instance;
+	return instance;
+}
+
 void BasicShader::load_shader(const std::string &vertex_path,
 			      const std::string &fragment_path)
 {

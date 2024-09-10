@@ -5,12 +5,20 @@
 
 #include <core/Input.h>
 
+#include <string>
+
 class Window {
+    public:
+	Window(const Window &) = delete;
+	Window &operator=(const Window &) = delete;
+
+	static Window &get_instance();
+
     private:
 	GLFWwindow *window;
+	Window();
 
     public:
-	Window();
 	~Window();
 	bool set_window_context();
 	bool gl_create_window();

@@ -6,8 +6,14 @@
 #include <math/Matrix4f.h>
 
 class BasicShader : public Shader {
-    public:
 	BasicShader();
+
+    public:
+	BasicShader(const BasicShader &) = delete;
+	BasicShader &operator=(const BasicShader &) = delete;
+
+	static BasicShader &get_instance();
+
 	void load_shader(const std::string &vertex_path,
 			 const std::string &fragment_path);
 

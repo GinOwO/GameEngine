@@ -15,11 +15,12 @@
 #include <iostream>
 #include <algorithm>
 #include <exception>
+#include <string>
 
 // #define _DEBUG_INPUT_ON
 #define _DEBUG_FPS_ON
 
-Input input_handler = Input();
+Input &input_handler = Input::get_instance();
 bool paused = false;
 bool Engine::created = false;
 
@@ -53,6 +54,7 @@ void mouse_scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 }
 
 Engine::Engine()
+	: window(Window::get_instance())
 {
 	if (!glfwInit()) {
 		std::cerr << "Error: Failed to initialize GLFW\n";
@@ -62,10 +64,9 @@ Engine::Engine()
 		std::cerr << "Error: Engine Already Created\n";
 		throw std::runtime_error("Error: Engine Already Created\n");
 	}
-	running = false;
-	Engine::created = true;
-	this->window = Window();
 	paused = false;
+	this->running = false;
+	Engine::created = true;
 }
 
 Engine::~Engine()
@@ -75,9 +76,8 @@ Engine::~Engine()
 
 void Engine::run()
 {
-	Timer timer = Timer();
-	Camera camera = Camera();
-	Game game = Game(input_handler, window, timer, camera);
+	Timer &timer = Timer::get_instance();
+	Game game;
 
 	int frames = 0;
 	double frame_counter = 0;
@@ -121,6 +121,7 @@ void Engine::run()
 
 		if (render_frame) {
 			game.render();
+			window.swap_buffers();
 			frames++;
 		}
 	}
@@ -163,7 +164,7 @@ void Engine::cleanup()
 	glfwTerminate();
 }
 
-Window Engine::get_window() const noexcept
+Window &Engine::get_window() const noexcept
 {
 	return window;
 }
