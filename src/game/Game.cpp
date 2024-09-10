@@ -25,8 +25,6 @@
 
 // #define _DEBUG_CAMERA_ON
 
-Material material;
-
 Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 	: input_handler(input_handler)
 	, window(window)
@@ -54,16 +52,14 @@ Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 
 	std::vector<int> indices{ 0, 1, 2, 2, 1, 3 };
 
-	material = Material(
-		Texture::load_texture("./assets/objects/test_texture.png"),
-		{ 1, 1, 1 }, { 1, 8 });
-
 	phong_shader.load_shaders("./shaders/phongVertShader.vert",
 				  "./shaders/phongFragShader.frag");
 
 	mesh.add_vertices(vertices, indices, true);
 
-	mesh.set_material(material);
+	mesh.set_material(Material(
+		Texture::load_texture("./assets/objects/test_texture.png"),
+		{ 1, 1, 1 }, { 1, 8 }));
 
 	meshes.push_back(mesh);
 	render_order = { 0 };
