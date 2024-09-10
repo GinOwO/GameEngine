@@ -12,10 +12,10 @@ BasicShader::BasicShader()
 {
 }
 
-BasicShader::BasicShader(const std::string &vertexPath,
-			 const std::string &fragmentPath)
-	: Shader(vertexPath, fragmentPath)
+void BasicShader::load_shader(const std::string &vertex_path,
+			      const std::string &fragment_path)
 {
+	this->load(vertex_path, fragment_path);
 	this->add_uniform("transform");
 	this->add_uniform("color");
 }

@@ -4,6 +4,7 @@
 #include <graphics/Material.h>
 #include <graphics/BaseLight.h>
 #include <graphics/DirectionalLight.h>
+#include <graphics/PointLight.h>
 
 #include <math/Matrix4f.h>
 #include <math/Vector3f.h>
@@ -11,16 +12,23 @@
 #include <core/RenderUtil.h>
 
 #include <iostream>
+#include <vector>
 
 PhongShader::PhongShader()
 	: Shader()
 {
 }
 
-PhongShader::PhongShader(const std::string &vertexPath,
-			 const std::string &fragmentPath)
-	: Shader(vertexPath, fragmentPath)
+PhongShader &PhongShader::get_instance()
 {
+	static PhongShader instance;
+	return instance;
+}
+
+void PhongShader::load_shaders(const std::string &vertex_path,
+			       const std::string &fragment_path)
+{
+	this->load(vertex_path, fragment_path);
 	this->add_uniform("transform");
 	this->add_uniform("transform_projected");
 	this->add_uniform("base_color");
@@ -33,6 +41,17 @@ PhongShader::PhongShader(const std::string &vertexPath,
 	this->add_uniform("specular.intensity");
 	this->add_uniform("specular.exponent");
 	this->add_uniform("eyePos");
+
+	for (int i = 0; i < MAX_POINT_LIGHTS; i++) {
+		const std::string prefix = "point_lights[" + std::to_string(i);
+		add_uniform(prefix + "].base_light.color");
+		add_uniform(prefix + "].base_light.intensity");
+		add_uniform(prefix + "].attenuation.constant");
+		add_uniform(prefix + "].attenuation.linear");
+		add_uniform(prefix + "].attenuation.exponent");
+		add_uniform(prefix + "].position");
+		add_uniform(prefix + "].range");
+	}
 }
 
 void PhongShader::update_uniforms(const Matrix4f &world_matrix,
@@ -51,6 +70,7 @@ void PhongShader::update_uniforms(const Matrix4f &world_matrix,
 
 	this->set_uniform("ambient_light", ambient_light);
 	this->set_uniform("directional_light", directional_light);
+	this->set_uniform("point_lights", point_lights);
 
 	this->set_uniform("base_color", material.get_color());
 	this->set_uniform("specular", material.get_specular());
@@ -80,6 +100,18 @@ void PhongShader::set_directional_light(
 		directional_light.direction.normalize();
 }
 
+void PhongShader::set_point_lights(const std::vector<PointLight> &point_lights)
+{
+	if (point_lights.size() > MAX_POINT_LIGHTS) {
+		std::cerr << "Error: Too Many Point Lights:\tCurrent: "
+			  << point_lights.size()
+			  << "\tMax: " << MAX_POINT_LIGHTS << '\n';
+		exit(EXIT_FAILURE);
+	}
+
+	PhongShader::point_lights = point_lights;
+}
+
 void PhongShader::set_uniform(const std::string &uniform,
 			      const BaseLight &base_light) noexcept
 {
@@ -99,4 +131,23 @@ void PhongShader::set_uniform(const std::string &uniform,
 {
 	set_uniform(uniform + ".intensity", specular.intensity);
 	set_uniform(uniform + ".exponent", specular.exponent);
+}
+
+void PhongShader::set_uniform(
+	const std::string &uniform,
+	const std::vector<PointLight> &point_lights) noexcept
+{
+	for (int i = 0; i < point_lights.size(); i++) {
+		const std::string prefix = "point_lights[" + std::to_string(i);
+		set_uniform(prefix + "].base_light",
+			    point_lights[i].base_light);
+		set_uniform(prefix + "].attenuation.constant",
+			    point_lights[i].attenuation.constant);
+		set_uniform(prefix + "].attenuation.linear",
+			    point_lights[i].attenuation.linear);
+		set_uniform(prefix + "].attenuation.exponent",
+			    point_lights[i].attenuation.exponent);
+		set_uniform(prefix + "].position", point_lights[i].position);
+		set_uniform(prefix + "].range", point_lights[i].range);
+	}
 }

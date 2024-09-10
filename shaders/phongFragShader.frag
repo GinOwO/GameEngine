@@ -1,5 +1,7 @@
 #version 460 core
 
+const int MAX_POINT_LIGHTS = 4;
+
 in vec2 texCoord0;
 in vec3 normal0;
 in vec3 worldPos0;
@@ -21,6 +23,19 @@ struct Specular {
 	float exponent;
 };
 
+struct Attenuation { // Quadratic formula
+	float linear;
+	float exponent;
+	float constant;
+};
+
+struct PointLight {
+	BaseLight base_light;
+	Attenuation attenuation;
+	vec3 position;
+	float range;
+};
+
 uniform vec3 base_color;
 uniform vec3 ambient_light;
 uniform sampler2D sampler;
@@ -29,6 +44,7 @@ uniform vec3 eyePos;
 
 uniform DirectionalLight directional_light;
 uniform Specular specular;
+uniform PointLight point_lights[MAX_POINT_LIGHTS];
 
 vec4 calc_light(BaseLight base_color, vec3 direction, vec3 normal)
 {
@@ -62,6 +78,28 @@ vec4 calc_directional_light(DirectionalLight directional_light, vec3 normal)
 			  -directional_light.direction, normal);
 }
 
+vec4 calc_point_light(PointLight point_light, vec3 normal)
+{
+	vec3 light_direction = worldPos0 - point_light.position;
+	float distance_to_point = length(light_direction);
+
+	if (distance_to_point > point_light.range)
+		return vec4(0);
+
+	light_direction = normalize(light_direction);
+
+	vec4 color =
+		calc_light(point_light.base_light, light_direction, normal);
+
+	float attenuation =
+		0.0000001 + point_light.attenuation.constant +
+		(point_light.attenuation.linear * distance_to_point) +
+		(point_light.attenuation.exponent * distance_to_point *
+		 distance_to_point);
+
+	return color / attenuation;
+}
+
 void main()
 {
 	vec4 total_light = vec4(ambient_light, 1.0);
@@ -75,6 +113,13 @@ void main()
 	vec3 normal = normalize(normal0);
 
 	total_light += calc_directional_light(directional_light, normal);
+
+	for (int i = 0; i < MAX_POINT_LIGHTS; i++) {
+		if (point_lights[i].base_light.intensity > 0) {
+			total_light +=
+				calc_point_light(point_lights[i], normal);
+		}
+	}
 
 	finalColor = color * total_light;
 }

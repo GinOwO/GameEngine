@@ -13,6 +13,7 @@
 #include <game/Game.h>
 
 #include <iostream>
+#include <algorithm>
 
 // #define _DEBUG_INPUT_ON
 #define _DEBUG_FPS_ON
@@ -105,17 +106,16 @@ void Engine::run()
 					std::cout << char(i) << '\n';
 			}
 #endif
-		}
+			frame_counter += timer.get_delta_time();
 
-		frame_counter += timer.get_delta_time();
-
-		if (frame_counter >= 1) {
+			if (frame_counter >= 1) {
 #ifdef _DEBUG_FPS_ON
-			std::cout << "FPS: " << frames << ' ' << frame_counter
-				  << '\n';
+				std::cout << "FPS: " << frames << ' '
+					  << frame_counter << '\n';
 #endif
-			frames = 0;
-			frame_counter = 0;
+				frames = 0;
+				frame_counter = 0;
+			}
 		}
 
 		if (render_frame) {
