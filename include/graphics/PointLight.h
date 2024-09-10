@@ -8,16 +8,18 @@ struct PointLight {
 	BaseLight base_light;
 	Attenuation attenuation;
 	Vector3f position;
+	float range;
 
 	PointLight()
 	{
 	}
 
 	PointLight(const BaseLight &base_light, const Attenuation &attenuation,
-		   const Vector3f &position)
+		   const Vector3f &position, float range)
 		: base_light(base_light)
 		, attenuation(attenuation)
 		, position(position)
+		, range(range)
 	{
 	}
 };

@@ -50,6 +50,7 @@ void PhongShader::load_shaders(const std::string &vertex_path,
 		add_uniform(prefix + "].attenuation.linear");
 		add_uniform(prefix + "].attenuation.exponent");
 		add_uniform(prefix + "].position");
+		add_uniform(prefix + "].range");
 	}
 }
 
@@ -147,5 +148,6 @@ void PhongShader::set_uniform(
 		set_uniform(prefix + "].attenuation.exponent",
 			    point_lights[i].attenuation.exponent);
 		set_uniform(prefix + "].position", point_lights[i].position);
+		set_uniform(prefix + "].range", point_lights[i].range);
 	}
 }

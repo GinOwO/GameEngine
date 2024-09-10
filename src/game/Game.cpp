@@ -71,12 +71,12 @@ Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 	phong_shader.set_ambient_light({ .1 });
 	// phong_shader.set_directional_light({ { 1.0f, 0.8f }, 1 });
 
-	PointLight point_light1{ { { 1, 0.5f, 0 }, 1.0f },
-				 { 0, 0, 1 },
-				 { -2, 0, 1 } };
-	PointLight point_light2{ { { 0, 0.5f, 1 }, 1.0f },
-				 { 0, 0, 1 },
-				 { 2, 0, 1 } };
+	PointLight point_light1{
+		{ { 1, 0.5f, 0 }, 1.0f }, { 0, 0, 1 }, { -2, 0, 1 }, 10
+	};
+	PointLight point_light2{
+		{ { 0, 0.5f, 1 }, 1.0f }, { 0, 0, 1 }, { 2, 0, 1 }, 10
+	};
 	phong_shader.set_point_lights({ point_light1, point_light2 });
 }
 
