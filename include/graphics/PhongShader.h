@@ -4,29 +4,33 @@
 #include <graphics/Material.h>
 #include <graphics/BaseLight.h>
 #include <graphics/DirectionalLight.h>
+#include <graphics/PointLight.h>
 
 #include <math/Matrix4f.h>
 #include <math/Vector3f.h>
+
+#include <vector>
+#include <iostream>
 
 class PhongShader : public Shader {
     public:
 	PhongShader(const PhongShader &) = delete;
 	PhongShader &operator=(const PhongShader &) = delete;
 
-	static PhongShader &get_instance()
-	{
-		static PhongShader instance;
-		return instance;
-	}
+	static PhongShader &get_instance();
 
     private:
 	Vector3f ambient_light{ 0.8, 0.8, 0.8 };
 	DirectionalLight directional_light{ BaseLight{ { 1, 1, 1 }, 0 },
 					    { 0, 0, 0 } };
 
+	const int MAX_POINT_LIGHTS = 4;
+
 	PhongShader();
 
     public:
+	std::vector<PointLight> point_lights;
+
 	void load_shaders(const std::string &vertexPath,
 			  const std::string &fragmentPath);
 
@@ -42,6 +46,8 @@ class PhongShader : public Shader {
 	void set_directional_light(
 		const DirectionalLight &directional_light) noexcept;
 
+	void set_point_lights(const std::vector<PointLight> &point_lights);
+
 	using Shader::set_uniform;
 	void set_uniform(const std::string &uniform,
 			 const BaseLight &base_light) noexcept;
@@ -49,4 +55,6 @@ class PhongShader : public Shader {
 			 const DirectionalLight &directional_light) noexcept;
 	void set_uniform(const std::string &uniform,
 			 const Specular &specular) noexcept;
+	void set_uniform(const std::string &uniform,
+			 const std::vector<PointLight> &point_lights) noexcept;
 };

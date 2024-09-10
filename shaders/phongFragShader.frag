@@ -1,6 +1,6 @@
 #version 460 core
 
-const int MAX_POINT_LIGHT = 4;
+const int MAX_POINT_LIGHTS = 4;
 
 in vec2 texCoord0;
 in vec3 normal0;
@@ -43,7 +43,7 @@ uniform vec3 eyePos;
 
 uniform DirectionalLight directional_light;
 uniform Specular specular;
-uniform PointLight point_lights[MAX_POINT_LIGHT];
+uniform PointLight point_lights[MAX_POINT_LIGHTS];
 
 vec4 calc_light(BaseLight base_color, vec3 direction, vec3 normal)
 {
@@ -109,7 +109,7 @@ void main()
 
 	total_light += calc_directional_light(directional_light, normal);
 
-	for (int i = 0; i < MAX_POINT_LIGHT; i++) {
+	for (int i = 0; i < MAX_POINT_LIGHTS; i++) {
 		total_light += calc_point_light(point_lights[i], normal);
 	}
 

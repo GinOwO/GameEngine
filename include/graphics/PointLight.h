@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Vector3f.h>
-#include <BaseLight.h>
-#include <Attenuation.h>
+#include <math/Vector3f.h>
+#include <graphics/BaseLight.h>
+#include <graphics/Attenuation.h>
 
 struct PointLight {
 	BaseLight base_light;
