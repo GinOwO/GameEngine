@@ -55,8 +55,8 @@ GLuint Shader::create_shader_module(const std::string &shader_source,
 	return shader_module;
 }
 
-Shader::Shader(const std::string &vertex_filepath,
-	       const std::string &fragment_filepath)
+void Shader::load(const std::string &vertex_filepath,
+		  const std::string &fragment_filepath)
 {
 	std::array<GLuint, 2> modules;
 	modules[0] = create_shader_module(read_shader(vertex_filepath),

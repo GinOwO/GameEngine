@@ -17,10 +17,10 @@ PhongShader::PhongShader()
 {
 }
 
-PhongShader::PhongShader(const std::string &vertexPath,
-			 const std::string &fragmentPath)
-	: Shader(vertexPath, fragmentPath)
+void PhongShader::load_shaders(const std::string &vertex_path,
+			       const std::string &fragment_path)
 {
+	this->load(vertex_path, fragment_path);
 	this->add_uniform("transform");
 	this->add_uniform("transform_projected");
 	this->add_uniform("base_color");

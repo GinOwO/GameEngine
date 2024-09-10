@@ -20,10 +20,12 @@ class Shader {
 	GLuint create_shader_module(const std::string &shader_source,
 				    GLuint module_type) const;
 
+    protected:
+	void load(const std::string &vertex_filepath,
+		  const std::string &fragment_filepath);
+
     public:
 	Shader();
-	Shader(const std::string &vertex_filepath,
-	       const std::string &fragment_filepath);
 
 	void delete_program() noexcept;
 	GLuint get_program() const noexcept;

@@ -8,8 +8,8 @@
 class BasicShader : public Shader {
     public:
 	BasicShader();
-	BasicShader(const std::string &vertexPath,
-		    const std::string &fragmentPath);
+	void load_shader(const std::string &vertex_path,
+			 const std::string &fragment_path);
 
 	void update_uniforms(const Matrix4f &world_matrix,
 			     const Matrix4f &projected_matrix,

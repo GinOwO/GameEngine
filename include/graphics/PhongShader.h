@@ -9,14 +9,26 @@
 #include <math/Vector3f.h>
 
 class PhongShader : public Shader {
+    public:
+	PhongShader(const PhongShader &) = delete;
+	PhongShader &operator=(const PhongShader &) = delete;
+
+	static PhongShader &get_instance()
+	{
+		static PhongShader instance;
+		return instance;
+	}
+
+    private:
 	Vector3f ambient_light{ 0.8, 0.8, 0.8 };
 	DirectionalLight directional_light{ BaseLight{ { 1, 1, 1 }, 0 },
 					    { 0, 0, 0 } };
 
-    public:
 	PhongShader();
-	PhongShader(const std::string &vertexPath,
-		    const std::string &fragmentPath);
+
+    public:
+	void load_shaders(const std::string &vertexPath,
+			  const std::string &fragmentPath);
 
 	void update_uniforms(const Matrix4f &world_matrix,
 			     const Matrix4f &projected_matrix,

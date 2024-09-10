@@ -24,7 +24,6 @@
 // #define _DEBUG_CAMERA_ON
 
 Material material;
-PhongShader sh;
 
 Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 	: input_handler(input_handler)
@@ -47,8 +46,8 @@ Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 		Texture::load_texture("./assets/objects/test_texture.png"),
 		{ 1, 1, 1 });
 
-	sh = PhongShader("./shaders/phongVertShader.vert",
-			 "./shaders/phongFragShader.frag");
+	phong_shader.load_shaders("./shaders/phongVertShader.vert",
+				  "./shaders/phongFragShader.frag");
 
 	mesh.add_vertices(vertices, indices, true);
 
@@ -59,8 +58,8 @@ Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 
 	camera.set_position({ 0, 0, -15 });
 
-	sh.set_ambient_light({ .1 });
-	sh.set_directional_light({ { 1.0f, 0.8f }, 1.0f });
+	phong_shader.set_ambient_light({ .1 });
+	phong_shader.set_directional_light({ { 1.0f, 0.8f }, 1.0f });
 }
 
 void Game::input()
@@ -80,6 +79,12 @@ void Game::input()
 	}
 	if (input_handler.is_key_pressed(GLFW_KEY_D)) {
 		camera.move_camera(camera.get_right(), move_multiplier);
+	}
+	if (input_handler.is_key_pressed(GLFW_KEY_Q)) {
+		camera.move_camera(camera.get_up(), move_multiplier);
+	}
+	if (input_handler.is_key_pressed(GLFW_KEY_E)) {
+		camera.move_camera(camera.get_up(), -move_multiplier);
 	}
 
 	if (input_handler.is_mouse_down(GLFW_MOUSE_BUTTON_2)) {
@@ -126,15 +131,16 @@ void Game::update()
 	}
 	std::cout << "-----------------------------------\n";
 #endif
-	sh.update_uniforms(transformation_matrix, projection_matrix,
-			   meshes[0].get_material(), camera.get_position());
+	phong_shader.update_uniforms(transformation_matrix, projection_matrix,
+				     meshes[0].get_material(),
+				     camera.get_position());
 }
 
 void Game::render()
 {
 	RenderUtil::clear_screen();
 	for (int i = meshes.size() - 1; i >= 0; i--) {
-		sh.use_program();
+		phong_shader.use_program();
 		meshes[render_order[i]].draw();
 	}
 	window.swap_buffers();
