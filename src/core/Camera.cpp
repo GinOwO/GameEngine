@@ -111,10 +111,10 @@ void Camera::input()
 		this->move_camera(this->get_right(), move_multiplier);
 	}
 	if (input_handler.is_key_pressed(GLFW_KEY_Q)) {
-		this->move_camera(this->get_up(), move_multiplier);
+		this->move_camera(this->get_up(), -move_multiplier);
 	}
 	if (input_handler.is_key_pressed(GLFW_KEY_E)) {
-		this->move_camera(this->get_up(), -move_multiplier);
+		this->move_camera(this->get_up(), move_multiplier);
 	}
 
 	if (input_handler.is_mouse_down(GLFW_MOUSE_BUTTON_2)) {

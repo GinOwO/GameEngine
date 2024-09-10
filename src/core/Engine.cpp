@@ -120,6 +120,7 @@ void Engine::run()
 		}
 
 		if (render_frame) {
+			RenderUtil::clear_screen();
 			game.render();
 			window.swap_buffers();
 			frames++;

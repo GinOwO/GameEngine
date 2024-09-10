@@ -33,10 +33,11 @@ Game::Game()
 
 	root->add_component(new MeshRenderer(mesh, material));
 
-	// camera.set_position({ 0, 0, -10 });
+	camera.set_position({ 0, 0, -10 });
 
 	shader.load_shader("shaders/vertShader.vert",
 			   "shaders/fragShader.frag");
+	transform.set_translation(0, -1, 5);
 }
 
 void Game::input()
@@ -49,18 +50,7 @@ void Game::update()
 {
 	transform.set_projection(70.0f, window.get_window_width(),
 				 window.get_window_height(), .1f, 1000.0f);
-	transform.set_translation(0, -1, 5);
 	root->update();
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			std::cout
-				<< transform.get_projected_camera(camera).get(i,
-									      j)
-				<< ' ';
-		}
-		std::cout << '\n';
-	}
-	std::cout << "-----------------------------------\n";
 }
 
 void Game::render()
