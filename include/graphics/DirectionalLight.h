@@ -13,7 +13,13 @@ struct DirectionalLight {
 		, direction(d.normalize())
 	{
 	}
+
 	DirectionalLight()
 	{
+	}
+
+	void set_direction(const Vector3f &direction)
+	{
+		this->direction = direction.normalize();
 	}
 };

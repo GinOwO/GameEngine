@@ -11,6 +11,8 @@
 #include <graphics/BasicShader.h>
 #include <graphics/PhongShader.h>
 #include <graphics/DirectionalLight.h>
+#include <graphics/PointLight.h>
+#include <graphics/SpotLight.h>
 
 #include <core/Input.h>
 #include <core/Window.h>
@@ -22,8 +24,6 @@
 #include <cmath>
 
 // #define _DEBUG_CAMERA_ON
-
-Material material;
 
 Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 	: input_handler(input_handler)
@@ -52,32 +52,35 @@ Game::Game(Input &input_handler, Window &window, Timer &timer, Camera &camera)
 
 	std::vector<int> indices{ 0, 1, 2, 2, 1, 3 };
 
-	material = Material(
-		Texture::load_texture("./assets/objects/test_texture.png"),
-		{ 1, 1, 1 }, { 1, 8 });
-
 	phong_shader.load_shaders("./shaders/phongVertShader.vert",
 				  "./shaders/phongFragShader.frag");
 
 	mesh.add_vertices(vertices, indices, true);
 
-	mesh.set_material(material);
+	mesh.set_material(Material(
+		Texture::load_texture("./assets/objects/test_texture.png"),
+		{ 1, 1, 1 }, { 1, 8 }));
 
 	meshes.push_back(mesh);
 	render_order = { 0 };
 
 	camera.set_position({ 0, 0, -10 });
 
-	phong_shader.set_ambient_light({ .1 });
+	phong_shader.set_ambient_light({ 0.1 });
 	// phong_shader.set_directional_light({ { 1.0f, 0.8f }, 1 });
 
 	PointLight point_light1{
-		{ { 1, 0.5f, 0 }, 1.0f }, { 0, 0, 1 }, { -2, 0, 1 }, 10
+		{ "#EEDD82", 0.7f }, { 0, 0, 0.05 }, { -2, 0, 1 }, 40
 	};
+
 	PointLight point_light2{
-		{ { 0, 0.5f, 1 }, 1.0f }, { 0, 0, 1 }, { 2, 0, 1 }, 10
+		{ "#0088FF", 1.0f }, { 0, 0, 1 }, { 2, 0, 1 }, 10
 	};
-	phong_shader.set_point_lights({ point_light1, point_light2 });
+
+	SpotLight spot_light1{ point_light1, { 1, 1, 1 }, 0.7f };
+
+	// phong_shader.set_point_lights({ point_light1, point_light2 });
+	phong_shader.set_spot_lights({ spot_light1 });
 }
 
 void Game::input()
@@ -136,10 +139,16 @@ void Game::update()
 	// transform.set_rotation({ 0, sint * 180, 0 });
 	// transform.set_scale({ .5, .5, .5 });
 
-	phong_shader.point_lights[0].position =
-		Vector3f{ 15.0f - sint, 0, cost };
-	phong_shader.point_lights[1].position =
-		Vector3f{ 15.0f - cost, 0, sint };
+	// phong_shader.point_lights[0].position =
+	// 	Vector3f{ 15.0f - sint, 0, cost };
+	// phong_shader.point_lights[1].position =
+	// 	Vector3f{ 15.0f - cost, 0, sint };
+
+	Vector3f camera_pos = camera.get_position();
+	phong_shader.spot_lights[0].set_direction(camera.get_forward());
+	phong_shader.spot_lights[0].point_light.position = {
+		camera_pos.getX(), camera_pos.getY(), camera_pos.getZ() + 0.5f
+	};
 
 	Matrix4f projection_matrix =
 		Matrix4f::flip_matrix(transform.get_projected_camera(camera));
