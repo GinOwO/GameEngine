@@ -4,13 +4,13 @@
 #include <GLFW/glfw3.h>
 
 #include <graphics/Shader.h>
+#include <graphics/RenderingEngine.h>
 
 #include <core/Timer.h>
 #include <core/Input.h>
 #include <core/Camera.h>
-#include <core/RenderUtil.h>
 
-#include <game/Game.h>
+#include <game/TestGame.h>
 
 #include <iostream>
 #include <algorithm>
@@ -77,7 +77,9 @@ Engine::~Engine()
 void Engine::run()
 {
 	Timer &timer = Timer::get_instance();
-	Game game;
+	RenderingEngine &rendering_engine = RenderingEngine::get_instance();
+	TestGame game;
+	game.init();
 
 	int frames = 0;
 	double frame_counter = 0;
@@ -120,8 +122,7 @@ void Engine::run()
 		}
 
 		if (render_frame) {
-			RenderUtil::clear_screen();
-			game.render();
+			rendering_engine.render(game.get_root_object());
 			window.swap_buffers();
 			frames++;
 		}
@@ -144,7 +145,6 @@ void Engine::start()
 		std::cerr << "Error: Engine Already Running\n";
 		throw std::runtime_error("Engine Already Running\n");
 	}
-	RenderUtil::init_graphics();
 
 	window.set_key_callback(key_callback);
 	window.set_mouse_callback(mouse_motion_callback, mouse_button_callback,

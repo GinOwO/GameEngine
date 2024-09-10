@@ -5,7 +5,6 @@
 #include <game/GameComponent.h>
 
 #include <graphics/Shader.h>
-#include <graphics/BasicShader.h>
 #include <graphics/Mesh.h>
 #include <graphics/Material.h>
 
@@ -25,10 +24,8 @@ void MeshRenderer::update(const Transform &transform)
 {
 }
 
-void MeshRenderer::render(const Transform &transform)
+void MeshRenderer::render(const Transform &transform, Shader &shader)
 {
-	BasicShader &shader = BasicShader::get_instance();
-
 	shader.use_program();
 	Matrix4f projection_matrix = Matrix4f::flip_matrix(
 		transform.get_projected_camera(Camera::get_instance()));

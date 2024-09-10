@@ -39,8 +39,7 @@ class PhongShader : public Shader {
 
 	void update_uniforms(const Matrix4f &world_matrix,
 			     const Matrix4f &projected_matrix,
-			     const Material &material,
-			     const Vector3f &camera_position);
+			     const Material &material);
 
 	Vector3f &get_ambient_light() noexcept;
 	void set_ambient_light(const Vector3f &ambient_light) noexcept;

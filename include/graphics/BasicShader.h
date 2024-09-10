@@ -19,5 +19,5 @@ class BasicShader : public Shader {
 
 	void update_uniforms(const Matrix4f &world_matrix,
 			     const Matrix4f &projected_matrix,
-			     const Material &material);
+			     const Material &material) override;
 };

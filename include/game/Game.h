@@ -7,6 +7,7 @@
 
 #include <graphics/Mesh.h>
 #include <graphics/Vertex.h>
+#include <graphics/Shader.h>
 #include <graphics/BasicShader.h>
 #include <graphics/PhongShader.h>
 
@@ -18,21 +19,29 @@
 
 class Game {
     private:
-	Input &input_handler = Input::get_instance();
-	Window &window = Window::get_instance();
-	Timer &timer = Timer::get_instance();
-	Camera &camera = Camera::get_instance();
-	BasicShader &shader = BasicShader::get_instance();
-	PhongShader &phong_shader = PhongShader::get_instance();
-
-	GameObject *root;
-
-	Transform transform;
+	GameObject *root = nullptr;
 
     public:
-	Game();
+	virtual void init() = 0;
 
-	void input();
-	void update();
-	void render();
+	void input()
+	{
+		get_root_object()->input();
+	};
+	void update()
+	{
+		get_root_object()->update();
+	};
+	void render(Shader &shader)
+	{
+		get_root_object()->render(shader);
+	};
+
+	GameObject *get_root_object() noexcept
+	{
+		if (root == nullptr) {
+			root = new GameObject();
+		}
+		return root;
+	}
 };

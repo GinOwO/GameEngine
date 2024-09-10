@@ -44,7 +44,6 @@ set(CORE_SOURCES
 	${PROJECT_SOURCE_DIR}/src/core/Timer.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Input.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Camera.cpp
-	${PROJECT_SOURCE_DIR}/src/core/RenderUtil.cpp
 )
 
 set(GRAPHICS_SOURCES
@@ -55,10 +54,11 @@ set(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/Material.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/BasicShader.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/PhongShader.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/RenderingEngine.cpp
 )
 
 set(GAME_SOURCES
-	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
+	${PROJECT_SOURCE_DIR}/src/game/TestGame.cpp
 	${PROJECT_SOURCE_DIR}/src/game/GameObject.cpp
 	${PROJECT_SOURCE_DIR}/src/game/MeshRenderer.cpp
 )

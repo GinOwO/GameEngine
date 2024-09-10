@@ -1,7 +1,10 @@
 #pragma once
 
+#include <graphics/RenderingEngine.h>
+
 #include <core/Window.h>
 #include <core/Input.h>
+
 #include <game/Game.h>
 
 #include <string>

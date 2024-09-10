@@ -9,7 +9,7 @@
 #include <math/Matrix4f.h>
 #include <math/Vector3f.h>
 
-#include <core/RenderUtil.h>
+#include <core/Camera.h>
 
 #include <iostream>
 #include <vector>
@@ -70,14 +70,11 @@ void PhongShader::load_shaders(const std::string &vertex_path,
 
 void PhongShader::update_uniforms(const Matrix4f &world_matrix,
 				  const Matrix4f &projected_matrix,
-				  const Material &material,
-				  const Vector3f &camera_position)
+				  const Material &material)
 {
-	if (material.get_texture().get_id() > 0) {
-		material.get_texture().bind();
-	} else {
-		RenderUtil::unbind_textures();
-	}
+	Vector3f camera_position = Camera::get_instance().get_position();
+
+	material.get_texture().bind();
 
 	this->set_uniform("transform_projected", projected_matrix);
 	this->set_uniform("transform", world_matrix);

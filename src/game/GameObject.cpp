@@ -1,9 +1,17 @@
 #include <game/GameObject.h>
 
-GameObject::GameObject(Transform &transform)
+#include <math/Transform.h>
+
+#include <graphics/Shader.h>
+
+#include <game/GameComponent.h>
+
+#include <vector>
+
+GameObject::GameObject()
 	: children()
 	, components()
-	, transform(transform)
+	, transform()
 {
 }
 
@@ -29,14 +37,14 @@ void GameObject::update()
 	}
 }
 
-void GameObject::render()
+void GameObject::render(Shader &shader)
 {
 	for (GameComponent *component : components) {
-		component->render(transform);
+		component->render(transform, shader);
 	}
 
 	for (GameObject *child : children) {
-		child->render();
+		child->render(shader);
 	}
 }
 
