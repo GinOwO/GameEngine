@@ -1,12 +1,5 @@
 #include <graphics/Shader.h>
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <array>
-#include <cstddef>
-#include <exception>
-
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -18,8 +11,24 @@
 
 #include <graphics/Material.h>
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <array>
+#include <cstddef>
+#include <exception>
+
 // #define _DEBUG_DISPLAY_ALL_UNIFORMS_ON
 
+/***************************************************************************
+ * @brief Reads the shader source code from a file.
+ *
+ * Reads the contents of the specified shader file into a string.
+ *
+ * @param filepath The path to the shader file.
+ * @return The source code of the shader as a string.
+ * @throws std::runtime_error if the file does not exist.
+ ***************************************************************************/
 std::string Shader::read_shader(const std::string &filepath) const
 {
 	std::ifstream file;
@@ -43,6 +52,16 @@ std::string Shader::read_shader(const std::string &filepath) const
 	return source;
 }
 
+/***************************************************************************
+ * @brief Creates a shader module from source code.
+ *
+ * Compiles a shader from the provided source code and returns the shader module.
+ *
+ * @param shader_source The source code of the shader.
+ * @param module_type The type of shader (e.g., GL_VERTEX_SHADER, GL_FRAGMENT_SHADER).
+ * @return The compiled shader module.
+ * @throws std::runtime_error if shader compilation fails.
+ ***************************************************************************/
 GLuint Shader::create_shader_module(const std::string &shader_source,
 				    GLuint module_type) const
 {
@@ -64,6 +83,16 @@ GLuint Shader::create_shader_module(const std::string &shader_source,
 	return shader_module;
 }
 
+/***************************************************************************
+ * @brief Loads and compiles shaders, and links them into a program.
+ *
+ * Loads the vertex and fragment shaders from the specified file paths, compiles
+ * them, and links them into a shader program.
+ *
+ * @param vertex_filepath The path to the vertex shader file.
+ * @param fragment_filepath The path to the fragment shader file.
+ * @throws std::runtime_error if shader linking fails.
+ ***************************************************************************/
 void Shader::load(const std::string &vertex_filepath,
 		  const std::string &fragment_filepath)
 {
@@ -97,25 +126,53 @@ void Shader::load(const std::string &vertex_filepath,
 	shader_program = shader;
 }
 
+/***************************************************************************
+ * @brief Default constructor for Shader.
+ *
+ * Initializes the Shader object.
+ ***************************************************************************/
 Shader::Shader()
 {
 }
 
+/***************************************************************************
+ * @brief Gets the ID of the shader program.
+ *
+ * @return The ID of the shader program.
+ ***************************************************************************/
 GLuint Shader::get_program() const noexcept
 {
 	return shader_program;
 }
 
+/***************************************************************************
+ * @brief Deletes the shader program.
+ *
+ * Deletes the shader program associated with this Shader object.
+ ***************************************************************************/
 void Shader::delete_program() noexcept
 {
 	glDeleteProgram(shader_program);
 }
 
+/***************************************************************************
+ * @brief Activates the shader program.
+ *
+ * Makes this shader program the current one for rendering.
+ ***************************************************************************/
 void Shader::use_program() const noexcept
 {
 	glUseProgram(shader_program);
 }
 
+/***************************************************************************
+ * @brief Adds a uniform variable to the shader.
+ *
+ * Adds a uniform variable to the shader program, allowing it to be set later.
+ *
+ * @param uniform The name of the uniform variable.
+ * @throws std::runtime_error if the uniform could not be added.
+ ***************************************************************************/
 void Shader::add_uniform(const std::string &uniform)
 {
 	use_program();
@@ -148,6 +205,15 @@ void Shader::add_uniform(const std::string &uniform)
 	uniforms[uniform] = uniform_location;
 }
 
+/***************************************************************************
+ * @brief Gets the location of a uniform variable.
+ *
+ * Retrieves the location of the specified uniform variable in the shader program.
+ *
+ * @param uniform The name of the uniform variable.
+ * @return The location of the uniform variable.
+ * @throws std::runtime_error if the uniform does not exist.
+ ***************************************************************************/
 GLuint Shader::get_uniform(const std::string &uniform) const
 {
 	use_program();
@@ -159,6 +225,15 @@ GLuint Shader::get_uniform(const std::string &uniform) const
 	return uniforms.at(uniform);
 }
 
+/***************************************************************************
+ * @brief Sets an integer value for a uniform variable.
+ *
+ * Sets the value of an integer uniform variable in the shader program.
+ *
+ * @param uniform The name of the uniform variable.
+ * @param value The integer value to set.
+ * @throws std::runtime_error if the uniform does not exist.
+ ***************************************************************************/
 void Shader::set_uniform(const std::string &uniform, int value)
 {
 	use_program();
@@ -170,6 +245,15 @@ void Shader::set_uniform(const std::string &uniform, int value)
 	glUniform1i(uniforms[uniform], value);
 }
 
+/***************************************************************************
+ * @brief Sets a float value for a uniform variable.
+ *
+ * Sets the value of a float uniform variable in the shader program.
+ *
+ * @param uniform The name of the uniform variable.
+ * @param value The float value to set.
+ * @throws std::runtime_error if the uniform does not exist.
+ ***************************************************************************/
 void Shader::set_uniform(const std::string &uniform, float value)
 {
 	use_program();
@@ -181,6 +265,15 @@ void Shader::set_uniform(const std::string &uniform, float value)
 	glUniform1f(uniforms[uniform], value);
 }
 
+/***************************************************************************
+ * @brief Sets a Vector3f value for a uniform variable.
+ *
+ * Sets the value of a Vector3f uniform variable in the shader program.
+ *
+ * @param uniform The name of the uniform variable.
+ * @param vec The Vector3f value to set.
+ * @throws std::runtime_error if the uniform does not exist.
+ ***************************************************************************/
 void Shader::set_uniform(const std::string &uniform, Vector3f vec)
 {
 	use_program();
@@ -192,6 +285,15 @@ void Shader::set_uniform(const std::string &uniform, Vector3f vec)
 	glUniform3f(uniforms[uniform], vec.getX(), vec.getY(), vec.getZ());
 }
 
+/***************************************************************************
+ * @brief Sets a Matrix4f value for a uniform variable.
+ *
+ * Sets the value of a Matrix4f uniform variable in the shader program.
+ *
+ * @param uniform The name of the uniform variable.
+ * @param matrix The Matrix4f value to set.
+ * @throws std::runtime_error if the uniform does not exist.
+ ***************************************************************************/
 void Shader::set_uniform(const std::string &uniform, Matrix4f matrix)
 {
 	use_program();

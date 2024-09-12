@@ -1,26 +1,44 @@
 #include <graphics/Texture.h>
 
-#include <string>
-#include <iostream>
-#include <cstdlib>
-#include <exception>
-
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <misc/stb_image.h>
 
+#include <string>
+#include <iostream>
+#include <cstdlib>
+#include <exception>
+
+/***************************************************************************
+ * @brief Default constructor for Texture.
+ *
+ * Initializes the Texture object with an ID of 0.
+ ***************************************************************************/
 Texture::Texture()
 {
 	id = 0;
 }
 
+/***************************************************************************
+ * @brief Constructs a Texture with a specified ID.
+ *
+ * Initializes the Texture object with the given OpenGL texture ID.
+ *
+ * @param id The OpenGL texture ID.
+ ***************************************************************************/
 Texture::Texture(GLuint id)
 	: id(id)
 {
 }
 
+/***************************************************************************
+ * @brief Binds the texture for use in rendering.
+ *
+ * Binds the texture to the current OpenGL context. If the texture ID is -1,
+ * no texture is bound.
+ ***************************************************************************/
 void Texture::bind() const
 {
 	if (id == -1)
@@ -28,11 +46,28 @@ void Texture::bind() const
 	glBindTexture(GL_TEXTURE_2D, id);
 }
 
+/***************************************************************************
+ * @brief Gets the ID of the texture.
+ *
+ * Retrieves the OpenGL texture ID associated with this Texture object.
+ *
+ * @return The OpenGL texture ID.
+ ***************************************************************************/
 GLuint Texture::get_id() const noexcept
 {
 	return this->id;
 }
 
+/***************************************************************************
+ * @brief Loads a texture from a file.
+ *
+ * Loads a texture image from the specified file path and generates an OpenGL
+ * texture object.
+ *
+ * @param file_path The path to the texture image file.
+ * @return A Texture object representing the loaded texture.
+ * @throws std::runtime_error if the texture fails to load.
+ ***************************************************************************/
 Texture Texture::load_texture(const std::string &file_path)
 {
 	int width, height, channels;

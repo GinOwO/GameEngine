@@ -1,9 +1,5 @@
 #include <graphics/PhongShader.h>
 
-#include <vector>
-#include <iostream>
-#include <exception>
-
 #include <math/Matrix4f.h>
 #include <math/Vector3f.h>
 
@@ -15,17 +11,40 @@
 #include <graphics/PointLight.h>
 #include <graphics/DirectionalLight.h>
 
+#include <vector>
+#include <iostream>
+#include <exception>
+
+/***************************************************************************
+ * @brief Default constructor for PhongShader.
+ *
+ * Initializes a PhongShader object by calling the base class constructor.
+ ***************************************************************************/
 PhongShader::PhongShader()
 	: Shader()
 {
 }
 
+/***************************************************************************
+ * @brief Gets the singleton instance of PhongShader.
+ *
+ * @return A reference to the singleton PhongShader instance.
+ ***************************************************************************/
 PhongShader &PhongShader::get_instance()
 {
 	static PhongShader instance;
 	return instance;
 }
 
+/***************************************************************************
+ * @brief Loads vertex and fragment shaders.
+ *
+ * Loads the vertex and fragment shaders from the specified file paths and 
+ * adds the required uniform variables for Phong shading.
+ *
+ * @param vertex_path The path to the vertex shader file.
+ * @param fragment_path The path to the fragment shader file.
+ ***************************************************************************/
 void PhongShader::load_shaders(const std::string &vertex_path,
 			       const std::string &fragment_path)
 {
@@ -68,6 +87,15 @@ void PhongShader::load_shaders(const std::string &vertex_path,
 	}
 }
 
+/***************************************************************************
+ * @brief Updates the shader uniforms with transform and material data.
+ *
+ * Sets the uniform values for the shader based on the provided transform 
+ * and material data. Includes setting up lighting and camera information.
+ *
+ * @param transform The transform object containing transformation matrices.
+ * @param material The material object containing material properties.
+ ***************************************************************************/
 void PhongShader::update_uniforms(const Transform &transform,
 				  const Material &material)
 {
@@ -104,21 +132,45 @@ void PhongShader::update_uniforms(const Transform &transform,
 	this->set_uniform("eyePos", camera_position);
 }
 
+/***************************************************************************
+ * @brief Gets the ambient light for the shader.
+ *
+ * @return A reference to the ambient light vector.
+ ***************************************************************************/
 Vector3f &PhongShader::get_ambient_light() noexcept
 {
 	return ambient_light;
 }
 
+/***************************************************************************
+ * @brief Sets the ambient light for the shader.
+ *
+ * Updates the ambient light vector used in the shader.
+ *
+ * @param ambient_light The ambient light vector to set.
+ ***************************************************************************/
 void PhongShader::set_ambient_light(const Vector3f &ambient_light) noexcept
 {
 	this->ambient_light = Vector3f(ambient_light);
 }
 
+/***************************************************************************
+ * @brief Gets the directional light for the shader.
+ *
+ * @return A reference to the directional light.
+ ***************************************************************************/
 DirectionalLight &PhongShader::get_directional_light() noexcept
 {
 	return directional_light;
 }
 
+/***************************************************************************
+ * @brief Sets the directional light for the shader.
+ *
+ * Updates the directional light data used in the shader.
+ *
+ * @param directional_light The directional light to set.
+ ***************************************************************************/
 void PhongShader::set_directional_light(
 	const DirectionalLight &directional_light) noexcept
 {
@@ -127,6 +179,16 @@ void PhongShader::set_directional_light(
 		directional_light.direction.normalize();
 }
 
+/***************************************************************************
+ * @brief Sets the point lights for the shader.
+ *
+ * Updates the list of point lights used in the shader. Throws an exception
+ * if the number of point lights exceeds the maximum allowed.
+ *
+ * @param point_lights The vector of point lights to set.
+ * @throws std::invalid_argument If the number of point lights exceeds the 
+ *         maximum allowed.
+ ***************************************************************************/
 void PhongShader::set_point_lights(const std::vector<PointLight> &point_lights)
 {
 	if (point_lights.size() > MAX_POINT_LIGHTS) {
@@ -139,9 +201,19 @@ void PhongShader::set_point_lights(const std::vector<PointLight> &point_lights)
 	this->point_lights = point_lights;
 }
 
+/***************************************************************************
+ * @brief Sets the spot lights for the shader.
+ *
+ * Updates the list of spot lights used in the shader. Throws an exception
+ * if the number of spot lights exceeds the maximum allowed.
+ *
+ * @param spot_lights The vector of spot lights to set.
+ * @throws std::invalid_argument If the number of spot lights exceeds the 
+ *         maximum allowed.
+ ***************************************************************************/
 void PhongShader::set_spot_lights(const std::vector<SpotLight> &spot_lights)
 {
-	if (point_lights.size() > MAX_SPOT_LIGHTS) {
+	if (spot_lights.size() > MAX_SPOT_LIGHTS) {
 		std::cerr << "Error: Too Many Spot Lights:\tCurrent: "
 			  << spot_lights.size() << "\tMax: " << MAX_SPOT_LIGHTS
 			  << '\n';
@@ -151,6 +223,14 @@ void PhongShader::set_spot_lights(const std::vector<SpotLight> &spot_lights)
 	this->spot_lights = spot_lights;
 }
 
+/***************************************************************************
+ * @brief Sets uniform values for a base light.
+ *
+ * Updates the shader uniform for a base light, including color and intensity.
+ *
+ * @param uniform The base name of the uniform.
+ * @param base_light The base light data to set.
+ ***************************************************************************/
 void PhongShader::set_uniform(const std::string &uniform,
 			      const BaseLight &base_light) noexcept
 {
@@ -158,6 +238,15 @@ void PhongShader::set_uniform(const std::string &uniform,
 	this->set_uniform(uniform + ".intensity", base_light.intensity);
 }
 
+/***************************************************************************
+ * @brief Sets uniform values for a directional light.
+ *
+ * Updates the shader uniform for a directional light, including base light 
+ * data and direction.
+ *
+ * @param uniform The base name of the uniform.
+ * @param directional_light The directional light data to set.
+ ***************************************************************************/
 void PhongShader::set_uniform(const std::string &uniform,
 			      const DirectionalLight &directional_light) noexcept
 {
@@ -165,6 +254,15 @@ void PhongShader::set_uniform(const std::string &uniform,
 	set_uniform(uniform + ".direction", directional_light.direction);
 }
 
+/***************************************************************************
+ * @brief Sets uniform values for specular lighting.
+ *
+ * Updates the shader uniform for specular lighting, including intensity and 
+ * exponent.
+ *
+ * @param uniform The base name of the uniform.
+ * @param specular The specular lighting data to set.
+ ***************************************************************************/
 void PhongShader::set_uniform(const std::string &uniform,
 			      const Specular &specular) noexcept
 {
@@ -172,6 +270,15 @@ void PhongShader::set_uniform(const std::string &uniform,
 	set_uniform(uniform + ".exponent", specular.exponent);
 }
 
+/***************************************************************************
+ * @brief Sets uniform values for a point light.
+ *
+ * Updates the shader uniform for a point light, including base light data, 
+ * attenuation parameters, position, and range.
+ *
+ * @param uniform The base name of the uniform.
+ * @param point_light The point light data to set.
+ ***************************************************************************/
 void PhongShader::set_uniform(const std::string &uniform,
 			      const PointLight &point_light) noexcept
 {
@@ -186,6 +293,15 @@ void PhongShader::set_uniform(const std::string &uniform,
 	set_uniform(uniform + ".range", point_light.range);
 }
 
+/***************************************************************************
+ * @brief Sets uniform values for a spot light.
+ *
+ * Updates the shader uniform for a spot light, including point light data, 
+ * direction, and cutoff.
+ *
+ * @param uniform The base name of the uniform.
+ * @param spot_light The spot light data to set.
+ ***************************************************************************/
 void PhongShader::set_uniform(const std::string &uniform,
 			      const SpotLight &spot_light) noexcept
 {

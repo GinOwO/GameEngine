@@ -1,5 +1,12 @@
 #include <graphics/Mesh.h>
 
+#include <misc/glad.h>
+#include <GLFW/glfw3.h>
+
+#include <graphics/Vertex.h>
+#include <graphics/Material.h>
+#include <graphics/BasicShader.h>
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -8,19 +15,22 @@
 #include <regex>
 #include <exception>
 
-#include <misc/glad.h>
-#include <GLFW/glfw3.h>
-
-#include <graphics/Vertex.h>
-#include <graphics/Material.h>
-#include <graphics/BasicShader.h>
-
 // #define _DEBUG_LOADER_ON
 
 // clang-format off
 std::regex extension_regex(R"(.*\.obj$)");
 // clang-format on
 
+/***************************************************************************
+ * @brief Loads a mesh from a file.
+ *
+ * Reads a mesh from the specified file path. Supports only OBJ file format.
+ *
+ * @param file_path The path to the file from which to load the mesh.
+ * @return A Mesh object initialized with the loaded vertices and indices.
+ * @throws std::runtime_error If the file type is not supported or the file 
+ *                             does not exist.
+ ***************************************************************************/
 Mesh Mesh::load_mesh(const std::string &file_path)
 {
 	if (!std::regex_match(file_path, extension_regex)) {
@@ -75,7 +85,7 @@ Mesh Mesh::load_mesh(const std::string &file_path)
 	file.close();
 #ifdef _DEBUG_LOADER_ON
 	for (Vertex &v : vertices) {
-		Vector3f vv = v.getPos();
+		Vector3f vv = v.get_pos();
 		std::cout << vv.getX() << ' ' << vv.getY() << ' ' << vv.getZ()
 			  << '\n';
 	}
@@ -91,11 +101,26 @@ Mesh Mesh::load_mesh(const std::string &file_path)
 	return mesh;
 }
 
+/***************************************************************************
+ * @brief Default constructor for Mesh.
+ *
+ * Initializes a Mesh object with default values.
+ ***************************************************************************/
 Mesh::Mesh()
 {
 	vao = vbo = ebo = size = 0;
 }
 
+/***************************************************************************
+ * @brief Constructs a Mesh with specified vertices, indices, and optional normals.
+ *
+ * Initializes a Mesh object with the provided vertices and indices. If 
+ * `normals` is true, the mesh will also calculate normals.
+ *
+ * @param vertices The vertices to be used in the mesh.
+ * @param indices The indices to be used in the mesh.
+ * @param normals Whether to calculate normals for the mesh.
+ ***************************************************************************/
 Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<int> &indices,
 	   bool normals)
 {
@@ -103,6 +128,11 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<int> &indices,
 	this->add_vertices(vertices, indices, normals);
 }
 
+/***************************************************************************
+ * @brief Deletes the mesh resources.
+ *
+ * Cleans up the OpenGL resources associated with the mesh.
+ ***************************************************************************/
 void Mesh::delete_mesh()
 {
 	glDeleteBuffers(size * Vertex::SIZE, &vbo);
@@ -110,6 +140,16 @@ void Mesh::delete_mesh()
 	vao = vbo = ebo = size = 0;
 }
 
+/***************************************************************************
+ * @brief Adds vertices and indices to the mesh.
+ *
+ * Updates the mesh with the specified vertices and indices. Optionally 
+ * calculates normals if `normals` is true.
+ *
+ * @param vertices The vertices to be added to the mesh.
+ * @param indices The indices to be added to the mesh.
+ * @param normals Whether to calculate normals for the mesh.
+ ***************************************************************************/
 void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 			bool normals)
 {
@@ -169,6 +209,12 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 	glBindVertexArray(0);
 }
 
+/***************************************************************************
+ * @brief Draws the mesh.
+ *
+ * Renders the mesh using the currently bound VAO.
+ * @throws std::runtime_error If the VAO is not initialized.
+ ***************************************************************************/
 void Mesh::draw() const
 {
 	if (vao == 0) {
@@ -181,6 +227,15 @@ void Mesh::draw() const
 	glBindVertexArray(0);
 }
 
+/***************************************************************************
+ * @brief Calculates normals for the mesh vertices.
+ *
+ * Computes normals for each vertex based on the mesh indices and updates
+ * the vertex normals.
+ *
+ * @param vertices The vertices of the mesh.
+ * @param indices The indices of the mesh.
+ ***************************************************************************/
 void Mesh::calculate_normals(std::vector<Vertex> &vertices,
 			     std::vector<int> &indices)
 {

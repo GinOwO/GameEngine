@@ -10,6 +10,7 @@
 #include <graphics/Vertex.h>
 #include <graphics/Texture.h>
 #include <graphics/Material.h>
+#include <graphics/BasicShader.h>
 
 #include <game/MeshRenderer.h>
 
