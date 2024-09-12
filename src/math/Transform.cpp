@@ -7,12 +7,6 @@
 
 #include <iostream>
 
-float Transform::zNear = 0;
-float Transform::zFar = 0;
-float Transform::width = 0;
-float Transform::height = 0;
-float Transform::fov = 0;
-
 Transform::Transform()
 {
 	translation = Vector3f();
@@ -65,16 +59,6 @@ void Transform::set_scale(Vector3f scale)
 	this->scale = scale;
 }
 
-void Transform::set_projection(float fov, float width, float height,
-			       float zNear, float zFar)
-{
-	Transform::fov = fov;
-	Transform::width = width;
-	Transform::height = height;
-	Transform::zNear = zNear;
-	Transform::zFar = zFar;
-}
-
 Matrix4f Transform::get_transformation() const noexcept
 {
 	return Matrix4f::Translation_Matrix(translation) *
@@ -82,42 +66,7 @@ Matrix4f Transform::get_transformation() const noexcept
 		Matrix4f::Scale_Matrix(scale));
 }
 
-Matrix4f Transform::get_projected_transformation() const noexcept
-{
-	Matrix4f projection_matrix =
-		Matrix4f::Projection_Matrix(fov, width, height, zNear, zFar);
-
-	Matrix4f transformation_matrix = this->get_transformation();
-
-	Matrix4f resultant_matrix = projection_matrix * transformation_matrix;
-
-	return resultant_matrix;
-}
-
 Matrix4f Transform::get_projected_camera(Camera &camera) const noexcept
 {
-	Matrix4f camera_rotation =
-		Matrix4f::Camera_Matrix(camera.get_forward(), camera.get_up());
-
-	Matrix4f camera_translation =
-		Matrix4f::Translation_Matrix(camera.get_position() * -1.0f);
-
-	Matrix4f projection_matrix =
-		Matrix4f::Projection_Matrix(fov, width, height, zNear, zFar);
-
-	Matrix4f transformation_matrix = this->get_transformation();
-
-	Matrix4f resultant_matrix =
-		projection_matrix * (camera_rotation * (camera_translation *
-							transformation_matrix));
-#ifdef _DEBUG_CAMERA_ON
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			std::cout << resultant_matrix.get(i, j) << ' ';
-		}
-		std::cout << '\n';
-	}
-	std::cout << '\n';
-#endif
-	return resultant_matrix;
+	return camera.get_view_projection() * get_transformation();
 }

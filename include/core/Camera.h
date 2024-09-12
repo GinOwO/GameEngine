@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math/Vector3f.h>
+#include <math/Matrix4f.h>
 
 class Camera {
     public:
@@ -11,14 +12,14 @@ class Camera {
 
     private:
 	static const Vector3f y_axis;
+	static bool perspective_set;
 
 	Vector3f position;
 	Vector3f forward;
 	Vector3f up;
+	Matrix4f projection;
 
 	Camera();
-	Camera(const Vector3f &position, const Vector3f &forward,
-	       const Vector3f &up);
 
     public:
 	void input();
@@ -36,4 +37,9 @@ class Camera {
 	void move_camera(const Vector3f &direction, float amount) noexcept;
 	void rotate_x(float angle) noexcept;
 	void rotate_y(float angle) noexcept;
+
+	void set_projection(float fov, float aspect_ratio, float zNear,
+			    float zFar);
+
+	Matrix4f get_view_projection() const;
 };

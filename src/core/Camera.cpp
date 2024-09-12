@@ -7,8 +7,12 @@
 #include <core/Input.h>
 
 #include <math/Vector3f.h>
+#include <math/Matrix4f.h>
+
+#include <exception>
 
 const Vector3f Camera::y_axis{ 0, 1, 0 };
+bool Camera::perspective_set = false;
 
 Camera &Camera::get_instance()
 {
@@ -23,12 +27,26 @@ Camera::Camera()
 	up = Vector3f{ 0, 1, 0 };
 }
 
-Camera::Camera(const Vector3f &position, const Vector3f &forward,
-	       const Vector3f &up)
+void Camera::set_projection(float fov, float aspect_ratio, float zNear,
+			    float zFar)
 {
-	this->position = position;
-	this->forward = forward.normalize();
-	this->up = up.normalize();
+	perspective_set = true;
+	projection =
+		Matrix4f::Perspective_Matrix(fov, aspect_ratio, zNear, zFar);
+}
+
+Matrix4f Camera::get_view_projection() const
+{
+	if (!perspective_set) {
+		throw std::runtime_error(
+			"ERROR: Perspective matrix not initialized");
+	}
+	Matrix4f camera_rotation = Matrix4f::Camera_Matrix(forward, up);
+
+	Matrix4f camera_translation =
+		Matrix4f::Translation_Matrix(position * -1.0f);
+
+	return projection * camera_rotation * camera_translation;
 }
 
 void Camera::set_position(const Vector3f &vec) noexcept

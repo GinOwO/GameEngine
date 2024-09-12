@@ -44,11 +44,6 @@ void TestGame::init()
 
 	shader.load_shader("shaders/vertShader.vert",
 			   "shaders/fragShader.frag");
-
-	transform.set_projection(70.0f,
-				 Window::get_instance().get_window_width(),
-				 Window::get_instance().get_window_height(),
-				 .1f, 1000.0f);
 }
 
 // void Game::input()

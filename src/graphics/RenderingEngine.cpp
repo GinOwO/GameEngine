@@ -3,9 +3,19 @@
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <core/Window.h>
+#include <core/Camera.h>
+
 #include <graphics/BasicShader.h>
 
 #include <game/GameObject.h>
+
+#include <cmath>
+
+template <typename T> inline float to_radians(T degrees)
+{
+	return (degrees * M_PI) / 180.0;
+}
 
 void RenderingEngine::render(GameObject *object)
 {
@@ -20,6 +30,7 @@ void RenderingEngine::clear_screen()
 }
 
 RenderingEngine::RenderingEngine()
+	: camera(Camera::get_instance())
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -33,6 +44,11 @@ RenderingEngine::RenderingEngine()
 	glEnable(GL_TEXTURE_2D);
 
 	RenderingEngine::clear_screen();
+	camera.set_projection(
+		to_radians(70.0f),
+		Window::get_instance().get_window_width() /
+			Window::get_instance().get_window_height(),
+		.1f, 1000.0f);
 }
 
 void RenderingEngine::texture_enable(bool enable)

@@ -90,11 +90,10 @@ Matrix4f Matrix4f::Scale_Matrix(float x, float y, float z)
 	return { matrix };
 }
 
-Matrix4f Matrix4f::Projection_Matrix(float fov, float width, float height,
-				     float zNear, float zFar)
+Matrix4f Matrix4f::Perspective_Matrix(float fov, float aspect_ratio,
+				      float zNear, float zFar)
 {
-	float aspect_ratio = width / height;
-	float tan_half_fov = std::tan(to_radians(fov / 2.0f));
+	float tan_half_fov = std::tan(fov / 2.0f);
 	float zRange = zNear - zFar;
 
 	float matrix[4][4] = { 0.0f };

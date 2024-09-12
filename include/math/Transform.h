@@ -7,12 +7,6 @@
 
 class Transform {
     private:
-	static float zNear;
-	static float zFar;
-	static float width;
-	static float height;
-	static float fov;
-
 	Vector3f translation;
 	Vector3f rotation;
 	Vector3f scale;
@@ -33,10 +27,6 @@ class Transform {
 	void set_scale(Vector3f rotation);
 	void set_scale(float x, float y, float z);
 
-	static void set_projection(float fov, float width, float height,
-				   float zNear, float zFar);
-
 	Matrix4f get_transformation() const noexcept;
-	Matrix4f get_projected_transformation() const noexcept;
 	Matrix4f get_projected_camera(Camera &camera) const noexcept;
 };

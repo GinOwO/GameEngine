@@ -24,8 +24,8 @@ class Matrix4f {
 	static Matrix4f Scale_Matrix(Vector3f vec);
 	static Matrix4f Scale_Matrix(float x, float y, float z);
 
-	static Matrix4f Projection_Matrix(float fov, float width, float height,
-					  float zNear, float zFar);
+	static Matrix4f Perspective_Matrix(float fov, float aspect_ratio,
+					   float zNear, float zFar);
 
 	static Matrix4f Camera_Matrix(const Vector3f &forward,
 				      const Vector3f &up);
