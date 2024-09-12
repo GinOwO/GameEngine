@@ -30,6 +30,9 @@ class Matrix4f {
 	static Matrix4f Camera_Matrix(const Vector3f &forward,
 				      const Vector3f &up);
 
+	static Matrix4f Orthogonal_Matrix(float left, float right, float bottom,
+					  float top, float near, float far);
+
 	static Matrix4f flip_matrix(const Matrix4f &m);
 
 	Matrix4f operator*(const Matrix4f &m) const noexcept;
