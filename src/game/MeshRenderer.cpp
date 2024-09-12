@@ -1,14 +1,14 @@
 #include <game/MeshRenderer.h>
 
+#include <math/Transform.h>
+
 #include <core/Camera.h>
 
-#include <game/GameComponent.h>
-
-#include <graphics/Shader.h>
 #include <graphics/Mesh.h>
+#include <graphics/Shader.h>
 #include <graphics/Material.h>
 
-#include <math/Transform.h>
+#include <game/GameComponent.h>
 
 MeshRenderer::MeshRenderer(const Mesh &mesh, const Material &material)
 	: mesh(mesh)

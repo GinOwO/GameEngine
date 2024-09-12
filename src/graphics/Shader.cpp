@@ -1,14 +1,22 @@
 #include <graphics/Shader.h>
 
-#include <misc/glad.h>
-#include <GLFW/glfw3.h>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <array>
 #include <cstddef>
 #include <exception>
+
+#include <misc/glad.h>
+#include <GLFW/glfw3.h>
+
+#include <math/Matrix4f.h>
+#include <math/Vector3f.h>
+#include <math/Transform.h>
+
+#include <core/Camera.h>
+
+#include <graphics/Material.h>
 
 // #define _DEBUG_DISPLAY_ALL_UNIFORMS_ON
 

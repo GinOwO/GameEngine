@@ -1,21 +1,21 @@
 #include <core/Engine.h>
 
+#include <iostream>
+#include <algorithm>
+#include <exception>
+#include <string>
+
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <graphics/Shader.h>
 #include <graphics/RenderingEngine.h>
 
-#include <core/Timer.h>
-#include <core/Input.h>
 #include <core/Camera.h>
+#include <core/Input.h>
+#include <core/Timer.h>
 
 #include <game/TestGame.h>
-
-#include <iostream>
-#include <algorithm>
-#include <exception>
-#include <string>
 
 #define _DEBUG_FPS_ON
 

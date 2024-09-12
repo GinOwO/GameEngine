@@ -1,12 +1,12 @@
 #pragma once
 
-#include <game/GameComponent.h>
+#include <math/Transform.h>
 
 #include <graphics/Mesh.h>
-#include <graphics/Material.h>
 #include <graphics/Shader.h>
+#include <graphics/Material.h>
 
-#include <math/Transform.h>
+#include <game/GameComponent.h>
 
 class MeshRenderer : public GameComponent {
 	Mesh mesh;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <graphics/Shader.h>
-
 #include <math/Transform.h>
+
+#include <graphics/Shader.h>
 
 class GameComponent {
     public:

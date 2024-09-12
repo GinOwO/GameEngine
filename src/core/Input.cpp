@@ -2,10 +2,10 @@
 
 // #define _DEBUG_INPUT_ON
 
+#include <cstring>
+
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
-
-#include <cstring>
 
 #ifdef _DEBUG_INPUT_ON
 #include <iostream>

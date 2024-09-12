@@ -1,14 +1,14 @@
 #include <core/Window.h>
 
-#include <misc/glad.h>
-#include <GLFW/glfw3.h>
-
-#include <core/Input.h>
-
 #include <iostream>
 #include <cstdlib>
 #include <exception>
 #include <string>
+
+#include <misc/glad.h>
+#include <GLFW/glfw3.h>
+
+#include <core/Input.h>
 
 Window &Window::get_instance()
 {

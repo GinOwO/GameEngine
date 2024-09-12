@@ -1,9 +1,9 @@
 #include <math/Vector3f.h>
 
-#include <math/Quaternion.h>
-
 #include <cmath>
 #include <array>
+
+#include <math/Quaternion.h>
 
 template <typename T> inline float to_degrees(T radians)
 {

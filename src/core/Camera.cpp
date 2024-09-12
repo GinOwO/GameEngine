@@ -1,15 +1,15 @@
 #include <core/Camera.h>
 
+#include <exception>
+
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <core/Timer.h>
 #include <core/Input.h>
+#include <core/Timer.h>
 
 #include <math/Vector3f.h>
 #include <math/Matrix4f.h>
-
-#include <exception>
 
 const Vector3f Camera::y_axis{ 0, 1, 0 };
 bool Camera::perspective_set = false;

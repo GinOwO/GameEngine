@@ -1,13 +1,13 @@
 #pragma once
 
+#include <string>
+
+#include <core/Input.h>
+#include <core/Window.h>
+
 #include <graphics/RenderingEngine.h>
 
-#include <core/Window.h>
-#include <core/Input.h>
-
 #include <game/Game.h>
-
-#include <string>
 
 class Engine {
     private:

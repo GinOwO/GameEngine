@@ -1,12 +1,12 @@
 #pragma once
 
-#include <graphics/Shader.h>
-#include <graphics/Material.h>
-
 #include <math/Matrix4f.h>
+#include <math/Transform.h>
 
 #include <core/Camera.h>
-#include <math/Transform.h>
+
+#include <graphics/Shader.h>
+#include <graphics/Material.h>
 
 class BasicShader : public Shader {
 	BasicShader();

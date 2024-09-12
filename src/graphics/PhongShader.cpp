@@ -1,19 +1,19 @@
 #include <graphics/PhongShader.h>
 
-#include <graphics/Shader.h>
-#include <graphics/Material.h>
-#include <graphics/BaseLight.h>
-#include <graphics/DirectionalLight.h>
-#include <graphics/PointLight.h>
+#include <vector>
+#include <iostream>
+#include <exception>
 
 #include <math/Matrix4f.h>
 #include <math/Vector3f.h>
 
 #include <core/Camera.h>
 
-#include <iostream>
-#include <vector>
-#include <exception>
+#include <graphics/Shader.h>
+#include <graphics/Material.h>
+#include <graphics/BaseLight.h>
+#include <graphics/PointLight.h>
+#include <graphics/DirectionalLight.h>
 
 PhongShader::PhongShader()
 	: Shader()

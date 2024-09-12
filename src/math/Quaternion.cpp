@@ -1,8 +1,8 @@
 #include <math/Quaternion.h>
 
-#include <math/Vector3f.h>
-
 #include <cmath>
+
+#include <math/Vector3f.h>
 
 Quaternion::Quaternion()
 {

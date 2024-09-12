@@ -1,14 +1,14 @@
 #pragma once
 
+#include <vector>
+#include <string>
+
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <graphics/Vertex.h>
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
-
-#include <vector>
-#include <string>
 
 class Mesh {
     private:

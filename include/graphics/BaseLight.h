@@ -1,11 +1,11 @@
 #pragma once
 
-#include <math/Vector3f.h>
-
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include <exception>
+
+#include <math/Vector3f.h>
 
 struct BaseLight {
 	Vector3f color;

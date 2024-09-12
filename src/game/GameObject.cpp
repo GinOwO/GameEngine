@@ -1,12 +1,12 @@
 #include <game/GameObject.h>
 
+#include <vector>
+
 #include <math/Transform.h>
 
 #include <graphics/Shader.h>
 
 #include <game/GameComponent.h>
-
-#include <vector>
 
 GameObject::GameObject()
 	: children()

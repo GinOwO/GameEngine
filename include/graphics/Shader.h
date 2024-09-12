@@ -3,16 +3,16 @@
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <string>
+#include <unordered_map>
+
 #include <math/Matrix4f.h>
 #include <math/Vector3f.h>
 #include <math/Transform.h>
 
-#include <graphics/Material.h>
-
 #include <core/Camera.h>
 
-#include <string>
-#include <unordered_map>
+#include <graphics/Material.h>
 
 class Shader {
     private:

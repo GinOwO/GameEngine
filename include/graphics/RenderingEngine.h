@@ -1,8 +1,8 @@
 #pragma once
 
-#include <game/GameObject.h>
-
 #include <core/Camera.h>
+
+#include <game/GameObject.h>
 
 class RenderingEngine {
     public:

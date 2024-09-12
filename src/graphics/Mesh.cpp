@@ -1,12 +1,5 @@
 #include <graphics/Mesh.h>
 
-#include <misc/glad.h>
-#include <GLFW/glfw3.h>
-
-#include <graphics/Vertex.h>
-#include <graphics/BasicShader.h>
-#include <graphics/Material.h>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -14,6 +7,13 @@
 #include <cstdlib>
 #include <regex>
 #include <exception>
+
+#include <misc/glad.h>
+#include <GLFW/glfw3.h>
+
+#include <graphics/Vertex.h>
+#include <graphics/Material.h>
+#include <graphics/BasicShader.h>
 
 // #define _DEBUG_LOADER_ON
 

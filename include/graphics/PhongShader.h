@@ -1,17 +1,17 @@
 #pragma once
 
-#include <graphics/Shader.h>
-#include <graphics/Material.h>
-#include <graphics/BaseLight.h>
-#include <graphics/DirectionalLight.h>
-#include <graphics/PointLight.h>
-#include <graphics/SpotLight.h>
+#include <vector>
+#include <iostream>
 
 #include <math/Matrix4f.h>
 #include <math/Vector3f.h>
 
-#include <vector>
-#include <iostream>
+#include <graphics/Shader.h>
+#include <graphics/Material.h>
+#include <graphics/BaseLight.h>
+#include <graphics/SpotLight.h>
+#include <graphics/PointLight.h>
+#include <graphics/DirectionalLight.h>
 
 class PhongShader : public Shader {
     public:

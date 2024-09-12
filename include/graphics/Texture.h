@@ -1,9 +1,9 @@
 #pragma once
 
+#include <string>
+
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
-
-#include <string>
 
 class Texture {
     private:

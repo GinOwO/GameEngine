@@ -1,15 +1,15 @@
 #include <graphics/Texture.h>
 
+#include <string>
+#include <iostream>
+#include <cstdlib>
+#include <exception>
+
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <misc/stb_image.h>
-
-#include <string>
-#include <iostream>
-#include <cstdlib>
-#include <exception>
 
 Texture::Texture()
 {

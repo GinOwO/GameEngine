@@ -1,17 +1,17 @@
 #include <game/TestGame.h>
 
+#include <cmath>
+#include <iostream>
+
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <graphics/Mesh.h>
 #include <graphics/Vertex.h>
-#include <graphics/Material.h>
 #include <graphics/Texture.h>
+#include <graphics/Material.h>
 
 #include <game/MeshRenderer.h>
-
-#include <iostream>
-#include <cmath>
 
 void TestGame::init()
 {

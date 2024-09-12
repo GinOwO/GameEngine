@@ -1,8 +1,8 @@
 #include <math/Matrix4f.h>
 
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
-#include <cmath>
 #include <iostream>
 #include <exception>
 

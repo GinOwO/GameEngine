@@ -1,12 +1,12 @@
 #pragma once
 
+#include <vector>
+
 #include <math/Transform.h>
 
 #include <graphics/Shader.h>
 
 #include <game/GameComponent.h>
-
-#include <vector>
 
 class GameObject {
 	std::vector<GameObject *> children;

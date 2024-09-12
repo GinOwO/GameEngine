@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math/Vector3f.h>
+
 #include <graphics/PointLight.h>
 
 struct SpotLight {

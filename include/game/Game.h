@@ -1,9 +1,13 @@
 #pragma once
 
-#include <core/Input.h>
-#include <core/Window.h>
-#include <core/Timer.h>
+#include <vector>
+
+#include <math/Transform.h>
+
 #include <core/Camera.h>
+#include <core/Input.h>
+#include <core/Timer.h>
+#include <core/Window.h>
 
 #include <graphics/Mesh.h>
 #include <graphics/Vertex.h>
@@ -11,11 +15,7 @@
 #include <graphics/BasicShader.h>
 #include <graphics/PhongShader.h>
 
-#include <math/Transform.h>
-
 #include <game/GameObject.h>
-
-#include <vector>
 
 class Game {
     private:

@@ -3,7 +3,7 @@
 #include <math/Vector3f.h>
 #include <math/Matrix4f.h>
 
-// #define _DEBUG_CAMERA_ON
+#include <core/Camera.h>
 
 #include <iostream>
 
