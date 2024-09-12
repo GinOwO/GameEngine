@@ -5,7 +5,11 @@
 
 #include <math/Matrix4f.h>
 #include <math/Vector3f.h>
+#include <math/Transform.h>
+
 #include <graphics/Material.h>
+
+#include <core/Camera.h>
 
 #include <string>
 #include <unordered_map>
@@ -40,7 +44,6 @@ class Shader {
 	void set_uniform(const std::string &uniform, Vector3f value);
 	void set_uniform(const std::string &uniform, Matrix4f value);
 
-	virtual void update_uniforms(const Matrix4f &world_matrix,
-				     const Matrix4f &projected_matrix,
+	virtual void update_uniforms(const Transform &transform,
 				     const Material &material) = 0;
 };

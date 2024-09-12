@@ -17,7 +17,6 @@
 #include <exception>
 #include <string>
 
-// #define _DEBUG_INPUT_ON
 #define _DEBUG_FPS_ON
 
 Input &input_handler = Input::get_instance();
@@ -101,14 +100,9 @@ void Engine::run()
 			}
 
 			game.input();
+			rendering_engine.input();
 			game.update();
 
-#ifdef _DEBUG_INPUT_ON
-			for (int i = 0; i < input_handler.NUM_KEYS; i++) {
-				if (input_handler.is_key_pressed(i))
-					std::cout << char(i) << '\n';
-			}
-#endif
 			frame_counter += timer.get_delta_time();
 
 			if (frame_counter >= 1) {

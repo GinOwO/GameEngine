@@ -68,11 +68,17 @@ void PhongShader::load_shaders(const std::string &vertex_path,
 	}
 }
 
-void PhongShader::update_uniforms(const Matrix4f &world_matrix,
-				  const Matrix4f &projected_matrix,
+void PhongShader::update_uniforms(const Transform &transform,
 				  const Material &material)
 {
-	Vector3f camera_position = Camera::get_instance().get_position();
+	static Camera &camera = Camera::get_instance();
+
+	Vector3f camera_position = camera.get_position();
+
+	Matrix4f world_matrix = transform.get_transformation();
+	Matrix4f projected_matrix = Matrix4f::flip_matrix(
+		camera.get_view_projection() * world_matrix);
+	world_matrix = Matrix4f::flip_matrix(world_matrix);
 
 	material.get_texture().bind();
 

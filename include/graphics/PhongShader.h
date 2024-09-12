@@ -37,9 +37,8 @@ class PhongShader : public Shader {
 	void load_shaders(const std::string &vertexPath,
 			  const std::string &fragmentPath);
 
-	void update_uniforms(const Matrix4f &world_matrix,
-			     const Matrix4f &projected_matrix,
-			     const Material &material);
+	void update_uniforms(const Transform &transform,
+			     const Material &material) override;
 
 	Vector3f &get_ambient_light() noexcept;
 	void set_ambient_light(const Vector3f &ambient_light) noexcept;

@@ -74,3 +74,8 @@ RenderingEngine &RenderingEngine::get_instance()
 	static RenderingEngine instance;
 	return instance;
 }
+
+void RenderingEngine::input()
+{
+	Camera::get_instance().input();
+}

@@ -5,6 +5,9 @@
 
 #include <math/Matrix4f.h>
 
+#include <core/Camera.h>
+#include <math/Transform.h>
+
 class BasicShader : public Shader {
 	BasicShader();
 
@@ -17,7 +20,6 @@ class BasicShader : public Shader {
 	void load_shader(const std::string &vertex_path,
 			 const std::string &fragment_path);
 
-	void update_uniforms(const Matrix4f &world_matrix,
-			     const Matrix4f &projected_matrix,
+	void update_uniforms(const Transform &transform,
 			     const Material &material) override;
 };

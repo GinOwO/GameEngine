@@ -20,5 +20,6 @@ class RenderingEngine {
 	RenderingEngine();
 
     public:
+	void input();
 	void render(GameObject *object);
 };

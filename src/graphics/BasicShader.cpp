@@ -24,10 +24,14 @@ void BasicShader::load_shader(const std::string &vertex_path,
 	this->add_uniform("color");
 }
 
-void BasicShader::update_uniforms(const Matrix4f &world_matrix,
-				  const Matrix4f &projected_matrix,
+void BasicShader::update_uniforms(const Transform &transform,
 				  const Material &material)
 {
+	static Camera &camera = Camera::get_instance();
+
+	Matrix4f projected_matrix = Matrix4f::flip_matrix(
+		camera.get_view_projection() * transform.get_transformation());
+
 	material.get_texture().bind();
 
 	this->set_uniform("transform", projected_matrix);
