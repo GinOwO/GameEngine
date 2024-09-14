@@ -62,5 +62,5 @@ void ForwardAmbient::update_uniforms(const Transform &transform,
 	material.get_texture().bind();
 
 	this->set_uniform("MVP", projected_matrix);
-	this->set_uniform("ambient_intensity", material.get_color());
+	this->set_uniform("ambient_intensity", ambient_light);
 }

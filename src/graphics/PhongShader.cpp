@@ -252,22 +252,6 @@ void PhongShader::set_uniform(const std::string &uniform,
 }
 
 /***************************************************************************
- * @brief Sets uniform values for specular lighting.
- *
- * Updates the shader uniform for specular lighting, including intensity and 
- * exponent.
- *
- * @param uniform The base name of the uniform.
- * @param specular The specular lighting data to set.
- ***************************************************************************/
-void PhongShader::set_uniform(const std::string &uniform,
-			      const Specular &specular) noexcept
-{
-	set_uniform(uniform + ".intensity", specular.intensity);
-	set_uniform(uniform + ".exponent", specular.exponent);
-}
-
-/***************************************************************************
  * @brief Sets uniform values for a point light.
  *
  * Updates the shader uniform for a point light, including base light data, 

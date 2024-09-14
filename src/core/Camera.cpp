@@ -211,7 +211,7 @@ void Camera::input()
 	Timer &timer = Timer::get_instance();
 	Input &input_handler = Input::get_instance();
 
-	float move_multiplier = 10.0f * timer.get_delta_time();
+	float move_multiplier = 15.0f * timer.get_delta_time();
 	float rotate_sensitivity = 40.0f * timer.get_delta_time();
 
 	if (input_handler.is_key_pressed(GLFW_KEY_W)) {
@@ -227,10 +227,10 @@ void Camera::input()
 		this->move_camera(this->get_right(), move_multiplier);
 	}
 	if (input_handler.is_key_pressed(GLFW_KEY_Q)) {
-		this->move_camera(this->get_up(), -move_multiplier);
+		this->move_camera(this->get_up(), move_multiplier);
 	}
 	if (input_handler.is_key_pressed(GLFW_KEY_E)) {
-		this->move_camera(this->get_up(), move_multiplier);
+		this->move_camera(this->get_up(), -move_multiplier);
 	}
 
 	if (input_handler.is_mouse_down(GLFW_MOUSE_BUTTON_2)) {

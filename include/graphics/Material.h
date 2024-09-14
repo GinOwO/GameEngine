@@ -31,6 +31,8 @@ class Material {
 	Specular specular; /**< Specular properties of the material. */
 
     public:
+	Vector3f ambient; // TODO: REMOVE THIS
+
 	Material();
 	Material(const Texture &texture, const Vector3f &color);
 	Material(const Texture &texture, const Vector3f &color,

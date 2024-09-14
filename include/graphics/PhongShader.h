@@ -120,13 +120,14 @@ class PhongShader : public Shader {
 	 ***************************************************************************/
 	void set_spot_lights(const std::vector<SpotLight> &spot_lights);
 
+	using Shader::set_uniform;
+
 	/***************************************************************************
 	 * @brief Sets a uniform variable for a BaseLight.
 	 *
 	 * @param uniform The name of the uniform variable.
 	 * @param base_light The BaseLight value to set.
 	 ***************************************************************************/
-	using Shader::set_uniform;
 	void set_uniform(const std::string &uniform,
 			 const BaseLight &base_light) noexcept;
 
@@ -138,15 +139,6 @@ class PhongShader : public Shader {
 	 ***************************************************************************/
 	void set_uniform(const std::string &uniform,
 			 const DirectionalLight &directional_light) noexcept;
-
-	/***************************************************************************
-	 * @brief Sets a uniform variable for Specular properties.
-	 *
-	 * @param uniform The name of the uniform variable.
-	 * @param specular The Specular value to set.
-	 ***************************************************************************/
-	void set_uniform(const std::string &uniform,
-			 const Specular &specular) noexcept;
 
 	/***************************************************************************
 	 * @brief Sets a uniform variable for a PointLight.

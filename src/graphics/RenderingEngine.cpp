@@ -7,6 +7,7 @@
 #include <core/Window.h>
 
 #include <graphics/ForwardAmbient.h>
+#include <graphics/ForwardDirectional.h>
 
 #include <game/GameObject.h>
 
@@ -36,7 +37,28 @@ template <typename T> inline float to_radians(T degrees)
 void RenderingEngine::render(GameObject *object)
 {
 	clear_screen();
-	object->render(ForwardAmbient::get_instance());
+
+	ForwardAmbient &forward_shader = ForwardAmbient::get_instance();
+	ForwardDirectional &forward_directional =
+		ForwardDirectional::get_instance();
+	forward_shader.ambient_light = { 0.2f };
+	object->render(forward_shader);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE, GL_ONE);
+	glDepthMask(GL_FALSE);
+	glDepthFunc(GL_EQUAL);
+
+	forward_directional.directional_light = { { "#F00", 0.4f },
+						  { 1, 1, 1 } };
+	object->render(forward_directional);
+	forward_directional.directional_light = { { "#00F", 0.4f },
+						  { -1, 1, -1 } };
+	object->render(forward_directional);
+
+	glDepthFunc(GL_LESS);
+	glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
 }
 
 /***************************************************************************

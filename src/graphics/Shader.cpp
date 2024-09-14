@@ -10,6 +10,7 @@
 #include <core/Camera.h>
 
 #include <graphics/Material.h>
+#include <graphics/Specular.h>
 
 #include <iostream>
 #include <fstream>
@@ -303,4 +304,19 @@ void Shader::set_uniform(const std::string &uniform, Matrix4f matrix)
 		throw std::runtime_error("Uniform Does not exist");
 	}
 	glUniformMatrix4fv(uniforms[uniform], 1, GL_FALSE, matrix.get_matrix());
+}
+
+/***************************************************************************
+ * @brief Sets uniform values for specular lighting.
+ *
+ * Updates the shader uniform for specular lighting, including intensity and 
+ * exponent.
+ *
+ * @param uniform The base name of the uniform.
+ * @param specular The specular lighting data to set.
+ ***************************************************************************/
+void Shader::set_uniform(const std::string &uniform, const Specular &specular)
+{
+	set_uniform(uniform + ".intensity", specular.intensity);
+	set_uniform(uniform + ".exponent", specular.exponent);
 }

@@ -21,6 +21,7 @@
 #include <core/Camera.h>
 
 #include <graphics/Material.h>
+#include <graphics/Specular.h>
 
 #include <string>
 #include <unordered_map>
@@ -139,6 +140,17 @@ class Shader {
 	 * @param value The Matrix4f value to set.
 	 ***************************************************************************/
 	void set_uniform(const std::string &uniform, Matrix4f value);
+
+	/***************************************************************************
+	 * @brief Sets uniform values for specular lighting.
+	 *
+	 * Updates the shader uniform for specular lighting, including intensity and 
+	 * exponent.
+	 *
+	 * @param uniform The base name of the uniform.
+	 * @param specular The specular lighting data to set.
+	 ***************************************************************************/
+	void set_uniform(const std::string &uniform, const Specular &specular);
 
 	/***************************************************************************
 	 * @brief Updates the shader's uniform variables.

@@ -24,7 +24,7 @@
 /***************************************************************************
  * @class ForwardAmbient
  *
- * @brief Represents the ambient lughting of the forward rendering pipeline
+ * @brief Represents the ambient lighting of the forward rendering pipeline
  *
  * The ForwardAmbient class provides functionality for loading and using shaders.
  * It is intended for ambient lighting as part of the forward rendering pipeline.
@@ -34,6 +34,7 @@ class ForwardAmbient : public Shader {
 	ForwardAmbient();
 
     public:
+	Vector3f ambient_light{ 0.0f };
 	ForwardAmbient(const ForwardAmbient &) = delete;
 	ForwardAmbient &operator=(const ForwardAmbient &) = delete;
 
