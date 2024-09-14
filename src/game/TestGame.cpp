@@ -17,7 +17,6 @@
 void TestGame::init()
 {
 	auto &camera = Camera::get_instance();
-	auto &shader = BasicShader::get_instance();
 	auto &transform = get_root_object()->transform;
 
 	float field_width = 10.0f, field_depth = 10.0f;
@@ -42,9 +41,6 @@ void TestGame::init()
 	get_root_object()->add_child(plane_object);
 
 	camera.set_position({ 0, 0, -10 });
-
-	shader.load_shader("shaders/vertShader.vert",
-			   "shaders/fragShader.frag");
 }
 
 // void Game::input()

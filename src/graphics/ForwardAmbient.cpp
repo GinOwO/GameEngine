@@ -1,4 +1,4 @@
-#include <graphics/BasicShader.h>
+#include <graphics/ForwardAmbient.h>
 
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
@@ -6,25 +6,25 @@
 #include <iostream>
 
 /***************************************************************************
- * @brief Constructs a BasicShader instance.
+ * @brief Constructs a ForwardAmbient instance.
  *
- * This constructor initializes a BasicShader object by calling the base 
+ * This constructor initializes a ForwardAmbient object by calling the base 
  * Shader constructor.
  ***************************************************************************/
-BasicShader::BasicShader()
+ForwardAmbient::ForwardAmbient()
 	: Shader()
 {
 	this->load_shader();
 }
 
 /***************************************************************************
- * @brief Retrieves the singleton instance of BasicShader.
+ * @brief Retrieves the singleton instance of ForwardAmbient.
  *
- * @return The singleton instance of BasicShader.
+ * @return The singleton instance of ForwardAmbient.
  ***************************************************************************/
-BasicShader &BasicShader::get_instance()
+ForwardAmbient &ForwardAmbient::get_instance()
 {
-	static BasicShader instance;
+	static ForwardAmbient instance;
 	return instance;
 }
 
@@ -32,13 +32,14 @@ BasicShader &BasicShader::get_instance()
  * @brief Loads shader files and initializes uniforms.
  *
  * Loads the vertex and fragment shader files, and adds the necessary 
- * uniforms "transform" and "color" to the shader.
+ * uniforms "transform" and "MVP" to the shader.
  ***************************************************************************/
-void BasicShader::load_shader()
+void ForwardAmbient::load_shader()
 {
-	this->load("shaders/vertShader.vert", "shaders/fragShader.frag");
-	this->add_uniform("transform");
-	this->add_uniform("color");
+	this->load("shaders/forwardAmbient.vert",
+		   "shaders/forwardAmbient.frag");
+	this->add_uniform("ambient_intensity");
+	this->add_uniform("MVP");
 }
 
 /***************************************************************************
@@ -50,8 +51,8 @@ void BasicShader::load_shader()
  * @param transform The transform to be used for the shader's "transform" uniform.
  * @param material The material to be used for the shader's "color" uniform and texture.
  ***************************************************************************/
-void BasicShader::update_uniforms(const Transform &transform,
-				  const Material &material)
+void ForwardAmbient::update_uniforms(const Transform &transform,
+				     const Material &material)
 {
 	static Camera &camera = Camera::get_instance();
 
@@ -60,6 +61,6 @@ void BasicShader::update_uniforms(const Transform &transform,
 
 	material.get_texture().bind();
 
-	this->set_uniform("transform", projected_matrix);
-	this->set_uniform("color", material.get_color());
+	this->set_uniform("MVP", projected_matrix);
+	this->set_uniform("ambient_intensity", material.get_color());
 }

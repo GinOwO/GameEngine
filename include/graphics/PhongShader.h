@@ -65,12 +65,8 @@ class PhongShader : public Shader {
 
 	/***************************************************************************
 	 * @brief Loads the vertex and fragment shaders.
-	 *
-	 * @param vertexPath Path to the vertex shader file.
-	 * @param fragmentPath Path to the fragment shader file.
 	 ***************************************************************************/
-	void load_shaders(const std::string &vertexPath,
-			  const std::string &fragmentPath);
+	void load_shader();
 
 	/***************************************************************************
 	 * @brief Updates the shader's uniform variables.

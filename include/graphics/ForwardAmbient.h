@@ -1,11 +1,13 @@
 /***************************************************************************
- * @file BasicShader.h
+ * @file ForwardAmbient.h
  *
- * @brief Declares the BasicShader class for basic shader functionality.
+ * @brief Declares the ForwardAmbient class for the ambient lighting as part of
+ * the forward rendering pipeline.
  *
- * This file contains the declaration of the BasicShader class, which extends
- * the Shader class to provide basic shader functionality. It includes methods
- * for loading shaders and updating uniforms specific to basic shading.
+ * This file contains the declaration of the ForwardAmbient class, which extends
+ * the Shader class to provide ambient lighting as part of the forward rendering
+ * pipeline. It includes methods for loading shaders and updating uniforms specific 
+ * to basic shading.
  *
  ***************************************************************************/
 
@@ -20,28 +22,27 @@
 #include <graphics/Material.h>
 
 /***************************************************************************
- * @class BasicShader
+ * @class ForwardAmbient
  *
- * @brief Represents a basic shader for simple shading operations.
+ * @brief Represents the ambient lughting of the forward rendering pipeline
  *
- * The BasicShader class provides functionality for loading and using basic
- * shaders. It is intended for simple shading and can be extended for more
- * complex shaders.
+ * The ForwardAmbient class provides functionality for loading and using shaders.
+ * It is intended for ambient lighting as part of the forward rendering pipeline.
  *
  ***************************************************************************/
-class BasicShader : public Shader {
-	BasicShader();
+class ForwardAmbient : public Shader {
+	ForwardAmbient();
 
     public:
-	BasicShader(const BasicShader &) = delete;
-	BasicShader &operator=(const BasicShader &) = delete;
+	ForwardAmbient(const ForwardAmbient &) = delete;
+	ForwardAmbient &operator=(const ForwardAmbient &) = delete;
 
 	/***************************************************************************
-	 * @brief Gets the singleton instance of the BasicShader.
+	 * @brief Gets the singleton instance of the ForwardAmbient.
 	 *
-	 * @return The singleton instance of the BasicShader.
+	 * @return The singleton instance of the ForwardAmbient.
 	 ***************************************************************************/
-	static BasicShader &get_instance();
+	static ForwardAmbient &get_instance();
 
 	/***************************************************************************
 	 * @brief Loads the vertex and fragment shaders.

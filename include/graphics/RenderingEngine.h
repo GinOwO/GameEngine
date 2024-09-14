@@ -12,7 +12,10 @@
 
 #pragma once
 
+#include <math/Vector3f.h>
+
 #include <core/Camera.h>
+
 #include <game/GameObject.h>
 
 /***************************************************************************
@@ -47,6 +50,7 @@ class RenderingEngine {
 
     private:
 	Camera &camera; /**< Reference to the Camera used for rendering. */
+	Vector3f ambient_light; /**< Light responsible for ambient lighting. */
 
 	/***************************************************************************
 	 * @brief Sets the clear color for the rendering engine.

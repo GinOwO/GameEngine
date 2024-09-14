@@ -23,6 +23,7 @@
 PhongShader::PhongShader()
 	: Shader()
 {
+	this->load_shader();
 }
 
 /***************************************************************************
@@ -41,14 +42,10 @@ PhongShader &PhongShader::get_instance()
  *
  * Loads the vertex and fragment shaders from the specified file paths and 
  * adds the required uniform variables for Phong shading.
- *
- * @param vertex_path The path to the vertex shader file.
- * @param fragment_path The path to the fragment shader file.
  ***************************************************************************/
-void PhongShader::load_shaders(const std::string &vertex_path,
-			       const std::string &fragment_path)
+void PhongShader::load_shader()
 {
-	this->load(vertex_path, fragment_path);
+	this->load("shaders/phongShader.vert", "shaders/phongShader.frag");
 	this->add_uniform("transform");
 	this->add_uniform("transform_projected");
 	this->add_uniform("base_color");

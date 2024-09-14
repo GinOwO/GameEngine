@@ -6,7 +6,7 @@
 #include <core/Camera.h>
 #include <core/Window.h>
 
-#include <graphics/BasicShader.h>
+#include <graphics/ForwardAmbient.h>
 
 #include <game/GameObject.h>
 
@@ -36,7 +36,7 @@ template <typename T> inline float to_radians(T degrees)
 void RenderingEngine::render(GameObject *object)
 {
 	clear_screen();
-	object->render(BasicShader::get_instance());
+	object->render(ForwardAmbient::get_instance());
 }
 
 /***************************************************************************
@@ -57,6 +57,7 @@ void RenderingEngine::clear_screen()
  ***************************************************************************/
 RenderingEngine::RenderingEngine()
 	: camera(Camera::get_instance())
+	, ambient_light(0.2f)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 

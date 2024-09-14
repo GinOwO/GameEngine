@@ -54,6 +54,7 @@ set(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/Material.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/BasicShader.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/PhongShader.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/ForwardAmbient.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/RenderingEngine.cpp
 )
 
