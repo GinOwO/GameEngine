@@ -334,3 +334,31 @@ Vector2f Vector2f::rotate(float degrees) const noexcept
 
 	return { x * c - y * s, x * s + y * c };
 }
+
+/***************************************************************************
+ * @brief Interpolates between the current vector and a destination vector.
+ *
+ * @param dest The destination vector to interpolate towards.
+ * @param interpolation_factor The interpolation factor, typically in the
+ *                             range [0.0, 1.0]. Values outside this range
+ *                             will extrapolate beyond the start and end vectors.
+ *
+ * @return A new `Vector2f` that represents the interpolated vector.
+ ***************************************************************************/
+Vector2f Vector2f::interpolate(const Vector2f &dest,
+			       float interpolation_factor) const noexcept
+{
+	return ((dest - *this) * interpolation_factor) + (*this);
+}
+
+/***************************************************************************
+ * @brief Computes the cross product of the current vector with another vector.
+ *
+ * @param v The vector to compute the cross product with.
+ *
+ * @return The scalar result of the cross product.
+ ***************************************************************************/
+float Vector2f::cross(const Vector2f &v) const noexcept
+{
+	return x * v.y - y * v.x;
+}

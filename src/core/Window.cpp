@@ -3,6 +3,8 @@
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <math/Vector2f.h>
+
 #include <core/Input.h>
 
 #include <iostream>
@@ -184,6 +186,18 @@ int Window::get_window_width() const noexcept
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
 	return width;
+}
+
+/***************************************************************************
+ * @brief Gets the relative center coordinates of the window.
+ *
+ * @return A vector with the relative center coordinates of the window.
+ ***************************************************************************/
+Vector2f Window::get_window_center() const noexcept
+{
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+	return { (float)width / 2.0f, (float)height / 2.0f };
 }
 
 /***************************************************************************

@@ -15,6 +15,8 @@
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <math/Vector2f.h>
+
 #include <core/Input.h>
 
 #include <string>
@@ -135,6 +137,13 @@ class Window {
 	 * @return The width of the window in pixels.
 	 ***************************************************************************/
 	int get_window_width() const noexcept;
+
+	/***************************************************************************
+	 * @brief Gets the relatiev center coordinates of the window.
+	 *
+	 * @return A vector with the relative center coordinates of the window.
+	 ***************************************************************************/
+	Vector2f get_window_center() const noexcept;
 
 	/***************************************************************************
 	 * @brief Sets the position of the mouse cursor.

@@ -277,4 +277,25 @@ class Vector3f {
 	 * @return The rotated vector.
 	 ***************************************************************************/
 	Vector3f rotate(const float angle, const Vector3f &axis) const noexcept;
+
+	/***************************************************************************
+	 * @brief Interpolates between the current vector and a destination vector.
+	 *
+	 * This function computes the interpolation between the current vector and
+	 * a destination vector based on the given interpolation factor. The
+	 * interpolation is linear, and the factor determines the position of the
+	 * result between the two vectors. If the interpolation factor is 0.0, the
+	 * result will be the current vector. If the factor is 1.0, the result will
+	 * be the destination vector. Values between 0 and 1 will produce vectors
+	 * along the line segment between the two vectors.
+	 *
+	 * @param dest The destination vector to interpolate towards.
+	 * @param interpolation_factor The interpolation factor, typically in the
+	 *                             range [0.0, 1.0]. Values outside this range
+	 *                             will extrapolate beyond the start and end vectors.
+	 *
+	 * @return A new `Vector3f` that represents the interpolated vector.
+	 ***************************************************************************/
+	Vector3f interpolate(const Vector3f &dest,
+			     float interpolation_factor) const noexcept;
 };
