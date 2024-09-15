@@ -8,6 +8,8 @@
 
 #include <graphics/ForwardAmbient.h>
 #include <graphics/ForwardDirectional.h>
+#include <graphics/ForwardPoint.h>
+#include <graphics/ForwardSpot.h>
 
 #include <game/GameObject.h>
 
@@ -41,7 +43,15 @@ void RenderingEngine::render(GameObject *object)
 	ForwardAmbient &forward_shader = ForwardAmbient::get_instance();
 	ForwardDirectional &forward_directional =
 		ForwardDirectional::get_instance();
+
+	ForwardSpot &forward_spot = ForwardSpot::get_instance();
+
 	forward_shader.ambient_light = { 0.2f };
+	forward_spot.spot_light = {
+		{ { "#FFF", 1.0f }, { 0, 0, 0.1f }, { 0, 0, 0 }, 100 },
+		{ 1, 0, 0 },
+		1.0f
+	};
 	object->render(forward_shader);
 
 	glEnable(GL_BLEND);
@@ -49,12 +59,14 @@ void RenderingEngine::render(GameObject *object)
 	glDepthMask(GL_FALSE);
 	glDepthFunc(GL_EQUAL);
 
-	forward_directional.directional_light = { { "#F00", 0.4f },
+	forward_directional.directional_light = { { "#00F", 0.4f },
 						  { 1, 1, 1 } };
 	object->render(forward_directional);
-	forward_directional.directional_light = { { "#00F", 0.4f },
+	forward_directional.directional_light = { { "#F00", 0.4f },
 						  { -1, 1, -1 } };
 	object->render(forward_directional);
+
+	object->render(forward_spot);
 
 	glDepthFunc(GL_LESS);
 	glDepthMask(GL_TRUE);

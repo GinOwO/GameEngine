@@ -56,6 +56,8 @@ set(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/PhongShader.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/ForwardAmbient.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/ForwardDirectional.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/ForwardPoint.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/ForwardSpot.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/RenderingEngine.cpp
 )
 
