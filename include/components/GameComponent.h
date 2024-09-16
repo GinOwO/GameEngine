@@ -26,6 +26,8 @@
  *
  ***************************************************************************/
 class GameComponent {
+	Transform *transform;
+
     public:
 	/***************************************************************************
 	 * @brief Pure virtual function to handle input.
@@ -33,7 +35,7 @@ class GameComponent {
 	 * @param transform The Transform object representing the component's
 	 *                  position and orientation.
 	 ***************************************************************************/
-	virtual void input(const Transform &transform) = 0;
+	virtual void input() = 0;
 
 	/***************************************************************************
 	 * @brief Pure virtual function to update the component.
@@ -41,7 +43,7 @@ class GameComponent {
 	 * @param transform The Transform object representing the component's
 	 *                  position and orientation.
 	 ***************************************************************************/
-	virtual void update(const Transform &transform) = 0;
+	virtual void update() = 0;
 
 	/***************************************************************************
 	 * @brief Pure virtual function to render the component.
@@ -50,7 +52,7 @@ class GameComponent {
 	 *                  position and orientation.
 	 * @param shader The Shader used for rendering.
 	 ***************************************************************************/
-	virtual void render(const Transform &transform, Shader &shader) = 0;
+	virtual void render(Shader &shader) = 0;
 
 	/***************************************************************************
 	 * @brief Virtual destructor.
@@ -61,7 +63,15 @@ class GameComponent {
 	virtual ~GameComponent() = default;
 
 	// TODO: comments
-	virtual void add_to_rendering_engine(bool id = 0)
+	virtual void add_to_rendering_engine(bool id = 0) {};
+
+	Transform *get_parent_transform() const noexcept
 	{
+		return transform;
+	}
+
+	void set_parent_transform(Transform *transform)
+	{
+		this->transform = transform;
 	}
 };

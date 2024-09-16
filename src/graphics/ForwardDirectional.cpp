@@ -3,7 +3,7 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
-#include <components/LightSources.h>
+#include <components/SharedGlobals.h>
 #include <components/BaseLight.h>
 
 #include <iostream>
@@ -85,7 +85,7 @@ void ForwardDirectional::update_uniforms(const Transform &transform,
 
 	this->set_uniform("directional_light",
 			  *static_cast<BaseLight *>(
-				  LightSources::get_instance().active_light));
+				  SharedGlobals::get_instance().active_light));
 }
 
 /***************************************************************************

@@ -46,21 +46,21 @@ class Transform {
 	 *
 	 * @return The translation vector.
 	 ***************************************************************************/
-	Vector3f get_translation();
+	Vector3f get_translation() const noexcept;
 
 	/***************************************************************************
 	 * @brief Gets the rotation vector of the transform.
 	 *
 	 * @return The rotation vector.
 	 ***************************************************************************/
-	Vector3f get_rotation();
+	Vector3f get_rotation() const noexcept;
 
 	/***************************************************************************
 	 * @brief Gets the scale vector of the transform.
 	 *
 	 * @return The scale vector.
 	 ***************************************************************************/
-	Vector3f get_scale();
+	Vector3f get_scale() const noexcept;
 
 	/***************************************************************************
 	 * @brief Sets the translation vector using individual float values.

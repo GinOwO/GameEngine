@@ -2,18 +2,19 @@
 #pragma once
 
 #include <math/Vector3f.h>
+#include <math/Transform.h>
 
 #include <vector>
 
-class LightSources {
+class SharedGlobals {
     public:
-	LightSources(const LightSources &) = delete;
-	LightSources &operator=(const LightSources &) = delete;
+	SharedGlobals(const SharedGlobals &) = delete;
+	SharedGlobals &operator=(const SharedGlobals &) = delete;
 
-	static LightSources &get_instance();
+	static SharedGlobals &get_instance();
 
     private:
-	LightSources();
+	SharedGlobals();
 	std::vector<void *> lights;
 
     public:

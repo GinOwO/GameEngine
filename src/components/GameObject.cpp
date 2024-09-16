@@ -4,6 +4,7 @@
 
 #include <graphics/Shader.h>
 
+#include <components/SharedGlobals.h>
 #include <components/GameComponent.h>
 
 #include <vector>
@@ -27,7 +28,7 @@ GameObject::GameObject()
 void GameObject::input()
 {
 	for (GameComponent *component : components) {
-		component->input(transform);
+		component->input();
 	}
 
 	for (GameObject *child : children) {
@@ -44,7 +45,7 @@ void GameObject::input()
 void GameObject::update()
 {
 	for (GameComponent *component : components) {
-		component->update(transform);
+		component->update();
 	}
 
 	for (GameObject *child : children) {
@@ -64,7 +65,7 @@ void GameObject::update()
 void GameObject::render(Shader &shader)
 {
 	for (GameComponent *component : components) {
-		component->render(transform, shader);
+		component->render(shader);
 	}
 
 	for (GameObject *child : children) {
@@ -112,5 +113,6 @@ void GameObject::add_child(GameObject *obj)
  ***************************************************************************/
 void GameObject::add_component(GameComponent *obj)
 {
+	obj->set_parent_transform(&transform);
 	components.push_back(obj);
 }

@@ -3,7 +3,7 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
-#include <components/LightSources.h>
+#include <components/SharedGlobals.h>
 
 #include <iostream>
 
@@ -65,5 +65,5 @@ void ForwardAmbient::update_uniforms(const Transform &transform,
 
 	this->set_uniform("MVP", projected_matrix);
 	this->set_uniform("ambient_intensity",
-			  LightSources::get_instance().active_ambient_light);
+			  SharedGlobals::get_instance().active_ambient_light);
 }

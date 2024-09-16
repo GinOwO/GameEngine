@@ -16,12 +16,7 @@
 
 #include <core/Camera.h>
 
-#include <components/SpotLight.h>
-
 #include <components/GameObject.h>
-#include <components/BaseLight.h>
-#include <components/DirectionalLight.h>
-#include <components/PointLight.h>
 
 #include <vector>
 
@@ -54,11 +49,6 @@ class RenderingEngine {
 	 * @return The singleton instance of the RenderingEngine.
 	 ***************************************************************************/
 	static RenderingEngine &get_instance();
-
-	Vector3f ambient_light;
-	DirectionalLight directional_light;
-	PointLight point_light;
-	SpotLight spot_light;
 
     private:
 	Camera &camera; /**< Reference to the Camera used for rendering. */

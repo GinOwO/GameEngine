@@ -13,7 +13,7 @@
 
 #include <components/BaseLight.h>
 #include <components/GameObject.h>
-#include <components/LightSources.h>
+#include <components/SharedGlobals.h>
 
 #include <cmath>
 
@@ -50,7 +50,7 @@ void RenderingEngine::clear_screen()
 RenderingEngine::RenderingEngine()
 	: camera(Camera::get_instance())
 {
-	LightSources::get_instance().active_ambient_light = Vector3f(0.2f);
+	SharedGlobals::get_instance().active_ambient_light = Vector3f(0.2f);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glFrontFace(GL_CW);
@@ -139,7 +139,7 @@ void RenderingEngine::render(GameObject *object)
 {
 	clear_screen();
 
-	LightSources &light_sources = LightSources::get_instance();
+	SharedGlobals &light_sources = SharedGlobals::get_instance();
 	light_sources.clear_lights();
 
 	object->add_to_rendering_engine();

@@ -3,6 +3,7 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
+#include <components/SharedGlobals.h>
 #include <components/BaseLight.h>
 
 #include <iostream>
@@ -89,7 +90,7 @@ void ForwardSpot::update_uniforms(const Transform &transform,
 
 	this->set_uniform("spot_light",
 			  *static_cast<BaseLight *>(
-				  LightSources::get_instance().active_light));
+				  SharedGlobals::get_instance().active_light));
 }
 
 /***************************************************************************
@@ -108,13 +109,13 @@ void ForwardSpot::set_uniform(const std::string &uniform,
 	this->set_uniform(uniform + ".point_light.base_light.intensity",
 			  base_light.intensity);
 	this->set_uniform(uniform + ".point_light.attenuation.constant",
-			  base_light.attenuation.constant);
+			  base_light.attenuation.getX());
 	this->set_uniform(uniform + ".point_light.attenuation.linear",
-			  base_light.attenuation.linear);
+			  base_light.attenuation.getY());
 	this->set_uniform(uniform + ".point_light.attenuation.exponent",
-			  base_light.attenuation.exponent);
+			  base_light.attenuation.getZ());
 	this->set_uniform(uniform + ".point_light.position",
-			  base_light.position);
+			  base_light.get_parent_transform()->get_translation());
 	this->set_uniform(uniform + ".point_light.range", base_light.range);
 	this->set_uniform(uniform + ".direction", base_light.direction);
 	this->set_uniform(uniform + ".cutoff", base_light.cutoff);

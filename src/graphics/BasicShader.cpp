@@ -3,6 +3,8 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
+#include <components/SharedGlobals.h>
+
 #include <iostream>
 
 /***************************************************************************

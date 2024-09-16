@@ -40,42 +40,32 @@ void TestGame::init()
 	plane_object->add_component(new MeshRenderer(mesh, material));
 	plane_object->transform.set_translation(0, -1, 5);
 
-	GameObject *light_object = new GameObject();
+	GameObject *light_object0 = new GameObject();
 	DirectionalLight *directional_light =
 		new DirectionalLight{ "#00F", 0.4f, Vector3f{ 1, 1, 1 } };
 
-	light_object->add_component(directional_light);
+	light_object0->add_component(directional_light);
 
-	PointLight *point_light =
-		new PointLight{ "#0F0", 0.4f, { 0, 0, 1 }, { 1, 0, 1 }, 10 };
-	light_object->add_component(point_light);
+	GameObject *light_object1 = new GameObject();
+	PointLight *point_light = new PointLight{
+		"#0F0",
+		0.4f,
+		{ 0, 0, 1 },
+	};
+	light_object1->add_component(point_light);
+	light_object1->transform.set_translation(1, 0, 1);
 
-	SpotLight *spot_light =
-		new SpotLight{ "#0FF",	    0.4f, { 0, 0, 0.1f },
-			       { 5, 0, 5 }, 100,  { 1, 0, 0 },
-			       0.7f };
-	light_object->add_component(spot_light);
+	GameObject *light_object2 = new GameObject();
+	SpotLight *spot_light = new SpotLight{
+		"#0Ff", 0.4f, { 0, 0, 0.1f }, { 1, 0, 0 }, 0.7f
+	};
+	light_object2->add_component(spot_light);
+	light_object2->transform.set_translation(5, 0, 5);
 
 	get_root_object()->add_child(plane_object);
-	get_root_object()->add_child(light_object);
+	get_root_object()->add_child(light_object0);
+	get_root_object()->add_child(light_object1);
+	get_root_object()->add_child(light_object2);
 
 	camera.set_position({ 0, 0, -10 });
 }
-
-// void Game::input()
-// {
-// 	camera.input();
-// 	root->input();
-// }
-
-// void Game::update()
-// {
-// 	transform.set_projection(70.0f, window.get_window_width(),
-// 				 window.get_window_height(), .1f, 1000.0f);
-// 	root->update();
-// }
-
-// void Game::render()
-// {
-// 	root->render();
-// }

@@ -37,6 +37,8 @@
  *
  ***************************************************************************/
 class Shader {
+    protected:
+	Transform const *transform; // TODO: Comment
     private:
 	GLuint shader_program; /**< The OpenGL shader program ID. */
 	std::unordered_map<std::string, GLuint>

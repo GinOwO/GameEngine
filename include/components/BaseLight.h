@@ -13,11 +13,10 @@
 
 #include <math/Vector3f.h>
 
-#include <graphics/Attenuation.h>
 #include <graphics/Shader.h>
 
 #include <components/GameComponent.h>
-#include <components/LightSources.h>
+#include <components/SharedGlobals.h>
 
 #include <string>
 #include <sstream>
@@ -39,7 +38,7 @@ struct BaseLight : public GameComponent {
 	Vector3f direction; /**< The direction of the light. */
 
 	// Point Light
-	Attenuation attenuation; /**< The light's attenuation properties. */
+	Vector3f attenuation; /**< The light's attenuation properties (constant, linear, exponent). */
 	Vector3f position; /**< The position of the light. */
 	float range; /**< The range of the light. */
 
@@ -149,13 +148,13 @@ struct BaseLight : public GameComponent {
 	// TODO: Comments
 	void add_to_rendering_engine(bool id) override
 	{
-		LightSources::get_instance().add_to_lights(
+		SharedGlobals::get_instance().add_to_lights(
 			static_cast<void *>(this));
 	}
 
     private:
 	// TODO: comments
-	void input(const Transform &transform) override {};
-	void update(const Transform &transform) override {};
-	void render(const Transform &transform, Shader &shader) override {};
+	void input() override {};
+	void update() override {};
+	void render(Shader &shader) override {};
 };

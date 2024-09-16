@@ -24,7 +24,7 @@ Transform::Transform()
  *
  * @return The translation vector.
  ***************************************************************************/
-Vector3f Transform::get_translation()
+Vector3f Transform::get_translation() const noexcept
 {
 	return translation;
 }
@@ -34,7 +34,7 @@ Vector3f Transform::get_translation()
  *
  * @return The rotation vector.
  ***************************************************************************/
-Vector3f Transform::get_rotation()
+Vector3f Transform::get_rotation() const noexcept
 {
 	return rotation;
 }
@@ -44,7 +44,7 @@ Vector3f Transform::get_rotation()
  *
  * @return The scale vector.
  ***************************************************************************/
-Vector3f Transform::get_scale()
+Vector3f Transform::get_scale() const noexcept
 {
 	return scale;
 }

@@ -66,7 +66,7 @@ class MeshRenderer : public GameComponent {
 	 * @param transform The Transform object representing the component's
 	 *                  position and orientation.
 	 ***************************************************************************/
-	void input(const Transform &transform) override;
+	void input() override;
 
 	/***************************************************************************
 	 * @brief Updates the MeshRenderer.
@@ -74,7 +74,7 @@ class MeshRenderer : public GameComponent {
 	 * @param transform The Transform object representing the component's
 	 *                  position and orientation.
 	 ***************************************************************************/
-	void update(const Transform &transform) override;
+	void update() override;
 
 	/***************************************************************************
 	 * @brief Renders the Mesh using the provided Shader.
@@ -83,5 +83,5 @@ class MeshRenderer : public GameComponent {
 	 *                  position and orientation.
 	 * @param shader The Shader used for rendering the Mesh.
 	 ***************************************************************************/
-	void render(const Transform &transform, Shader &shader) override;
+	void render(Shader &shader) override;
 };

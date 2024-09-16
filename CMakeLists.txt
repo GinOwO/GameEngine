@@ -53,7 +53,6 @@ set(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/Texture.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Material.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/BasicShader.cpp
-	# ${PROJECT_SOURCE_DIR}/src/graphics/PhongShader.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/ForwardAmbient.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/ForwardDirectional.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/ForwardPoint.cpp
@@ -68,7 +67,7 @@ set(GAME_SOURCES
 set(COMPONENT_SOURCES
 	${PROJECT_SOURCE_DIR}/src/components/GameObject.cpp
 	${PROJECT_SOURCE_DIR}/src/components/MeshRenderer.cpp
-	${PROJECT_SOURCE_DIR}/src/components/LightSources.cpp
+	${PROJECT_SOURCE_DIR}/src/components/SharedGlobals.cpp
 )
 
 set(MISC_SOURCES

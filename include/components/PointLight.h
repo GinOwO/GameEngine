@@ -13,11 +13,10 @@
 
 #include <math/Vector3f.h>
 
-#include <graphics/Attenuation.h>
 #include <graphics/ForwardPoint.h>
 
 #include <components/BaseLight.h>
-#include <components/LightSources.h>
+#include <components/SharedGlobals.h>
 
 #include <string>
 
@@ -42,18 +41,14 @@ struct PointLight : public BaseLight {
 	 * 
 	 * @param color The color of the light, specified as a Vector3f.
 	 * @param intensity The intensity of the light.
-	 * @param attenuation The attenuation properties.
-	 * @param position The position of the light.
-	 * @param range The range of the light.
+	 * @param attenuation The attenuation properties (constant, linear, exponent).
 	 ***************************************************************************/
 	PointLight(const Vector3f &color, const float &intensity,
-		   const Attenuation &attenuation, const Vector3f &position,
-		   float range)
+		   const Vector3f &attenuation)
 		: BaseLight(color, intensity)
 	{
 		this->attenuation = attenuation;
-		this->position = position;
-		this->range = range;
+		this->range = 1000.0f;
 		this->shader = &ForwardPoint::get_instance();
 	}
 
@@ -67,17 +62,13 @@ struct PointLight : public BaseLight {
 	 * @param hex The color of the light, specified as a HEX color string.
 	 * @param intensity The intensity of the light.
 	 * @param attenuation The attenuation properties.
-	 * @param position The position of the light.
-	 * @param range The range of the light.
 	 ***************************************************************************/
 	PointLight(const std::string &color, const float &intensity,
-		   const Attenuation &attenuation, const Vector3f &position,
-		   float range)
+		   const Vector3f &attenuation)
 		: BaseLight(color, intensity)
 	{
 		this->attenuation = attenuation;
-		this->position = position;
-		this->range = range;
+		this->range = 1000.0f;
 		this->shader = &ForwardPoint::get_instance();
 	}
 };

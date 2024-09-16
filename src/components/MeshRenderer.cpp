@@ -8,6 +8,7 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
+#include <components/SharedGlobals.h>
 #include <components/GameComponent.h>
 
 /***************************************************************************
@@ -29,7 +30,7 @@ MeshRenderer::MeshRenderer(const Mesh &mesh, const Material &material)
  *
  * @param transform The transform associated with this MeshRenderer.
  ***************************************************************************/
-void MeshRenderer::input(const Transform &transform)
+void MeshRenderer::input()
 {
 }
 
@@ -40,7 +41,7 @@ void MeshRenderer::input(const Transform &transform)
  *
  * @param transform The transform associated with this MeshRenderer.
  ***************************************************************************/
-void MeshRenderer::update(const Transform &transform)
+void MeshRenderer::update()
 {
 }
 
@@ -53,9 +54,9 @@ void MeshRenderer::update(const Transform &transform)
  * @param transform The transform to apply to the mesh.
  * @param shader The shader to use for rendering the mesh.
  ***************************************************************************/
-void MeshRenderer::render(const Transform &transform, Shader &shader)
+void MeshRenderer::render(Shader &shader)
 {
 	shader.use_program();
-	shader.update_uniforms(transform, material);
+	shader.update_uniforms(*get_parent_transform(), material);
 	mesh.draw();
 }

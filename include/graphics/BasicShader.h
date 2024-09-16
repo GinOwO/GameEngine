@@ -51,7 +51,6 @@ class BasicShader : public Shader {
 	/***************************************************************************
 	 * @brief Updates the shader's uniform variables.
 	 *
-	 * @param transform The transformation matrix to use.
 	 * @param material The material properties to use.
 	 ***************************************************************************/
 	void update_uniforms(const Transform &transform,

@@ -16,7 +16,7 @@
 #include <graphics/ForwardDirectional.h>
 
 #include <components/BaseLight.h>
-#include <components/LightSources.h>
+#include <components/SharedGlobals.h>
 
 #include <string>
 
