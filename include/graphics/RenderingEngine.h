@@ -14,7 +14,7 @@
 
 #include <math/Vector3f.h>
 
-#include <core/Camera.h>
+#include <components/BaseCamera.h>
 
 #include <components/GameObject.h>
 
@@ -51,8 +51,6 @@ class RenderingEngine {
 	static RenderingEngine &get_instance();
 
     private:
-	Camera &camera; /**< Reference to the Camera used for rendering. */
-
 	/***************************************************************************
 	 * @brief Sets the clear color for the rendering engine.
 	 *

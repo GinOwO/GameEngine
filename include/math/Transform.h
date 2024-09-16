@@ -16,7 +16,7 @@
 #include <math/Matrix4f.h>
 #include <math/Quaternion.h>
 
-#include <core/Camera.h>
+#include <components/BaseCamera.h>
 
 /***************************************************************************
  * @class Transform
@@ -115,5 +115,5 @@ class Transform {
 	 * @param camera The camera object for which the projection is computed.
 	 * @return The projection matrix relative to the camera.
 	 ***************************************************************************/
-	Matrix4f get_projected_camera(Camera &camera) const noexcept;
+	Matrix4f get_projected_camera(BaseCamera *camera) const noexcept;
 };

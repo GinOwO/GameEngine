@@ -16,7 +16,7 @@
 #include <math/Matrix4f.h>
 #include <math/Transform.h>
 
-#include <core/Camera.h>
+#include <components/BaseCamera.h>
 
 #include <graphics/Shader.h>
 #include <graphics/Material.h>

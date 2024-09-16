@@ -56,10 +56,11 @@ void ForwardAmbient::load_shader()
 void ForwardAmbient::update_uniforms(const Transform &transform,
 				     const Material &material)
 {
-	static Camera &camera = Camera::get_instance();
+	BaseCamera *camera = static_cast<BaseCamera *>(
+		SharedGlobals::get_instance().main_camera);
 
 	Matrix4f projected_matrix = Matrix4f::flip_matrix(
-		camera.get_view_projection() * transform.get_transformation());
+		camera->get_view_projection() * transform.get_transformation());
 
 	material.get_texture().bind();
 

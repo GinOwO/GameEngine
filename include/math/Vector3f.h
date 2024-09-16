@@ -12,6 +12,7 @@
 #pragma once
 
 #include <array>
+#include <cmath>
 
 /***************************************************************************
  * @class Vector3f
@@ -307,3 +308,17 @@ class Vector3f {
 	Vector3f interpolate(const Vector3f &dest,
 			     float interpolation_factor) const noexcept;
 };
+
+/***************************************************************************
+ * @brief Converts degrees to radians.
+ *
+ * Converts the given angle in degrees to radians.
+ *
+ * @tparam T The type of the angle in degrees.
+ * @param degrees The angle in degrees.
+ * @return The angle in radians.
+ ***************************************************************************/
+template <typename T> inline float to_radians(T degrees)
+{
+	return (degrees * M_PI) / 180.0;
+}

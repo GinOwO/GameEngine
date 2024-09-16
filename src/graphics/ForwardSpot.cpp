@@ -71,13 +71,15 @@ void ForwardSpot::load_shader()
 void ForwardSpot::update_uniforms(const Transform &transform,
 				  const Material &material)
 {
-	static Camera &camera = Camera::get_instance();
+	BaseCamera *camera = static_cast<BaseCamera *>(
+		SharedGlobals::get_instance().main_camera);
 
-	Vector3f camera_position = camera.get_position();
+	Vector3f camera_position = camera->get_position();
 
 	Matrix4f world_matrix = transform.get_transformation();
 	Matrix4f projected_matrix = Matrix4f::flip_matrix(
-		camera.get_view_projection() * world_matrix);
+		camera->get_view_projection() * world_matrix);
+
 	world_matrix = Matrix4f::flip_matrix(world_matrix);
 
 	material.get_texture().bind();

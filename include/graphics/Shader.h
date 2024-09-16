@@ -18,7 +18,7 @@
 #include <math/Vector3f.h>
 #include <math/Transform.h>
 
-#include <core/Camera.h>
+#include <components/BaseCamera.h>
 
 #include <graphics/Material.h>
 #include <graphics/Specular.h>

@@ -3,7 +3,8 @@
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <core/Camera.h>
+#include <math/Vector3f.h>
+
 #include <core/Window.h>
 
 #include <graphics/ForwardAmbient.h>
@@ -11,25 +12,12 @@
 #include <graphics/ForwardPoint.h>
 #include <graphics/ForwardSpot.h>
 
+#include <components/BaseCamera.h>
 #include <components/BaseLight.h>
 #include <components/GameObject.h>
 #include <components/SharedGlobals.h>
 
 #include <cmath>
-
-/***************************************************************************
- * @brief Converts degrees to radians.
- *
- * Converts the given angle in degrees to radians.
- *
- * @tparam T The type of the angle in degrees.
- * @param degrees The angle in degrees.
- * @return The angle in radians.
- ***************************************************************************/
-template <typename T> inline float to_radians(T degrees)
-{
-	return (degrees * M_PI) / 180.0;
-}
 
 /***************************************************************************
  * @brief Clears the screen buffer.
@@ -48,7 +36,6 @@ void RenderingEngine::clear_screen()
  * Initializes OpenGL settings and sets up the camera projection.
  ***************************************************************************/
 RenderingEngine::RenderingEngine()
-	: camera(Camera::get_instance())
 {
 	SharedGlobals::get_instance().active_ambient_light = Vector3f(0.2f);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -63,11 +50,12 @@ RenderingEngine::RenderingEngine()
 	glEnable(GL_TEXTURE_2D);
 
 	RenderingEngine::clear_screen();
-	camera.set_projection(
-		to_radians(70.0f),
-		Window::get_instance().get_window_width() /
-			Window::get_instance().get_window_height(),
-		.1f, 1000.0f);
+	static_cast<BaseCamera *>(SharedGlobals::get_instance().main_camera)
+		->set_projection(
+			to_radians(70.0f),
+			Window::get_instance().get_window_width() /
+				Window::get_instance().get_window_height(),
+			.1f, 1000.0f);
 }
 
 /***************************************************************************
@@ -119,13 +107,10 @@ RenderingEngine &RenderingEngine::get_instance()
 }
 
 /***************************************************************************
- * @brief Handles input for the camera.
- *
- * Processes input for the camera, allowing it to respond to user controls.
+ * @brief Handles input.
  ***************************************************************************/
 void RenderingEngine::input()
 {
-	Camera::get_instance().input();
 }
 
 /***************************************************************************

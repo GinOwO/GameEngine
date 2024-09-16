@@ -43,7 +43,6 @@ set(CORE_SOURCES
 	${PROJECT_SOURCE_DIR}/src/core/Engine.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Timer.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Input.cpp
-	${PROJECT_SOURCE_DIR}/src/core/Camera.cpp
 )
 
 set(GRAPHICS_SOURCES
@@ -66,6 +65,7 @@ set(GAME_SOURCES
 
 set(COMPONENT_SOURCES
 	${PROJECT_SOURCE_DIR}/src/components/GameObject.cpp
+	${PROJECT_SOURCE_DIR}/src/components/Camera.cpp
 	${PROJECT_SOURCE_DIR}/src/components/MeshRenderer.cpp
 	${PROJECT_SOURCE_DIR}/src/components/SharedGlobals.cpp
 )

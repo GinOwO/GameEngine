@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
+
 #include <math/Vector3f.h>
 #include <math/Matrix4f.h>
-#include <core/Camera.h>
 #include <math/Transform.h>
+
+#include <components/BaseCamera.h>
 
 // Test for default constructor
 TEST(TransformTest, DefaultConstructor)

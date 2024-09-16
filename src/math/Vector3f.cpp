@@ -10,11 +10,6 @@ template <typename T> inline float to_degrees(T radians)
 	return radians * (180.0 / M_PI);
 }
 
-template <typename T> inline float to_radians(T degrees)
-{
-	return (degrees * M_PI) / 180.0;
-}
-
 /***************************************************************************
  * @brief Default constructor for Vector3f.
  *

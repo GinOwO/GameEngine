@@ -1,4 +1,4 @@
-#include <core/Camera.h>
+#include <components/Camera.h>
 
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
@@ -13,32 +13,6 @@
 
 const Vector3f Camera::y_axis{ 0, 1, 0 };
 bool Camera::perspective_set = false;
-
-/***************************************************************************
- * @brief Gets the singleton instance of the Camera class.
- *
- * This method ensures that only one instance of the Camera class exists
- * throughout the application.
- *
- * @return A reference to the singleton instance of the Camera class.
- ***************************************************************************/
-Camera &Camera::get_instance()
-{
-	static Camera instance;
-	return instance;
-}
-
-/***************************************************************************
- * @brief Constructs a Camera object with default settings.
- *
- * Initializes the camera's position, forward, and up vectors to default values.
- ***************************************************************************/
-Camera::Camera()
-{
-	position = Vector3f{ 0, 0, 0 };
-	forward = Vector3f{ 0, 0, 1 };
-	up = Vector3f{ 0, 1, 0 };
-}
 
 /***************************************************************************
  * @brief Sets the projection matrix for the camera.
@@ -74,40 +48,11 @@ Matrix4f Camera::get_view_projection() const
 		throw std::runtime_error(
 			"ERROR: Perspective matrix not initialized");
 	}
-	Matrix4f camera_rotation = Matrix4f::Camera_Matrix(forward, up);
-	Matrix4f camera_translation =
-		Matrix4f::Translation_Matrix(position * -1.0f);
+	Matrix4f camera_rotation =
+		get_parent_transform()->get_rotation().to_rotation_matrix();
+	Matrix4f camera_translation = Matrix4f::Translation_Matrix(
+		get_parent_transform()->get_translation() * -1.0f);
 	return projection * camera_rotation * camera_translation;
-}
-
-/***************************************************************************
- * @brief Sets the position of the camera.
- *
- * @param vec The new position of the camera.
- ***************************************************************************/
-void Camera::set_position(const Vector3f &vec) noexcept
-{
-	position = vec;
-}
-
-/***************************************************************************
- * @brief Sets the forward direction of the camera.
- *
- * @param vec The new forward direction of the camera.
- ***************************************************************************/
-void Camera::set_forward(const Vector3f &vec) noexcept
-{
-	forward = vec;
-}
-
-/***************************************************************************
- * @brief Sets the up direction of the camera.
- *
- * @param vec The new up direction of the camera.
- ***************************************************************************/
-void Camera::set_up(const Vector3f &vec) noexcept
-{
-	up = vec;
 }
 
 /***************************************************************************
@@ -117,7 +62,7 @@ void Camera::set_up(const Vector3f &vec) noexcept
  ***************************************************************************/
 Vector3f Camera::get_position() const noexcept
 {
-	return position;
+	return get_parent_transform()->get_translation();
 }
 
 /***************************************************************************
@@ -127,7 +72,7 @@ Vector3f Camera::get_position() const noexcept
  ***************************************************************************/
 Vector3f Camera::get_forward() const noexcept
 {
-	return forward;
+	return get_parent_transform()->get_rotation().get_forward();
 }
 
 /***************************************************************************
@@ -137,7 +82,7 @@ Vector3f Camera::get_forward() const noexcept
  ***************************************************************************/
 Vector3f Camera::get_up() const noexcept
 {
-	return up;
+	return get_parent_transform()->get_rotation().get_up();
 }
 
 /***************************************************************************
@@ -147,7 +92,7 @@ Vector3f Camera::get_up() const noexcept
  ***************************************************************************/
 Vector3f Camera::get_left() const noexcept
 {
-	return forward.cross(up).normalize();
+	return get_parent_transform()->get_rotation().get_left();
 }
 
 /***************************************************************************
@@ -157,7 +102,7 @@ Vector3f Camera::get_left() const noexcept
  ***************************************************************************/
 Vector3f Camera::get_right() const noexcept
 {
-	return up.cross(forward).normalize();
+	return get_parent_transform()->get_rotation().get_right();
 }
 
 /***************************************************************************
@@ -170,35 +115,9 @@ Vector3f Camera::get_right() const noexcept
  ***************************************************************************/
 void Camera::move_camera(const Vector3f &direction, float amount) noexcept
 {
-	position = position + (direction * amount);
-}
-
-/***************************************************************************
- * @brief Rotates the camera around the Y-axis.
- *
- * Rotates the camera's forward and up vectors based on the given angle.
- *
- * @param angle The angle to rotate the camera, in degrees.
- ***************************************************************************/
-void Camera::rotate_y(float angle) noexcept
-{
-	Vector3f horizontal_axis = y_axis.cross(forward).normalize();
-	forward = forward.rotate(angle, horizontal_axis).normalize();
-	up = forward.cross(horizontal_axis).normalize();
-}
-
-/***************************************************************************
- * @brief Rotates the camera around the X-axis.
- *
- * Rotates the camera's forward and up vectors based on the given angle.
- *
- * @param angle The angle to rotate the camera, in degrees.
- ***************************************************************************/
-void Camera::rotate_x(float angle) noexcept
-{
-	Vector3f horizontal_axis = y_axis.cross(forward).normalize();
-	forward = forward.rotate(angle, y_axis).normalize();
-	up = forward.cross(horizontal_axis).normalize();
+	get_parent_transform()->set_translation(
+		get_parent_transform()->get_translation() +
+		(direction * amount));
 }
 
 /***************************************************************************
@@ -238,12 +157,20 @@ void Camera::input()
 		float dx = delta[0], dy = delta[1];
 
 		if (abs(dx) > 5e-4) {
-			this->rotate_x(3.14 * (dx * rotate_sensitivity) /
-				       180.0f);
+			get_parent_transform()->set_rotation(
+				get_parent_transform()->get_rotation() *
+				Quaternion::Rotation_Quaternion(
+					y_axis,
+					to_radians(-dx * rotate_sensitivity)));
 		}
 		if (abs(dy) > 5e-4) {
-			this->rotate_y(3.14 * (dy * rotate_sensitivity) /
-				       180.0f);
+			get_parent_transform()->set_rotation(
+				get_parent_transform()->get_rotation() *
+				Quaternion::Rotation_Quaternion(
+					get_parent_transform()
+						->get_rotation()
+						.get_right(),
+					to_radians(-dy * rotate_sensitivity)));
 		}
 	}
 }

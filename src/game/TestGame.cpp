@@ -1,24 +1,26 @@
 #include <game/TestGame.h>
 
-#include <cmath>
-#include <iostream>
-
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <math/Vector3f.h>
 
 #include <graphics/Mesh.h>
 #include <graphics/Vertex.h>
 #include <graphics/Texture.h>
 #include <graphics/Material.h>
 
+#include <components/Camera.h>
 #include <components/DirectionalLight.h>
 #include <components/PointLight.h>
 #include <components/SpotLight.h>
 #include <components/MeshRenderer.h>
 
+#include <cmath>
+#include <iostream>
+
 void TestGame::init()
 {
-	auto &camera = Camera::get_instance();
 	auto &transform = get_root_object()->transform;
 
 	float field_width = 10.0f, field_depth = 10.0f;
@@ -35,6 +37,11 @@ void TestGame::init()
 	Material material(
 		Texture::load_texture("./assets/objects/test_texture.png"),
 		{ 1, 1, 1 }, { 1, 8 });
+
+	GameObject *camera_object = new GameObject();
+	Camera *camera = new Camera();
+	SharedGlobals::get_instance().main_camera = camera;
+	camera_object->add_component(camera);
 
 	GameObject *plane_object = new GameObject();
 	plane_object->add_component(new MeshRenderer(mesh, material));
@@ -64,9 +71,10 @@ void TestGame::init()
 		{ 0, 1, 0 }, (3.14f * 90.0f / 180.0f)));
 
 	get_root_object()->add_child(plane_object);
-	// get_root_object()->add_child(light_object0);
+	get_root_object()->add_child(light_object0);
 	get_root_object()->add_child(light_object1);
 	get_root_object()->add_child(light_object2);
+	get_root_object()->add_child(camera_object);
 
-	camera.set_position({ 0, 0, -10 });
+	camera_object->transform.set_translation({ 0, 0, -10 });
 }

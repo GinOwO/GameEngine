@@ -3,7 +3,7 @@
 #include <math/Vector3f.h>
 #include <math/Matrix4f.h>
 
-#include <core/Camera.h>
+#include <components/BaseCamera.h>
 
 #include <iostream>
 
@@ -123,7 +123,7 @@ Matrix4f Transform::get_transformation() const noexcept
  * @return The resulting matrix from the camera's view-projection and 
  *	 the transform.
  ***************************************************************************/
-Matrix4f Transform::get_projected_camera(Camera &camera) const noexcept
+Matrix4f Transform::get_projected_camera(BaseCamera *camera) const noexcept
 {
-	return camera.get_view_projection() * get_transformation();
+	return camera->get_view_projection() * get_transformation();
 }

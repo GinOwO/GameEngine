@@ -2,7 +2,7 @@
 
 #include <math/Transform.h>
 
-#include <core/Camera.h>
+#include <components/BaseCamera.h>
 
 #include <graphics/Mesh.h>
 #include <graphics/Shader.h>

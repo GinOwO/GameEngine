@@ -6,7 +6,7 @@
 #include <graphics/Shader.h>
 #include <graphics/RenderingEngine.h>
 
-#include <core/Camera.h>
+#include <components/BaseCamera.h>
 #include <core/Input.h>
 #include <core/Timer.h>
 
@@ -140,9 +140,9 @@ Engine::~Engine()
 void Engine::run()
 {
 	Timer &timer = Timer::get_instance();
-	RenderingEngine &rendering_engine = RenderingEngine::get_instance();
 	TestGame game;
 	game.init();
+	RenderingEngine &rendering_engine = RenderingEngine::get_instance();
 
 	int frames = 0;
 	double frame_counter = 0;
@@ -164,7 +164,6 @@ void Engine::run()
 			}
 
 			game.input();
-			rendering_engine.input();
 			game.update();
 
 			frame_counter += timer.get_delta_time();

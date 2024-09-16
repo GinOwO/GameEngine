@@ -20,6 +20,7 @@ class SharedGlobals {
     public:
 	Vector3f active_ambient_light; /**< Light responsible for ambient lighting. */
 	void *active_light;
+	void *main_camera;
 
 	void add_to_lights(void *light) noexcept;
 	std::vector<void *> &get_lights();
