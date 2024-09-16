@@ -12,8 +12,11 @@
 #pragma once
 
 #include <math/Vector3f.h>
-#include <graphics/BaseLight.h>
+
 #include <graphics/Attenuation.h>
+
+#include <components/BaseLight.h>
+#include <components/LightSources.h>
 
 /***************************************************************************
  * @struct PointLight
@@ -24,8 +27,7 @@
  * and range. It models a light that radiates from a single point in all directions.
  *
  ***************************************************************************/
-struct PointLight {
-	BaseLight base_light; /**< The base light properties. */
+struct PointLight : public BaseLight {
 	Attenuation attenuation; /**< The light's attenuation properties. */
 	Vector3f position; /**< The position of the light. */
 	float range; /**< The range of the light. */
@@ -40,12 +42,20 @@ struct PointLight {
 	 * @param position The position of the light.
 	 * @param range The range of the light.
 	 ***************************************************************************/
-	PointLight(const BaseLight &base_light, const Attenuation &attenuation,
-		   const Vector3f &position, float range)
-		: base_light(base_light)
+	PointLight(const Vector3f &color, const float &intensity,
+		   const Attenuation &attenuation, const Vector3f &position,
+		   float range)
+		: BaseLight(color, intensity)
 		, attenuation(attenuation)
 		, position(position)
 		, range(range)
 	{
+	}
+
+	// TODO: comments
+	void add_to_rendering_engine(bool id) override
+	{
+		LightSources::get_instance().add_to_point_lights(
+			static_cast<void *>(this));
 	}
 };

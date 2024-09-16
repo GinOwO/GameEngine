@@ -13,6 +13,11 @@
 
 #include <math/Vector3f.h>
 
+#include <components/GameComponent.h>
+#include <components/LightSources.h>
+
+#include <graphics/Shader.h>
+
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -28,7 +33,9 @@
  * string. The intensity determines the brightness of the light source.
  *
  ***************************************************************************/
-struct BaseLight {
+struct BaseLight : public GameComponent {
+	Vector3f direction; /**< The direction of the light for directional Light. */
+
 	/***************************************************************************
 	 * @brief The color of the light, represented as a Vector3f.
 	 *
@@ -43,6 +50,13 @@ struct BaseLight {
 	 * This value represents the brightness of the light source.
 	 ***************************************************************************/
 	float intensity;
+
+	/***************************************************************************
+	 * @brief The shader used to render this BaseLight.
+	 *
+	 * This object represents the shader used to render this BaseLight.
+	 ***************************************************************************/
+	Shader *shader;
 
 	/***************************************************************************
 	 * @brief Constructs a BaseLight with RGB color and intensity.
@@ -121,4 +135,10 @@ struct BaseLight {
 		, intensity(0.0f)
 	{
 	}
+
+    private:
+	// TODO: comments
+	void input(const Transform &transform) override {};
+	void update(const Transform &transform) override {};
+	void render(const Transform &transform, Shader &shader) override {};
 };

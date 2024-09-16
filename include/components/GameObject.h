@@ -15,7 +15,7 @@
 
 #include <graphics/Shader.h>
 
-#include <game/GameComponent.h>
+#include <components/GameComponent.h>
 
 #include <vector>
 
@@ -43,6 +43,9 @@ class GameObject {
 	std::vector<GameComponent *> components;
 
     public:
+	// TODO: Comment
+	~GameObject();
+
 	/***************************************************************************
 	 * @brief The Transform of this GameObject.
 	 ***************************************************************************/
@@ -83,4 +86,7 @@ class GameObject {
 	 * @param obj Pointer to the GameComponent to be added.
 	 ***************************************************************************/
 	void add_component(GameComponent *obj);
+
+	// TODO: Comments
+	void add_to_rendering_engine();
 };

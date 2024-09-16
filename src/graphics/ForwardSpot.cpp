@@ -1,6 +1,6 @@
 #include <graphics/ForwardSpot.h>
 
-#include <graphics/BaseLight.h>
+#include <components/BaseLight.h>
 #include <graphics/SpotLight.h>
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
@@ -117,7 +117,8 @@ void ForwardSpot::set_uniform(const std::string &uniform,
 void ForwardSpot::set_uniform(const std::string &uniform,
 			      const PointLight &point_light) noexcept
 {
-	set_uniform(uniform + ".base_light", point_light.base_light);
+	set_uniform(uniform + ".base_light",
+		    BaseLight{ point_light.color, point_light.intensity });
 	set_uniform(uniform + ".attenuation.constant",
 		    point_light.attenuation.constant);
 	set_uniform(uniform + ".attenuation.linear",

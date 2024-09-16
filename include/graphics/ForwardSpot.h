@@ -18,7 +18,7 @@
 
 #include <core/Camera.h>
 
-#include <graphics/BaseLight.h>
+#include <components/BaseLight.h>
 #include <graphics/SpotLight.h>
 #include <graphics/Shader.h>
 #include <graphics/Material.h>

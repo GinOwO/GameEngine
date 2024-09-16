@@ -12,7 +12,7 @@
 
 #include <graphics/Shader.h>
 
-#include <game/GameObject.h>
+#include <components/GameObject.h>
 
 /***************************************************************************
  * @class Game
@@ -32,6 +32,11 @@ class Game {
 	GameObject *root = nullptr;
 
     public:
+	// TODO: comments
+	~Game()
+	{
+		delete root;
+	}
 	/***************************************************************************
 	 * @brief Pure virtual function to initialize the game.
 	 *

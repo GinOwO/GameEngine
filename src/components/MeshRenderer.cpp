@@ -1,4 +1,4 @@
-#include <game/MeshRenderer.h>
+#include <components/MeshRenderer.h>
 
 #include <math/Transform.h>
 
@@ -8,7 +8,7 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
-#include <game/GameComponent.h>
+#include <components/GameComponent.h>
 
 /***************************************************************************
  * @brief Constructs a MeshRenderer with the specified mesh and material.

@@ -3,6 +3,8 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
+#include <components/LightSources.h>
+
 #include <iostream>
 
 /***************************************************************************
@@ -62,5 +64,6 @@ void ForwardAmbient::update_uniforms(const Transform &transform,
 	material.get_texture().bind();
 
 	this->set_uniform("MVP", projected_matrix);
-	this->set_uniform("ambient_intensity", ambient_light);
+	this->set_uniform("ambient_intensity",
+			  LightSources::get_instance().ambient_light);
 }

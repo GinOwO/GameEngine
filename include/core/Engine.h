@@ -17,7 +17,7 @@
 
 #include <graphics/RenderingEngine.h>
 
-#include <game/Game.h>
+#include <components/Game.h>
 
 #include <string>
 

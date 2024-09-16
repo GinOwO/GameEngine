@@ -18,8 +18,8 @@
 
 #include <core/Camera.h>
 
-#include <graphics/BaseLight.h>
-#include <graphics/PointLight.h>
+#include <components/BaseLight.h>
+#include <components/PointLight.h>
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
@@ -36,8 +36,6 @@ class ForwardPoint : public Shader {
 	ForwardPoint();
 
     public:
-	PointLight point_light;
-
 	ForwardPoint(const ForwardPoint &) = delete;
 	ForwardPoint &operator=(const ForwardPoint &) = delete;
 

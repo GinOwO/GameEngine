@@ -16,7 +16,14 @@
 
 #include <core/Camera.h>
 
-#include <game/GameObject.h>
+#include <graphics/SpotLight.h>
+
+#include <components/GameObject.h>
+#include <components/BaseLight.h>
+#include <components/DirectionalLight.h>
+#include <components/PointLight.h>
+
+#include <vector>
 
 /***************************************************************************
  * @class RenderingEngine
@@ -48,9 +55,13 @@ class RenderingEngine {
 	 ***************************************************************************/
 	static RenderingEngine &get_instance();
 
+	std::vector<BaseLight> base_lights;
+	std::vector<DirectionalLight> directional_lights;
+	std::vector<PointLight> point_lights;
+	std::vector<SpotLight> spot_lights;
+
     private:
 	Camera &camera; /**< Reference to the Camera used for rendering. */
-	Vector3f ambient_light; /**< Light responsible for ambient lighting. */
 
 	/***************************************************************************
 	 * @brief Sets the clear color for the rendering engine.

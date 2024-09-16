@@ -1,9 +1,11 @@
 #include <graphics/ForwardPoint.h>
 
-#include <graphics/BaseLight.h>
-#include <graphics/PointLight.h>
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
+
+#include <components/LightSources.h>
+#include <components/BaseLight.h>
+#include <components/PointLight.h>
 
 #include <iostream>
 
@@ -85,7 +87,10 @@ void ForwardPoint::update_uniforms(const Transform &transform,
 	this->set_uniform("specular", material.get_specular());
 	this->set_uniform("eyePos", camera_position);
 
-	this->set_uniform("point_light", point_light);
+	this->set_uniform(
+		"point_light",
+		*static_cast<PointLight *>(
+			LightSources::get_instance().active_point_light));
 }
 
 /***************************************************************************
@@ -115,7 +120,8 @@ void ForwardPoint::set_uniform(const std::string &uniform,
 void ForwardPoint::set_uniform(const std::string &uniform,
 			       const PointLight &point_light) noexcept
 {
-	set_uniform(uniform + ".base_light", point_light.base_light);
+	set_uniform(uniform + ".base_light",
+		    BaseLight{ point_light.color, point_light.intensity });
 	set_uniform(uniform + ".attenuation.constant",
 		    point_light.attenuation.constant);
 	set_uniform(uniform + ".attenuation.linear",

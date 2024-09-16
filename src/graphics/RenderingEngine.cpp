@@ -11,7 +11,8 @@
 #include <graphics/ForwardPoint.h>
 #include <graphics/ForwardSpot.h>
 
-#include <game/GameObject.h>
+#include <components/GameObject.h>
+#include <components/LightSources.h>
 
 #include <cmath>
 
@@ -27,50 +28,6 @@
 template <typename T> inline float to_radians(T degrees)
 {
 	return (degrees * M_PI) / 180.0;
-}
-
-/***************************************************************************
- * @brief Renders the specified GameObject.
- *
- * Clears the screen and renders the given GameObject using the BasicShader.
- *
- * @param object Pointer to the GameObject to be rendered.
- ***************************************************************************/
-void RenderingEngine::render(GameObject *object)
-{
-	clear_screen();
-
-	ForwardAmbient &forward_shader = ForwardAmbient::get_instance();
-	ForwardDirectional &forward_directional =
-		ForwardDirectional::get_instance();
-
-	ForwardSpot &forward_spot = ForwardSpot::get_instance();
-
-	forward_shader.ambient_light = { 0.2f };
-	forward_spot.spot_light = {
-		{ { "#FFF", 1.0f }, { 0, 0, 0.1f }, { 0, 0, 0 }, 100 },
-		{ 1, 0, 0 },
-		1.0f
-	};
-	object->render(forward_shader);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE);
-	glDepthMask(GL_FALSE);
-	glDepthFunc(GL_EQUAL);
-
-	forward_directional.directional_light = { { "#00F", 0.4f },
-						  { 1, 1, 1 } };
-	object->render(forward_directional);
-	forward_directional.directional_light = { { "#F00", 0.4f },
-						  { -1, 1, -1 } };
-	object->render(forward_directional);
-
-	object->render(forward_spot);
-
-	glDepthFunc(GL_LESS);
-	glDepthMask(GL_TRUE);
-	glDisable(GL_BLEND);
 }
 
 /***************************************************************************
@@ -91,8 +48,8 @@ void RenderingEngine::clear_screen()
  ***************************************************************************/
 RenderingEngine::RenderingEngine()
 	: camera(Camera::get_instance())
-	, ambient_light(0.2f)
 {
+	LightSources::get_instance().ambient_light = Vector3f(0.2f);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glFrontFace(GL_CW);
@@ -168,4 +125,47 @@ RenderingEngine &RenderingEngine::get_instance()
 void RenderingEngine::input()
 {
 	Camera::get_instance().input();
+}
+
+/***************************************************************************
+ * @brief Renders the specified GameObject.
+ *
+ * Clears the screen and renders the given GameObject using the BasicShader.
+ *
+ * @param object Pointer to the GameObject to be rendered.
+ ***************************************************************************/
+void RenderingEngine::render(GameObject *object)
+{
+	clear_screen();
+
+	LightSources &light_sources = LightSources::get_instance();
+	light_sources.clear_lights();
+
+	object->add_to_rendering_engine();
+
+	object->render(ForwardAmbient::get_instance());
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE, GL_ONE);
+	glDepthMask(GL_FALSE);
+	glDepthFunc(GL_EQUAL);
+
+	for (void *light : light_sources.get_directional_lights()) {
+		light_sources.active_directional_light = light;
+		object->render(ForwardDirectional::get_instance());
+	}
+
+	for (void *light : light_sources.get_point_lights()) {
+		light_sources.active_point_light = light;
+		object->render(ForwardPoint::get_instance());
+	}
+
+	for (void *light : light_sources.get_spot_lights()) {
+		light_sources.active_spot_light = light;
+		object->render(ForwardSpot::get_instance());
+	}
+
+	glDepthFunc(GL_LESS);
+	glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
 }

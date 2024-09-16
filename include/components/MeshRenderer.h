@@ -18,7 +18,7 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
-#include <game/GameComponent.h>
+#include <components/GameComponent.h>
 
 /***************************************************************************
  * @class MeshRenderer

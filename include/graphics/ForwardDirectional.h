@@ -18,10 +18,10 @@
 
 #include <core/Camera.h>
 
-#include <graphics/BaseLight.h>
-#include <graphics/DirectionalLight.h>
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
+
+#include <components/BaseLight.h>
 
 /***************************************************************************
  * @class ForwardDirectional
@@ -36,8 +36,6 @@ class ForwardDirectional : public Shader {
 	ForwardDirectional();
 
     public:
-	DirectionalLight directional_light{ { 0.0f, 0.0f }, 0.0f };
-
 	ForwardDirectional(const ForwardDirectional &) = delete;
 	ForwardDirectional &operator=(const ForwardDirectional &) = delete;
 
@@ -63,15 +61,6 @@ class ForwardDirectional : public Shader {
 	 ***************************************************************************/
 	void set_uniform(const std::string &uniform,
 			 const BaseLight &base_light) noexcept;
-
-	/***************************************************************************
-	 * @brief Sets a uniform variable for a DirectionalLight.
-	 *
-	 * @param uniform The name of the uniform variable.
-	 * @param directional_light The DirectionalLight value to set.
-	 ***************************************************************************/
-	void set_uniform(const std::string &uniform,
-			 const DirectionalLight &directional_light) noexcept;
 
 	/***************************************************************************
 	 * @brief Updates the shader's uniform variables.

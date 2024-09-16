@@ -34,7 +34,6 @@ class ForwardAmbient : public Shader {
 	ForwardAmbient();
 
     public:
-	Vector3f ambient_light{ 0.0f };
 	ForwardAmbient(const ForwardAmbient &) = delete;
 	ForwardAmbient &operator=(const ForwardAmbient &) = delete;
 

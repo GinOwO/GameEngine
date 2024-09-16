@@ -59,4 +59,9 @@ class GameComponent {
 	 * instances.
 	 ***************************************************************************/
 	virtual ~GameComponent() = default;
+
+	// TODO: comments
+	virtual void add_to_rendering_engine(bool id = 0)
+	{
+	}
 };

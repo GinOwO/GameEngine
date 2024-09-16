@@ -1,6 +1,6 @@
 #pragma once
 
-#include <game/Game.h>
+#include <components/Game.h>
 
 class TestGame : public Game {
     public:

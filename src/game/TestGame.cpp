@@ -12,7 +12,8 @@
 #include <graphics/Material.h>
 #include <graphics/BasicShader.h>
 
-#include <game/MeshRenderer.h>
+#include <components/DirectionalLight.h>
+#include <components/MeshRenderer.h>
 
 void TestGame::init()
 {
@@ -38,7 +39,12 @@ void TestGame::init()
 	plane_object->add_component(new MeshRenderer(mesh, material));
 	plane_object->transform.set_translation(0, -1, 5);
 
+	GameObject *directional_light_object = new GameObject();
+	directional_light_object->add_component(
+		new DirectionalLight{ "#00F", 0.4f, Vector3f{ 1, 1, 1 } });
+
 	get_root_object()->add_child(plane_object);
+	get_root_object()->add_child(directional_light_object);
 
 	camera.set_position({ 0, 0, -10 });
 }

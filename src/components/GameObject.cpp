@@ -1,10 +1,10 @@
-#include <game/GameObject.h>
+#include <components/GameObject.h>
 
 #include <math/Transform.h>
 
 #include <graphics/Shader.h>
 
-#include <game/GameComponent.h>
+#include <components/GameComponent.h>
 
 #include <vector>
 
@@ -69,6 +69,29 @@ void GameObject::render(Shader &shader)
 
 	for (GameObject *child : children) {
 		child->render(shader);
+	}
+}
+
+//TODO:comments
+void GameObject::add_to_rendering_engine()
+{
+	for (GameComponent *component : components) {
+		component->add_to_rendering_engine();
+	}
+
+	for (GameObject *child : children) {
+		child->add_to_rendering_engine();
+	}
+}
+
+GameObject::~GameObject()
+{
+	for (GameComponent *obj : components) {
+		delete obj;
+	}
+
+	for (GameObject *obj : children) {
+		delete obj;
 	}
 }
 
