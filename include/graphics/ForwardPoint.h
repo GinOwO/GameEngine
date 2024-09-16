@@ -19,7 +19,6 @@
 #include <core/Camera.h>
 
 #include <components/BaseLight.h>
-#include <components/PointLight.h>
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
@@ -61,15 +60,6 @@ class ForwardPoint : public Shader {
 	 ***************************************************************************/
 	void set_uniform(const std::string &uniform,
 			 const BaseLight &base_light) noexcept;
-
-	/***************************************************************************
-	 * @brief Sets a uniform variable for a PointLight.
-	 *
-	 * @param uniform The name of the uniform variable.
-	 * @param point_light The PointLight value to set.
-	 ***************************************************************************/
-	void set_uniform(const std::string &uniform,
-			 const PointLight &point_light) noexcept;
 
 	/***************************************************************************
 	 * @brief Updates the shader's uniform variables.

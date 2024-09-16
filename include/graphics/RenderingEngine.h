@@ -55,10 +55,10 @@ class RenderingEngine {
 	 ***************************************************************************/
 	static RenderingEngine &get_instance();
 
-	std::vector<BaseLight> base_lights;
-	std::vector<DirectionalLight> directional_lights;
-	std::vector<PointLight> point_lights;
-	std::vector<SpotLight> spot_lights;
+	Vector3f ambient_light;
+	DirectionalLight directional_light;
+	PointLight point_light;
+	SpotLight spot_light;
 
     private:
 	Camera &camera; /**< Reference to the Camera used for rendering. */

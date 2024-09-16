@@ -11,6 +11,7 @@
 #include <graphics/ForwardPoint.h>
 #include <graphics/ForwardSpot.h>
 
+#include <components/BaseLight.h>
 #include <components/GameObject.h>
 #include <components/LightSources.h>
 
@@ -49,7 +50,7 @@ void RenderingEngine::clear_screen()
 RenderingEngine::RenderingEngine()
 	: camera(Camera::get_instance())
 {
-	LightSources::get_instance().ambient_light = Vector3f(0.2f);
+	LightSources::get_instance().active_ambient_light = Vector3f(0.2f);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glFrontFace(GL_CW);
@@ -150,19 +151,9 @@ void RenderingEngine::render(GameObject *object)
 	glDepthMask(GL_FALSE);
 	glDepthFunc(GL_EQUAL);
 
-	for (void *light : light_sources.get_directional_lights()) {
-		light_sources.active_directional_light = light;
-		object->render(ForwardDirectional::get_instance());
-	}
-
-	for (void *light : light_sources.get_point_lights()) {
-		light_sources.active_point_light = light;
-		object->render(ForwardPoint::get_instance());
-	}
-
-	for (void *light : light_sources.get_spot_lights()) {
-		light_sources.active_spot_light = light;
-		object->render(ForwardSpot::get_instance());
+	for (void *light : light_sources.get_lights()) {
+		light_sources.active_light = light;
+		object->render(*(static_cast<BaseLight *>(light)->shader));
 	}
 
 	glDepthFunc(GL_LESS);

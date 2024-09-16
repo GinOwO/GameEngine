@@ -84,7 +84,7 @@ void ForwardDirectional::update_uniforms(const Transform &transform,
 	this->set_uniform("eyePos", camera_position);
 
 	BaseLight &light = *static_cast<BaseLight *>(
-		LightSources::get_instance().active_directional_light);
+		LightSources::get_instance().active_light);
 	this->set_uniform("directional_light.base_light", light);
 	this->set_uniform("directional_light.direction", light.direction);
 }

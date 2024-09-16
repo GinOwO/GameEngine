@@ -14,19 +14,13 @@ class LightSources {
 
     private:
 	LightSources();
-	std::vector<void *> directional_lights, point_lights, spot_lights;
+	std::vector<void *> lights;
 
     public:
-	Vector3f ambient_light; /**< Light responsible for ambient lighting. */
-	void *active_directional_light;
-	void *active_point_light;
-	void *active_spot_light;
+	Vector3f active_ambient_light; /**< Light responsible for ambient lighting. */
+	void *active_light;
 
-	void add_to_directional_lights(void *light) noexcept;
-	void add_to_point_lights(void *light) noexcept;
-	void add_to_spot_lights(void *light) noexcept;
-	std::vector<void *> &get_directional_lights();
-	std::vector<void *> &get_point_lights();
-	std::vector<void *> &get_spot_lights();
+	void add_to_lights(void *light) noexcept;
+	std::vector<void *> &get_lights();
 	void clear_lights();
 };

@@ -13,10 +13,11 @@
 
 #include <math/Vector3f.h>
 
+#include <graphics/Attenuation.h>
+#include <graphics/Shader.h>
+
 #include <components/GameComponent.h>
 #include <components/LightSources.h>
-
-#include <graphics/Shader.h>
 
 #include <string>
 #include <sstream>
@@ -34,7 +35,13 @@
  *
  ***************************************************************************/
 struct BaseLight : public GameComponent {
-	Vector3f direction; /**< The direction of the light for directional Light. */
+	// Directional Light
+	Vector3f direction; /**< The direction of the light. */
+
+	// Point Light
+	Attenuation attenuation; /**< The light's attenuation properties. */
+	Vector3f position; /**< The position of the light. */
+	float range; /**< The range of the light. */
 
 	/***************************************************************************
 	 * @brief The color of the light, represented as a Vector3f.

@@ -5,9 +5,6 @@
 
 #include <components/LightSources.h>
 #include <components/BaseLight.h>
-#include <components/PointLight.h>
-
-#include <iostream>
 
 /***************************************************************************
  * @brief Constructs a ForwardPoint instance.
@@ -87,10 +84,9 @@ void ForwardPoint::update_uniforms(const Transform &transform,
 	this->set_uniform("specular", material.get_specular());
 	this->set_uniform("eyePos", camera_position);
 
-	this->set_uniform(
-		"point_light",
-		*static_cast<PointLight *>(
-			LightSources::get_instance().active_point_light));
+	this->set_uniform("point_light",
+			  *static_cast<BaseLight *>(
+				  LightSources::get_instance().active_light));
 }
 
 /***************************************************************************
@@ -104,30 +100,15 @@ void ForwardPoint::update_uniforms(const Transform &transform,
 void ForwardPoint::set_uniform(const std::string &uniform,
 			       const BaseLight &base_light) noexcept
 {
-	this->set_uniform(uniform + ".color", base_light.color);
-	this->set_uniform(uniform + ".intensity", base_light.intensity);
-}
-
-/***************************************************************************
- * @brief Sets uniform values for a point light.
- *
- * Updates the shader uniform for a point light, including base light data, 
- * attenuation parameters, position, and range.
- *
- * @param uniform The base name of the uniform.
- * @param point_light The point light data to set.
- ***************************************************************************/
-void ForwardPoint::set_uniform(const std::string &uniform,
-			       const PointLight &point_light) noexcept
-{
-	set_uniform(uniform + ".base_light",
-		    BaseLight{ point_light.color, point_light.intensity });
-	set_uniform(uniform + ".attenuation.constant",
-		    point_light.attenuation.constant);
-	set_uniform(uniform + ".attenuation.linear",
-		    point_light.attenuation.linear);
-	set_uniform(uniform + ".attenuation.exponent",
-		    point_light.attenuation.exponent);
-	set_uniform(uniform + ".position", point_light.position);
-	set_uniform(uniform + ".range", point_light.range);
+	this->set_uniform(uniform + ".base_light.color", base_light.color);
+	this->set_uniform(uniform + ".base_light.intensity",
+			  base_light.intensity);
+	this->set_uniform(uniform + ".attenuation.constant",
+			  base_light.attenuation.constant);
+	this->set_uniform(uniform + ".attenuation.linear",
+			  base_light.attenuation.linear);
+	this->set_uniform(uniform + ".attenuation.exponent",
+			  base_light.attenuation.exponent);
+	this->set_uniform(uniform + ".position", base_light.position);
+	this->set_uniform(uniform + ".range", base_light.range);
 }

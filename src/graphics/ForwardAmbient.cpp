@@ -65,5 +65,5 @@ void ForwardAmbient::update_uniforms(const Transform &transform,
 
 	this->set_uniform("MVP", projected_matrix);
 	this->set_uniform("ambient_intensity",
-			  LightSources::get_instance().ambient_light);
+			  LightSources::get_instance().active_ambient_light);
 }
