@@ -98,7 +98,7 @@ TEST(Vector3fTest, Rotate)
 	Vector3f v(1.0f, 1.0f, 1.0f);
 	Vector3f axis(0.0f, 0.0f, 1.0f);
 	float angle = 90.0f;
-	Vector3f rotated = v.rotate(3.14 * angle / 180.0f, axis);
+	Vector3f rotated = v.rotate(axis, 3.14 * angle / 180.0f);
 	EXPECT_NEAR(rotated.getX(), -0.9992033839225769f, 1e-6);
 	EXPECT_NEAR(rotated.getY(), 1.000795841217041f, 1e-6);
 	EXPECT_NEAR(rotated.getZ(), 1.0f, 1e-6);

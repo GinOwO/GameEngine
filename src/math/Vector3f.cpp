@@ -135,7 +135,7 @@ float Vector3f::length() const noexcept
  * @param v The vector to dot with.
  * @return The dot product of this vector and the given vector.
  ***************************************************************************/
-float Vector3f::dot(const Vector3f &v) noexcept
+float Vector3f::dot(const Vector3f &v) const noexcept
 {
 	return x * v.x + y * v.y + z * v.z;
 }
@@ -372,15 +372,15 @@ Vector3f Vector3f::cross(const Vector3f &v) const noexcept
  * @param axis The axis around which to rotate.
  * @return The rotated vector.
  ***************************************************************************/
-Vector3f Vector3f::rotate(const float angle,
-			  const Vector3f &axis) const noexcept
+Vector3f Vector3f::rotate(const Vector3f &axis,
+			  const float angle) const noexcept
 {
-	Quaternion rotation = Quaternion::Rotation_Quaternion(axis, angle);
-	Quaternion conjugate = rotation.conjugate();
+	float sinAngle = std::sin(-angle);
+	float cosAngle = std::cos(-angle);
 
-	Quaternion w = (rotation * (*this)) * conjugate;
-
-	return { w.getX(), w.getY(), w.getZ() };
+	return this->cross(axis * sinAngle) +
+	       (((*this) * (cosAngle)) +
+		(axis * this->dot(axis * (1 - cosAngle))));
 }
 
 /***************************************************************************
@@ -419,7 +419,7 @@ Vector3f Vector3f::interpolate(const Vector3f &dest,
 }
 
 /***************************************************************************
- * @brief Rotates the vector around a given Quaternion.
+ * @brief Rotates the vector with a given Quaternion.
  *
  * @param quaternion The quaternion to rotate the vector as Array<float, 4>.
  * @return The rotated vector.

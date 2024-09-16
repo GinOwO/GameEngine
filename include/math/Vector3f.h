@@ -116,7 +116,7 @@ class Vector3f {
 	 * @param v The other vector.
 	 * @return The dot product result.
 	 ***************************************************************************/
-	float dot(const Vector3f &v) noexcept;
+	float dot(const Vector3f &v) const noexcept;
 
 	/***************************************************************************
 	 * @brief Normalizes the vector to have unit length.
@@ -276,7 +276,7 @@ class Vector3f {
 	 * @param axis The axis to rotate around.
 	 * @return The rotated vector.
 	 ***************************************************************************/
-	Vector3f rotate(const float angle, const Vector3f &axis) const noexcept;
+	Vector3f rotate(const Vector3f &axis, const float angle) const noexcept;
 
 	/***************************************************************************
 	 * @brief Rotates the vector around a given Quaternion.
