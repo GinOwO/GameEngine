@@ -30,11 +30,14 @@
  ***************************************************************************/
 class Transform {
     private:
-	Vector3f translation; /**< The translation vector. */
-	Quaternion rotation; /**< The rotation Quaternion. */
-	Vector3f scale; /**< The scale vector. */
+	Vector3f translation, prev_translation; /**< The translation vector. */
+	Quaternion rotation, prev_rotation; /**< The rotation Quaternion. */
+	Vector3f scale, prev_scale; /**< The scale vector. */
+	Matrix4f parent_matrix;
 
     public:
+	Transform *parent = nullptr; /**< The parent transform hierarchy. */
+
 	/***************************************************************************
 	 * @brief Default constructor for the Transform class.
 	 *
@@ -107,7 +110,7 @@ class Transform {
 	 *
 	 * @return The transformation matrix.
 	 ***************************************************************************/
-	Matrix4f get_transformation() const noexcept;
+	Matrix4f get_transformation() noexcept;
 
 	/***************************************************************************
 	 * @brief Computes the transformation matrix for projecting the camera view.
@@ -115,5 +118,7 @@ class Transform {
 	 * @param camera The camera object for which the projection is computed.
 	 * @return The projection matrix relative to the camera.
 	 ***************************************************************************/
-	Matrix4f get_projected_camera(BaseCamera *camera) const noexcept;
+	Matrix4f get_projected_camera(BaseCamera *camera) noexcept;
+
+	bool has_changed() noexcept;
 };

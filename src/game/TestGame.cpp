@@ -33,7 +33,17 @@ void TestGame::init()
 
 	std::vector<int> indices{ 0, 1, 2, 2, 1, 3 };
 
+	field_width = 1;
+	field_depth = 1;
+	std::vector<Vertex> vertices2{
+		{ { -field_width, 0.0f, -field_depth }, { 0.0f, 0.0f } },
+		{ { -field_width, 0.0f, field_depth * 3 }, { 0.0f, 1.0f } },
+		{ { field_width * 3, 0.0f, -field_depth }, { 1.0f, 0.0f } },
+		{ { field_width * 3, 0.0f, field_depth * 3 }, { 1.0f, 1.0f } }
+	};
+
 	Mesh mesh(vertices, indices, true);
+	Mesh mesh2(vertices2, indices, true);
 	Material material(
 		Texture::load_texture("./assets/objects/test_texture.png"),
 		{ 1, 1, 1 }, { 1, 8 });
@@ -75,6 +85,16 @@ void TestGame::init()
 	get_root_object()->add_child(light_object1);
 	get_root_object()->add_child(light_object2);
 	get_root_object()->add_child(camera_object);
+
+	GameObject *plane_object2 = new GameObject();
+	plane_object2->add_component(new MeshRenderer(mesh2, material));
+	plane_object2->transform.set_translation(0, 2, 0);
+	get_root_object()->add_child(plane_object2);
+
+	GameObject *plane_object3 = new GameObject();
+	plane_object3->add_component(new MeshRenderer(mesh2, material));
+	plane_object3->transform.set_translation(0, 0, 5);
+	plane_object2->add_child(plane_object3);
 
 	camera_object->transform.set_translation({ 0, 0, -10 });
 }

@@ -160,6 +160,6 @@ class Shader {
 	 * @param transform The transformation matrix to use.
 	 * @param material The material properties to use.
 	 ***************************************************************************/
-	virtual void update_uniforms(const Transform &transform,
+	virtual void update_uniforms(Transform *transform,
 				     const Material &material) = 0;
 };

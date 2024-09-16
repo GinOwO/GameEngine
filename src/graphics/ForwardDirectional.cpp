@@ -63,7 +63,7 @@ void ForwardDirectional::load_shader()
  * @param model The model to be used for the shader's "model" uniform.
  * @param material The material to be used for the shader's "MVP" uniform and texture.
  ***************************************************************************/
-void ForwardDirectional::update_uniforms(const Transform &transform,
+void ForwardDirectional::update_uniforms(Transform *transform,
 					 const Material &material)
 {
 	BaseCamera *camera = static_cast<BaseCamera *>(
@@ -71,7 +71,7 @@ void ForwardDirectional::update_uniforms(const Transform &transform,
 
 	Vector3f camera_position = camera->get_position();
 
-	Matrix4f world_matrix = transform.get_transformation();
+	Matrix4f world_matrix = transform->get_transformation();
 	Matrix4f projected_matrix = Matrix4f::flip_matrix(
 		camera->get_view_projection() * world_matrix);
 	world_matrix = Matrix4f::flip_matrix(world_matrix);

@@ -103,6 +103,7 @@ GameObject::~GameObject()
  ***************************************************************************/
 void GameObject::add_child(GameObject *obj)
 {
+	obj->transform.parent = &transform;
 	children.push_back(obj);
 }
 

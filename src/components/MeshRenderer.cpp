@@ -57,6 +57,6 @@ void MeshRenderer::update()
 void MeshRenderer::render(Shader &shader)
 {
 	shader.use_program();
-	shader.update_uniforms(*get_parent_transform(), material);
+	shader.update_uniforms(get_parent_transform(), material);
 	mesh.draw();
 }

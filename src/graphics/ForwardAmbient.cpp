@@ -53,14 +53,15 @@ void ForwardAmbient::load_shader()
  * @param transform The transform to be used for the shader's "transform" uniform.
  * @param material The material to be used for the shader's "color" uniform and texture.
  ***************************************************************************/
-void ForwardAmbient::update_uniforms(const Transform &transform,
+void ForwardAmbient::update_uniforms(Transform *transform,
 				     const Material &material)
 {
 	BaseCamera *camera = static_cast<BaseCamera *>(
 		SharedGlobals::get_instance().main_camera);
 
-	Matrix4f projected_matrix = Matrix4f::flip_matrix(
-		camera->get_view_projection() * transform.get_transformation());
+	Matrix4f projected_matrix =
+		Matrix4f::flip_matrix(camera->get_view_projection() *
+				      transform->get_transformation());
 
 	material.get_texture().bind();
 

@@ -68,6 +68,6 @@ class ForwardDirectional : public Shader {
 	 * @param transform The transformation matrix to use.
 	 * @param material The material properties to use.
 	 ***************************************************************************/
-	void update_uniforms(const Transform &transform,
+	void update_uniforms(Transform *transform,
 			     const Material &material) override;
 };

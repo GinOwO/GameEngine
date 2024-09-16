@@ -13,10 +13,13 @@
  * Initializes the translation and rotation to (0, 0, 0) and scale to (1, 1, 1).
  ***************************************************************************/
 Transform::Transform()
+	: parent_matrix{ Matrix4f::Identity_Matrix() }
 {
-	translation = Vector3f();
+	translation = Vector3f(0);
 	rotation = Quaternion(0, 0, 0, 1);
 	scale = Vector3f(1, 1, 1);
+
+	prev_translation = Vector3f(-1e9);
 }
 
 /***************************************************************************
@@ -109,10 +112,19 @@ void Transform::set_scale(Vector3f scale)
  *
  * @return The resulting transformation matrix.
  ***************************************************************************/
-Matrix4f Transform::get_transformation() const noexcept
+Matrix4f Transform::get_transformation() noexcept
 {
-	return Matrix4f::Translation_Matrix(translation) *
-	       (rotation.to_rotation_matrix() * Matrix4f::Scale_Matrix(scale));
+	if (parent != nullptr && parent->has_changed()) {
+		parent_matrix = parent->get_transformation();
+	}
+	if (prev_translation.getX() != -1e9) {
+		prev_translation = translation;
+		prev_rotation = rotation;
+		prev_scale = scale;
+	}
+	return parent_matrix * (Matrix4f::Translation_Matrix(translation) *
+				(rotation.to_rotation_matrix() *
+				 Matrix4f::Scale_Matrix(scale)));
 }
 
 /***************************************************************************
@@ -123,7 +135,23 @@ Matrix4f Transform::get_transformation() const noexcept
  * @return The resulting matrix from the camera's view-projection and 
  *	 the transform.
  ***************************************************************************/
-Matrix4f Transform::get_projected_camera(BaseCamera *camera) const noexcept
+Matrix4f Transform::get_projected_camera(BaseCamera *camera) noexcept
 {
 	return camera->get_view_projection() * get_transformation();
+}
+
+bool Transform::has_changed() noexcept
+{
+	if (prev_translation.getX() == -1e9) {
+		prev_translation = translation;
+		prev_rotation = rotation;
+		prev_scale = scale;
+		return true;
+	}
+
+	if (parent != nullptr && parent->has_changed())
+		return true;
+
+	return !(translation == prev_translation && scale == prev_scale &&
+		 rotation == prev_rotation);
 }
