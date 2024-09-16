@@ -1,9 +1,9 @@
 #include <graphics/ForwardSpot.h>
 
-#include <components/BaseLight.h>
-#include <graphics/SpotLight.h>
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
+
+#include <components/BaseLight.h>
 
 #include <iostream>
 
@@ -87,7 +87,9 @@ void ForwardSpot::update_uniforms(const Transform &transform,
 	this->set_uniform("specular", material.get_specular());
 	this->set_uniform("eyePos", camera_position);
 
-	this->set_uniform("spot_light", spot_light);
+	this->set_uniform("spot_light",
+			  *static_cast<BaseLight *>(
+				  LightSources::get_instance().active_light));
 }
 
 /***************************************************************************
@@ -101,47 +103,19 @@ void ForwardSpot::update_uniforms(const Transform &transform,
 void ForwardSpot::set_uniform(const std::string &uniform,
 			      const BaseLight &base_light) noexcept
 {
-	this->set_uniform(uniform + ".color", base_light.color);
-	this->set_uniform(uniform + ".intensity", base_light.intensity);
-}
-
-/***************************************************************************
- * @brief Sets uniform values for a point light.
- *
- * Updates the shader uniform for a point light, including base light data, 
- * attenuation parameters, position, and range.
- *
- * @param uniform The base name of the uniform.
- * @param point_light The point light data to set.
- ***************************************************************************/
-void ForwardSpot::set_uniform(const std::string &uniform,
-			      const PointLight &point_light) noexcept
-{
-	set_uniform(uniform + ".base_light",
-		    BaseLight{ point_light.color, point_light.intensity });
-	set_uniform(uniform + ".attenuation.constant",
-		    point_light.attenuation.constant);
-	set_uniform(uniform + ".attenuation.linear",
-		    point_light.attenuation.linear);
-	set_uniform(uniform + ".attenuation.exponent",
-		    point_light.attenuation.exponent);
-	set_uniform(uniform + ".position", point_light.position);
-	set_uniform(uniform + ".range", point_light.range);
-}
-
-/***************************************************************************
- * @brief Sets uniform values for a spot light.
- *
- * Updates the shader uniform for a spot light, including point light data, 
- * direction, and cutoff.
- *
- * @param uniform The base name of the uniform.
- * @param spot_light The spot light data to set.
- ***************************************************************************/
-void ForwardSpot::set_uniform(const std::string &uniform,
-			      const SpotLight &spot_light) noexcept
-{
-	set_uniform(uniform + ".point_light", spot_light.point_light);
-	set_uniform(uniform + ".direction", spot_light.direction);
-	set_uniform(uniform + ".cutoff", spot_light.cutoff);
+	this->set_uniform(uniform + ".point_light.base_light.color",
+			  base_light.color);
+	this->set_uniform(uniform + ".point_light.base_light.intensity",
+			  base_light.intensity);
+	this->set_uniform(uniform + ".point_light.attenuation.constant",
+			  base_light.attenuation.constant);
+	this->set_uniform(uniform + ".point_light.attenuation.linear",
+			  base_light.attenuation.linear);
+	this->set_uniform(uniform + ".point_light.attenuation.exponent",
+			  base_light.attenuation.exponent);
+	this->set_uniform(uniform + ".point_light.position",
+			  base_light.position);
+	this->set_uniform(uniform + ".point_light.range", base_light.range);
+	this->set_uniform(uniform + ".direction", base_light.direction);
+	this->set_uniform(uniform + ".cutoff", base_light.cutoff);
 }

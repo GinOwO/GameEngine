@@ -16,7 +16,7 @@
 
 #include <core/Camera.h>
 
-#include <graphics/SpotLight.h>
+#include <components/SpotLight.h>
 
 #include <components/GameObject.h>
 #include <components/BaseLight.h>

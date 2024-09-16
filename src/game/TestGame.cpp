@@ -10,11 +10,10 @@
 #include <graphics/Vertex.h>
 #include <graphics/Texture.h>
 #include <graphics/Material.h>
-#include <graphics/ForwardDirectional.h>
-#include <graphics/ForwardPoint.h>
 
 #include <components/DirectionalLight.h>
 #include <components/PointLight.h>
+#include <components/SpotLight.h>
 #include <components/MeshRenderer.h>
 
 void TestGame::init()
@@ -41,20 +40,24 @@ void TestGame::init()
 	plane_object->add_component(new MeshRenderer(mesh, material));
 	plane_object->transform.set_translation(0, -1, 5);
 
-	GameObject *directional_light_object = new GameObject();
+	GameObject *light_object = new GameObject();
 	DirectionalLight *directional_light =
 		new DirectionalLight{ "#00F", 0.4f, Vector3f{ 1, 1, 1 } };
-	directional_light_object->add_component(directional_light);
 
-	GameObject *point_light_object = new GameObject();
-	PointLight *point_light = new PointLight{
-		"#0F0", 0.4f, { 0, 0, 1 }, Vector3f{ 1, 0, 1 }, 10
-	};
-	point_light_object->add_component(point_light);
+	light_object->add_component(directional_light);
+
+	PointLight *point_light =
+		new PointLight{ "#0F0", 0.4f, { 0, 0, 1 }, { 1, 0, 1 }, 10 };
+	light_object->add_component(point_light);
+
+	SpotLight *spot_light =
+		new SpotLight{ "#0FF",	    0.4f, { 0, 0, 0.1f },
+			       { 5, 0, 5 }, 100,  { 1, 0, 0 },
+			       0.7f };
+	light_object->add_component(spot_light);
 
 	get_root_object()->add_child(plane_object);
-	get_root_object()->add_child(directional_light_object);
-	get_root_object()->add_child(point_light_object);
+	get_root_object()->add_child(light_object);
 
 	camera.set_position({ 0, 0, -10 });
 }

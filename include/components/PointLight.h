@@ -80,11 +80,4 @@ struct PointLight : public BaseLight {
 		this->range = range;
 		this->shader = &ForwardPoint::get_instance();
 	}
-
-	// TODO: comments
-	void add_to_rendering_engine(bool id) override
-	{
-		LightSources::get_instance().add_to_lights(
-			static_cast<void *>(this));
-	}
 };

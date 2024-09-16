@@ -83,16 +83,15 @@ void ForwardDirectional::update_uniforms(const Transform &transform,
 	this->set_uniform("specular", material.get_specular());
 	this->set_uniform("eyePos", camera_position);
 
-	BaseLight &light = *static_cast<BaseLight *>(
-		LightSources::get_instance().active_light);
-	this->set_uniform("directional_light.base_light", light);
-	this->set_uniform("directional_light.direction", light.direction);
+	this->set_uniform("directional_light",
+			  *static_cast<BaseLight *>(
+				  LightSources::get_instance().active_light));
 }
 
 /***************************************************************************
  * @brief Sets uniform values for a base light.
  *
- * Updates the shader uniform for a base light, including color and intensity.
+ * Updates the shader uniform for a directional light using base light.
  *
  * @param uniform The base name of the uniform.
  * @param base_light The base light data to set.
@@ -100,6 +99,8 @@ void ForwardDirectional::update_uniforms(const Transform &transform,
 void ForwardDirectional::set_uniform(const std::string &uniform,
 				     const BaseLight &base_light) noexcept
 {
-	this->set_uniform(uniform + ".color", base_light.color);
-	this->set_uniform(uniform + ".intensity", base_light.intensity);
+	this->set_uniform(uniform + ".base_light.color", base_light.color);
+	this->set_uniform(uniform + ".base_light.intensity",
+			  base_light.intensity);
+	this->set_uniform(uniform + ".direction", base_light.direction);
 }

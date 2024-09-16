@@ -79,11 +79,4 @@ struct DirectionalLight : public BaseLight {
 	{
 		this->direction = direction.normalize();
 	}
-
-	// TODO: Comments
-	void add_to_rendering_engine(bool id) override
-	{
-		LightSources::get_instance().add_to_lights(
-			static_cast<void *>(this));
-	}
 };

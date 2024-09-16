@@ -92,7 +92,7 @@ void ForwardPoint::update_uniforms(const Transform &transform,
 /***************************************************************************
  * @brief Sets uniform values for a base light.
  *
- * Updates the shader uniform for a base light, including color and intensity.
+ * Updates the shader uniform for a point light using base light.
  *
  * @param uniform The base name of the uniform.
  * @param base_light The base light data to set.

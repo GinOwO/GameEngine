@@ -43,6 +43,9 @@ struct BaseLight : public GameComponent {
 	Vector3f position; /**< The position of the light. */
 	float range; /**< The range of the light. */
 
+	// Spot Light
+	float cutoff; /**< The cutoff angle of the light. */
+
 	/***************************************************************************
 	 * @brief The color of the light, represented as a Vector3f.
 	 *
@@ -141,6 +144,13 @@ struct BaseLight : public GameComponent {
 		: color(0, 0, 0)
 		, intensity(0.0f)
 	{
+	}
+
+	// TODO: Comments
+	void add_to_rendering_engine(bool id) override
+	{
+		LightSources::get_instance().add_to_lights(
+			static_cast<void *>(this));
 	}
 
     private:

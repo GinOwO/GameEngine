@@ -19,7 +19,6 @@
 #include <core/Camera.h>
 
 #include <components/BaseLight.h>
-#include <graphics/SpotLight.h>
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
@@ -36,8 +35,6 @@ class ForwardSpot : public Shader {
 	ForwardSpot();
 
     public:
-	SpotLight spot_light;
-
 	ForwardSpot(const ForwardSpot &) = delete;
 	ForwardSpot &operator=(const ForwardSpot &) = delete;
 
@@ -63,24 +60,6 @@ class ForwardSpot : public Shader {
 	 ***************************************************************************/
 	void set_uniform(const std::string &uniform,
 			 const BaseLight &base_light) noexcept;
-
-	/***************************************************************************
-	 * @brief Sets a uniform variable for a PointLight.
-	 *
-	 * @param uniform The name of the uniform variable.
-	 * @param point_light The PointLight value to set.
-	 ***************************************************************************/
-	void set_uniform(const std::string &uniform,
-			 const PointLight &point_light) noexcept;
-
-	/***************************************************************************
-	 * @brief Sets a uniform variable for a SpotLight.
-	 *
-	 * @param uniform The name of the uniform variable.
-	 * @param spot_light The SpotLight value to set.
-	 ***************************************************************************/
-	void set_uniform(const std::string &uniform,
-			 const SpotLight &spot_light) noexcept;
 
 	/***************************************************************************
 	 * @brief Updates the shader's uniform variables.
