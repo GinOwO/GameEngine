@@ -2,7 +2,7 @@
  * @file Input.h
  *
  * @brief Declares the Input class, including its public and private methods
- *        and member variables.
+ *	and member variables.
  *
  * This file contains the declaration of the Input class, which handles
  * input events from the keyboard and mouse. It provides methods to check

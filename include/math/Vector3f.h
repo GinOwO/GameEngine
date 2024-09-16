@@ -279,6 +279,14 @@ class Vector3f {
 	Vector3f rotate(const float angle, const Vector3f &axis) const noexcept;
 
 	/***************************************************************************
+	 * @brief Rotates the vector around a given Quaternion.
+	 *
+	 * @param quaternion The quaternion to rotate the vector as Array<float, 4>.
+	 * @return The rotated vector.
+	 ***************************************************************************/
+	Vector3f rotate(const std::array<float, 4> &quaternion) const noexcept;
+
+	/***************************************************************************
 	 * @brief Interpolates between the current vector and a destination vector.
 	 *
 	 * This function computes the interpolation between the current vector and
@@ -291,8 +299,8 @@ class Vector3f {
 	 *
 	 * @param dest The destination vector to interpolate towards.
 	 * @param interpolation_factor The interpolation factor, typically in the
-	 *                             range [0.0, 1.0]. Values outside this range
-	 *                             will extrapolate beyond the start and end vectors.
+	 *			     range [0.0, 1.0]. Values outside this range
+	 *			     will extrapolate beyond the start and end vectors.
 	 *
 	 * @return A new `Vector3f` that represents the interpolated vector.
 	 ***************************************************************************/

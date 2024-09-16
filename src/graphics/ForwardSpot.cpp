@@ -117,6 +117,8 @@ void ForwardSpot::set_uniform(const std::string &uniform,
 	this->set_uniform(uniform + ".point_light.position",
 			  base_light.get_parent_transform()->get_translation());
 	this->set_uniform(uniform + ".point_light.range", base_light.range);
-	this->set_uniform(uniform + ".direction", base_light.direction);
+	this->set_uniform(
+		uniform + ".direction",
+		base_light.get_parent_transform()->get_rotation().get_forward());
 	this->set_uniform(uniform + ".cutoff", base_light.cutoff);
 }

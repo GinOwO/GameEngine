@@ -144,7 +144,7 @@ float Vector3f::dot(const Vector3f &v) noexcept
  * @brief Normalizes the vector.
  *
  * @return A normalized version of the vector. If the vector's length is 0,
- *         a vector with the same components is returned.
+ *	 a vector with the same components is returned.
  ***************************************************************************/
 Vector3f Vector3f::normalize() const noexcept
 {
@@ -375,23 +375,12 @@ Vector3f Vector3f::cross(const Vector3f &v) const noexcept
 Vector3f Vector3f::rotate(const float angle,
 			  const Vector3f &axis) const noexcept
 {
-	// Convert angle from degrees to radians
-	float rad_angle = to_radians(angle);
-	float sin_half_angle = std::sin(rad_angle / 2.0f);
-	float cos_half_angle = std::cos(rad_angle / 2.0f);
+	Quaternion rotation = Quaternion::Rotation_Quaternion(axis, angle);
+	Quaternion conjugate = rotation.conjugate();
 
-	// Create the rotation quaternion
-	Quaternion rotation{ axis.getX() * sin_half_angle,
-			     axis.getY() * sin_half_angle,
-			     axis.getZ() * sin_half_angle, cos_half_angle };
+	Quaternion w = (rotation * (*this)) * conjugate;
 
-	// Create a quaternion for the vector to be rotated
-	Quaternion v_as_quat{ this->x, this->y, this->z, 0.0f };
-
-	// Perform rotation: q * v * q^*
-	Quaternion rotated = rotation * v_as_quat * rotation.conjugate();
-
-	return { rotated.getX(), rotated.getY(), rotated.getZ() };
+	return { w.getX(), w.getY(), w.getZ() };
 }
 
 /***************************************************************************
@@ -418,8 +407,8 @@ bool Vector3f::operator==(const Vector3f &v) const noexcept
  *
  * @param dest The destination vector to interpolate towards.
  * @param interpolation_factor The interpolation factor, typically in the
- *                             range [0.0, 1.0]. Values outside this range
- *                             will extrapolate beyond the start and end vectors.
+ *			     range [0.0, 1.0]. Values outside this range
+ *			     will extrapolate beyond the start and end vectors.
  *
  * @return A new `Vector3f` that represents the interpolated vector.
  ***************************************************************************/
@@ -427,4 +416,21 @@ Vector3f Vector3f::interpolate(const Vector3f &dest,
 			       float interpolation_factor) const noexcept
 {
 	return ((dest - *this) * interpolation_factor) + (*this);
+}
+
+/***************************************************************************
+ * @brief Rotates the vector around a given Quaternion.
+ *
+ * @param quaternion The quaternion to rotate the vector as Array<float, 4>.
+ * @return The rotated vector.
+ ***************************************************************************/
+Vector3f Vector3f::rotate(const std::array<float, 4> &quaternion) const noexcept
+{
+	Quaternion rotation = Quaternion{ quaternion[0], quaternion[1],
+					  quaternion[2], quaternion[3] };
+	Quaternion conjugate = rotation.conjugate();
+
+	Quaternion w = (rotation * (*this)) * conjugate;
+
+	return { w.getX(), w.getY(), w.getZ() };
 }

@@ -2,7 +2,7 @@
  * @file Quaternion.h
  *
  * @brief Declares the Quaternion class for representing and manipulating
- *        quaternions.
+ *	quaternions.
  *
  * This file contains the declaration of the Quaternion class, which represents
  * a quaternion for 3D rotations. It provides methods for quaternion operations
@@ -14,12 +14,15 @@
 #pragma once
 
 #include <math/Vector3f.h>
+#include <math/Matrix4f.h>
+
+#include <array>
 
 /***************************************************************************
  * @class Quaternion
  *
  * @brief Represents a quaternion for 3D rotations and provides various
- *        quaternion operations.
+ *	quaternion operations.
  *
  * The Quaternion class encapsulates a quaternion with x, y, z, and w components.
  * It supports operations such as addition, subtraction, multiplication,
@@ -35,6 +38,47 @@ class Quaternion {
 	float w; /**< The w component of the quaternion. */
 
     public:
+	/***************************************************************************
+	 * @brief Returns the forward direction based on the quaternion.
+	 *
+	 * @return A Vector3f representing the forward direction.
+	 ***************************************************************************/
+	Vector3f get_forward() const;
+
+	/***************************************************************************
+	 * @brief Returns the back direction based on the quaternion.
+	 *
+	 * @return A Vector3f representing the back direction.
+	 ***************************************************************************/
+	Vector3f get_backward() const;
+
+	/***************************************************************************
+	 * @brief Returns the up direction based on the quaternion.
+	 *
+	 * @return A Vector3f representing the up direction.
+	 ***************************************************************************/
+	Vector3f get_up() const;
+
+	/***************************************************************************
+	 * @brief Returns the down direction based on the quaternion.
+	 *
+	 * @return A Vector3f representing the down direction.
+	 ***************************************************************************/
+	Vector3f get_down() const;
+
+	/***************************************************************************
+	 * @brief Returns the right direction based on the quaternion.
+	 *
+	 * @return A Vector3f representing the right direction.
+	 ***************************************************************************/
+	Vector3f get_right() const;
+
+	/***************************************************************************
+	 * @brief Returns the left direction based on the quaternion.
+	 *
+	 * @return A Vector3f representing the left direction.
+	 ***************************************************************************/
+	Vector3f get_left() const;
 	/***************************************************************************
 	 * @brief Default constructor for the Quaternion class.
 	 *
@@ -107,6 +151,13 @@ class Quaternion {
 	 * @return The w component.
 	 ***************************************************************************/
 	float getW() const noexcept;
+
+	/***************************************************************************
+	 * @brief Gets all the components of the quaternion as an array<float, 4>.
+	 *
+	 * @return Array<float, 4> as (x, y, z, w).
+	 ***************************************************************************/
+	std::array<float, 4> get() const noexcept;
 
 	/***************************************************************************
 	 * @brief Calculates the length (magnitude) of the quaternion.
@@ -280,4 +331,9 @@ class Quaternion {
 	 * @return True if the quaternions are equal, false otherwise.
 	 ***************************************************************************/
 	bool operator==(const Quaternion &q) const noexcept;
+
+	//TODO: Comment
+	Matrix4f to_rotation_matrix() const noexcept;
+	static Quaternion Rotation_Quaternion(const Vector3f &axis,
+					      float angle) noexcept;
 };

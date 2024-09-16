@@ -212,7 +212,7 @@ void Camera::input()
 	Input &input_handler = Input::get_instance();
 
 	float move_multiplier = 15.0f * timer.get_delta_time();
-	float rotate_sensitivity = 40.0f * timer.get_delta_time();
+	float rotate_sensitivity = 35.0f * timer.get_delta_time();
 
 	if (input_handler.is_key_pressed(GLFW_KEY_W)) {
 		this->move_camera(this->get_forward(), move_multiplier);
@@ -237,11 +237,13 @@ void Camera::input()
 		const double *delta = input_handler.get_mouse_pos_delta();
 		float dx = delta[0], dy = delta[1];
 
-		if (dx != 0) {
-			this->rotate_x(dx * rotate_sensitivity);
+		if (abs(dx) > 5e-4) {
+			this->rotate_x(3.14 * (dx * rotate_sensitivity) /
+				       180.0f);
 		}
-		if (dy != 0) {
-			this->rotate_y(dy * rotate_sensitivity);
+		if (abs(dy) > 5e-4) {
+			this->rotate_y(3.14 * (dy * rotate_sensitivity) /
+				       180.0f);
 		}
 	}
 }

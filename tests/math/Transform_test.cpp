@@ -10,11 +10,11 @@ TEST(TransformTest, DefaultConstructor)
 	Transform transform;
 
 	Vector3f translation = transform.get_translation();
-	Vector3f rotation = transform.get_rotation();
+	Quaternion rotation = transform.get_rotation();
 	Vector3f scale = transform.get_scale();
 
 	EXPECT_EQ(translation, Vector3f(0.0f, 0.0f, 0.0f));
-	EXPECT_EQ(rotation, Vector3f(0.0f, 0.0f, 0.0f));
+	EXPECT_EQ(rotation, Quaternion(0.0f, 0.0f, 0.0f, 1.0f));
 	EXPECT_EQ(scale,
 		  Vector3f(1.0f, 1.0f, 1.0f)); // Assuming scale defaults to 1
 }
@@ -34,7 +34,7 @@ TEST(TransformTest, TranslationSetterGetter)
 TEST(TransformTest, RotationSetterGetter)
 {
 	Transform transform;
-	Vector3f rotation(90.0f, 45.0f, 30.0f);
+	Quaternion rotation(90.0f, 45.0f, 30.0f, 1.0f);
 
 	transform.set_rotation(rotation);
 

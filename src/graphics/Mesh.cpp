@@ -29,7 +29,7 @@ std::regex extension_regex(R"(.*\.obj$)");
  * @param file_path The path to the file from which to load the mesh.
  * @return A Mesh object initialized with the loaded vertices and indices.
  * @throws std::runtime_error If the file type is not supported or the file 
- *                             does not exist.
+ *			     does not exist.
  ***************************************************************************/
 Mesh Mesh::load_mesh(const std::string &file_path)
 {

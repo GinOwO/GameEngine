@@ -2,7 +2,7 @@
  * @file Window.h
  *
  * @brief Declares the Window class for managing GLFW window creation and
- *        handling input events.
+ *	handling input events.
  *
  * This file contains the declaration of the Window class, which provides
  * methods for creating and managing a GLFW window, handling input events,

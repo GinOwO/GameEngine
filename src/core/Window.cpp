@@ -61,7 +61,7 @@ bool Window::gl_create_window()
  * @brief Sets the OpenGL context for the window and initializes GLAD.
  *
  * @return True if the context was successfully set and GLAD initialized, 
- *         false otherwise.
+ *	 false otherwise.
  ***************************************************************************/
 bool Window::set_window_context()
 {

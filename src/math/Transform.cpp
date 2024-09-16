@@ -15,7 +15,7 @@
 Transform::Transform()
 {
 	translation = Vector3f();
-	rotation = Vector3f();
+	rotation = Quaternion(0, 0, 0, 1);
 	scale = Vector3f(1, 1, 1);
 }
 
@@ -30,11 +30,11 @@ Vector3f Transform::get_translation() const noexcept
 }
 
 /***************************************************************************
- * @brief Gets the rotation vector of the transform.
+ * @brief Gets the rotation Quaternion of the transform.
  *
- * @return The rotation vector.
+ * @return The rotation Quaternion.
  ***************************************************************************/
-Vector3f Transform::get_rotation() const noexcept
+Quaternion Transform::get_rotation() const noexcept
 {
 	return rotation;
 }
@@ -72,23 +72,11 @@ void Transform::set_translation(Vector3f translation)
 }
 
 /***************************************************************************
- * @brief Sets the rotation using individual float components.
+ * @brief Sets the rotation using a Quaternion.
  *
- * @param x The x component of the rotation.
- * @param y The y component of the rotation.
- * @param z The z component of the rotation.
+ * @param rotation The new rotation Quaternion.
  ***************************************************************************/
-void Transform::set_rotation(float x, float y, float z)
-{
-	this->set_rotation({ x, y, z });
-}
-
-/***************************************************************************
- * @brief Sets the rotation using a Vector3f.
- *
- * @param rotation The new rotation vector.
- ***************************************************************************/
-void Transform::set_rotation(Vector3f rotation)
+void Transform::set_rotation(Quaternion rotation)
 {
 	this->rotation = rotation;
 }
@@ -117,24 +105,23 @@ void Transform::set_scale(Vector3f scale)
 
 /***************************************************************************
  * @brief Computes the transformation matrix based on the translation, 
- *        rotation, and scale.
+ *	rotation, and scale.
  *
  * @return The resulting transformation matrix.
  ***************************************************************************/
 Matrix4f Transform::get_transformation() const noexcept
 {
 	return Matrix4f::Translation_Matrix(translation) *
-	       (Matrix4f::Rotation_Matrix(rotation) *
-		Matrix4f::Scale_Matrix(scale));
+	       (rotation.to_rotation_matrix() * Matrix4f::Scale_Matrix(scale));
 }
 
 /***************************************************************************
  * @brief Computes the transformation matrix projected onto a camera's 
- *        view and projection matrix.
+ *	view and projection matrix.
  *
  * @param camera The camera to project the transformation onto.
  * @return The resulting matrix from the camera's view-projection and 
- *         the transform.
+ *	 the transform.
  ***************************************************************************/
 Matrix4f Transform::get_projected_camera(Camera &camera) const noexcept
 {

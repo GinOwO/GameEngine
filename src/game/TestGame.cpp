@@ -56,14 +56,15 @@ void TestGame::init()
 	light_object1->transform.set_translation(1, 0, 1);
 
 	GameObject *light_object2 = new GameObject();
-	SpotLight *spot_light = new SpotLight{
-		"#0Ff", 0.4f, { 0, 0, 0.1f }, { 1, 0, 0 }, 0.7f
-	};
+	SpotLight *spot_light =
+		new SpotLight{ "#0Ff", 0.4f, { 0, 0, 0.1f }, 0.7f };
 	light_object2->add_component(spot_light);
 	light_object2->transform.set_translation(5, 0, 5);
+	light_object2->transform.set_rotation(Quaternion::Rotation_Quaternion(
+		{ 0, 1, 0 }, (3.14f * 90.0f / 180.0f)));
 
 	get_root_object()->add_child(plane_object);
-	get_root_object()->add_child(light_object0);
+	// get_root_object()->add_child(light_object0);
 	get_root_object()->add_child(light_object1);
 	get_root_object()->add_child(light_object2);
 

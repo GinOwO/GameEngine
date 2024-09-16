@@ -42,14 +42,12 @@ struct SpotLight : public PointLight {
 	 * @param color The color of the light, specified as a Vector3f.
 	 * @param intensity The intensity of the light.
 	 * @param attenuation The attenuation properties.
-	 * @param direction The direction of the light.
 	 * @param cutoff The cutoff angle of the light.
 	 ***************************************************************************/
 	SpotLight(const Vector3f &color, const float &intensity,
-		  const Vector3f &attenuation, Vector3f direction, float cutoff)
+		  const Vector3f &attenuation, float cutoff)
 		: PointLight(color, intensity, attenuation)
 	{
-		this->direction = direction.normalize();
 		this->cutoff = cutoff;
 		this->shader = &ForwardSpot::get_instance();
 	}
@@ -64,25 +62,13 @@ struct SpotLight : public PointLight {
 	 * @param hex The color of the light, specified as a HEX color string.
 	 * @param intensity The intensity of the light.
 	 * @param attenuation The attenuation properties (constant, linear, exponent).
-	 * @param direction The direction of the light.
 	 * @param cutoff The cutoff angle of the light.
 	 ***************************************************************************/
 	SpotLight(const std::string &hex, const float &intensity,
-		  const Vector3f &attenuation, Vector3f direction, float cutoff)
+		  const Vector3f &attenuation, float cutoff)
 		: PointLight(hex, intensity, attenuation)
 	{
-		this->direction = direction.normalize();
 		this->cutoff = cutoff;
 		this->shader = &ForwardSpot::get_instance();
-	}
-
-	/***************************************************************************
-	 * @brief Sets the direction of the light.
-	 *
-	 * @param direction The new direction of the light.
-	 ***************************************************************************/
-	void set_direction(const Vector3f &direction)
-	{
-		this->direction = direction.normalize();
 	}
 };

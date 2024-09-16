@@ -2,7 +2,7 @@
  * @file Camera.h
  *
  * @brief Declares the Camera class, including its public and private methods
- *        and member variables.
+ *	and member variables.
  *
  * This file contains the declaration of the Camera class, which handles the
  * camera's position, orientation, and projection in the 3D space. The class
@@ -20,7 +20,7 @@
  * @class Camera
  *
  * @brief Singleton class managing the camera's position, orientation, and
- *        projection in 3D space.
+ *	projection in 3D space.
  *
  * This class handles the camera's attributes and operations, including its
  * position, orientation vectors, and projection matrix. It provides methods

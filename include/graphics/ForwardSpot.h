@@ -18,9 +18,10 @@
 
 #include <core/Camera.h>
 
-#include <components/BaseLight.h>
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
+
+#include <components/BaseLight.h>
 
 /***************************************************************************
  * @class ForwardSpot

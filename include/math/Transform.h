@@ -14,6 +14,7 @@
 
 #include <math/Vector3f.h>
 #include <math/Matrix4f.h>
+#include <math/Quaternion.h>
 
 #include <core/Camera.h>
 
@@ -30,7 +31,7 @@
 class Transform {
     private:
 	Vector3f translation; /**< The translation vector. */
-	Vector3f rotation; /**< The rotation vector (Euler angles). */
+	Quaternion rotation; /**< The rotation Quaternion. */
 	Vector3f scale; /**< The scale vector. */
 
     public:
@@ -53,7 +54,7 @@ class Transform {
 	 *
 	 * @return The rotation vector.
 	 ***************************************************************************/
-	Vector3f get_rotation() const noexcept;
+	Quaternion get_rotation() const noexcept;
 
 	/***************************************************************************
 	 * @brief Gets the scale vector of the transform.
@@ -83,16 +84,7 @@ class Transform {
 	 *
 	 * @param rotation The new rotation vector (Euler angles).
 	 ***************************************************************************/
-	void set_rotation(Vector3f rotation);
-
-	/***************************************************************************
-	 * @brief Sets the rotation vector using individual float values.
-	 *
-	 * @param x The x component of the rotation.
-	 * @param y The y component of the rotation.
-	 * @param z The z component of the rotation.
-	 ***************************************************************************/
-	void set_rotation(float x, float y, float z);
+	void set_rotation(Quaternion rotation);
 
 	/***************************************************************************
 	 * @brief Sets the scale vector using a Vector3f object.

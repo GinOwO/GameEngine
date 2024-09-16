@@ -340,8 +340,8 @@ Vector2f Vector2f::rotate(float degrees) const noexcept
  *
  * @param dest The destination vector to interpolate towards.
  * @param interpolation_factor The interpolation factor, typically in the
- *                             range [0.0, 1.0]. Values outside this range
- *                             will extrapolate beyond the start and end vectors.
+ *			     range [0.0, 1.0]. Values outside this range
+ *			     will extrapolate beyond the start and end vectors.
  *
  * @return A new `Vector2f` that represents the interpolated vector.
  ***************************************************************************/

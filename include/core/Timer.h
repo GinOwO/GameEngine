@@ -2,7 +2,7 @@
  * @file Timer.h
  *
  * @brief Declares the Timer class for measuring elapsed time and managing
- *        frame rate.
+ *	frame rate.
  *
  * This file contains the declaration of the Timer class, which provides
  * functionality for measuring time intervals, updating delta time, and

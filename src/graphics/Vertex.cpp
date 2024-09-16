@@ -44,7 +44,7 @@ Vertex::Vertex(const Vector3f &pos, const Vector2f &texCoord)
 
 /***************************************************************************
  * @brief Constructs a Vertex with specified position, texture coordinates, 
- *        and normal.
+ *	and normal.
  *
  * Initializes a Vertex with the given position, texture coordinates, and 
  * normal.

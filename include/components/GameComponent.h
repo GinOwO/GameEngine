@@ -33,7 +33,7 @@ class GameComponent {
 	 * @brief Pure virtual function to handle input.
 	 *
 	 * @param transform The Transform object representing the component's
-	 *                  position and orientation.
+	 *		  position and orientation.
 	 ***************************************************************************/
 	virtual void input() = 0;
 
@@ -41,7 +41,7 @@ class GameComponent {
 	 * @brief Pure virtual function to update the component.
 	 *
 	 * @param transform The Transform object representing the component's
-	 *                  position and orientation.
+	 *		  position and orientation.
 	 ***************************************************************************/
 	virtual void update() = 0;
 
@@ -49,7 +49,7 @@ class GameComponent {
 	 * @brief Pure virtual function to render the component.
 	 *
 	 * @param transform The Transform object representing the component's
-	 *                  position and orientation.
+	 *		  position and orientation.
 	 * @param shader The Shader used for rendering.
 	 ***************************************************************************/
 	virtual void render(Shader &shader) = 0;

@@ -1,6 +1,7 @@
 #include <math/Quaternion.h>
 
 #include <math/Vector3f.h>
+#include <math/Matrix4f.h>
 
 #include <cmath>
 
@@ -428,4 +429,100 @@ bool Quaternion::operator==(const Quaternion &q) const noexcept
 {
 	return this->x == q.x && this->y == q.y && this->z == q.z &&
 	       this->w == q.w;
+}
+
+/***************************************************************************
+ * @brief Returns the forward direction based on the quaternion.
+ *
+ * @return A Vector3f representing the forward direction.
+ ***************************************************************************/
+Vector3f Quaternion::get_forward() const
+{
+	return Vector3f{ 0, 0, 1 }.rotate(this->get());
+}
+
+/***************************************************************************
+ * @brief Returns the backward direction based on the quaternion.
+ *
+ * @return A Vector3f representing the backward direction.
+ ***************************************************************************/
+Vector3f Quaternion::get_backward() const
+{
+	return Vector3f{ 0, 0, -1 }.rotate(this->get());
+}
+
+/***************************************************************************
+ * @brief Returns the upward direction based on the quaternion.
+ *
+ * @return A Vector3f representing the upward direction.
+ ***************************************************************************/
+Vector3f Quaternion::get_up() const
+{
+	return Vector3f{ 0, -1, 0 }.rotate(this->get());
+}
+
+/***************************************************************************
+ * @brief Returns the downward direction based on the quaternion.
+ *
+ * @return A Vector3f representing the downward direction.
+ ***************************************************************************/
+Vector3f Quaternion::get_down() const
+{
+	return Vector3f{ 0, -1, 0 }.rotate(this->get());
+}
+
+/***************************************************************************
+ * @brief Returns the right direction based on the quaternion.
+ *
+ * @return A Vector3f representing the right direction.
+ ***************************************************************************/
+Vector3f Quaternion::get_right() const
+{
+	return Vector3f{ 1, 0, 0 }.rotate(this->get());
+}
+
+/***************************************************************************
+ * @brief Returns the left direction based on the quaternion.
+ *
+ * @return A Vector3f representing the left direction.
+ ***************************************************************************/
+Vector3f Quaternion::get_left() const
+{
+	return Vector3f{ -1, 0, 0 }.rotate(this->get());
+}
+
+// TODO: Comment
+Matrix4f Quaternion::to_rotation_matrix() const noexcept
+{
+	Vector3f forward = Vector3f(2.0f * (x * z - w * y),
+				    2.0f * (y * z + w * x),
+				    1.0f - 2.0f * (x * x + y * y));
+	Vector3f up = Vector3f(2.0f * (x * y + w * z),
+			       1.0f - 2.0f * (x * x + z * z),
+			       2.0f * (y * z - w * x));
+	Vector3f right = Vector3f(1.0f - 2.0f * (y * y + z * z),
+				  2.0f * (x * y - w * z),
+				  2.0f * (x * z + w * y));
+
+	return Matrix4f::Rotation_Matrix(forward, up, right);
+}
+
+Quaternion Quaternion::Rotation_Quaternion(const Vector3f &axis,
+					   float angle) noexcept
+{
+	float x, y, z, w;
+	float sinHalfAngle = (float)std::sin(angle / 2);
+	float cosHalfAngle = (float)std::cos(angle / 2);
+
+	x = axis.getX() * sinHalfAngle;
+	y = axis.getY() * sinHalfAngle;
+	z = axis.getZ() * sinHalfAngle;
+	w = cosHalfAngle;
+
+	return { x, y, z, w };
+}
+
+std::array<float, 4> Quaternion::get() const noexcept
+{
+	return { x, y, z, w };
 }

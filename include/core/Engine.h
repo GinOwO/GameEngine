@@ -2,7 +2,7 @@
  * @file Engine.h
  *
  * @brief Declares the Engine class, including its public and private methods
- *        and member variables.
+ *	and member variables.
  *
  * This file contains the declaration of the Engine class, which manages the
  * main game loop, the window, and the rendering engine. It includes methods
