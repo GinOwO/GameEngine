@@ -34,7 +34,7 @@ template <typename T> inline float to_radians(T degrees)
 /***************************************************************************
  * @brief Clears the screen buffer.
  *
- * Clears the color and depth buffers. TODO: Implement stencil buffer clearing.
+ * Clears the color and depth buffers.
  ***************************************************************************/
 void RenderingEngine::clear_screen()
 {
