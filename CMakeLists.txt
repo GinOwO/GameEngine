@@ -47,6 +47,7 @@ set(CORE_SOURCES
 
 set(RESOURCE_MANAGEMENT
 	${PROJECT_SOURCE_DIR}/src/graphics/resource_management/MeshResource.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/resource_management/TextureResource.cpp
 )
 
 set(MESH_MODELS

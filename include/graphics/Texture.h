@@ -14,8 +14,12 @@
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <graphics/resource_management/TextureResource.h>
+
 #include <string>
+#include <memory>
 #include <functional>
+#include <unordered_map>
 
 /***************************************************************************
  * @class Texture
@@ -28,11 +32,12 @@
  ***************************************************************************/
 class Texture {
     private:
-	GLuint id; /**< Texture ID. */
+	std::shared_ptr<TextureResource> texture_resource;
+	static std::unordered_map<std::string, std::weak_ptr<TextureResource> >
+		texture_cache;
 
     public:
 	Texture();
-	Texture(GLuint id);
 
 	const static Texture None; // TODO: comment
 	const static std::function<void(void *)> deleter;
@@ -58,5 +63,5 @@ class Texture {
 	static Texture *load_texture(const std::string &file_path);
 
 	// TODO: comment
-	constexpr bool operator==(const Texture &other) const noexcept;
+	bool operator==(const Texture &other) const noexcept;
 };

@@ -38,7 +38,8 @@ class Mesh {
     private:
 	std::shared_ptr<MeshResource> buffers;
 	static std::unordered_map<std::string, std::weak_ptr<MeshResource> >
-		loaded_models;
+		mesh_cache;
+
 	/***************************************************************************
 	 * @brief Calculates normals for the mesh vertices.
 	 *

@@ -46,12 +46,23 @@ void TestGame::init()
 	Mesh mesh2(vertices2, indices, true);
 	Mesh mesh3 = Mesh::load_mesh("./assets/objects/monkey.obj");
 	Mesh mesh4 = Mesh::load_mesh("./assets/objects/monkey.obj");
-	Material material;
+	Material material, material2;
 	Texture *tex =
 		Texture::load_texture("./assets/objects/test_texture.png");
+	Texture *tex2 =
+		Texture::load_texture("./assets/objects/test_texture.png");
+
 	material.add_property("diffuse",
 			      std::shared_ptr<void>(tex, Texture::deleter));
 	material.add_property(
+		"specular",
+		std::shared_ptr<void>(new Specular{ 1, 8 }, [](void *ptr) {
+			delete static_cast<Specular *>(ptr);
+		}));
+
+	material2.add_property("diffuse",
+			       std::shared_ptr<void>(tex2, Texture::deleter));
+	material2.add_property(
 		"specular",
 		std::shared_ptr<void>(new Specular{ 1, 8 }, [](void *ptr) {
 			delete static_cast<Specular *>(ptr);
@@ -110,7 +121,7 @@ void TestGame::init()
 	plane_object->add_child(monkey1);
 
 	GameObject *monkey2 = new GameObject();
-	monkey2->add_component(new MeshRenderer(mesh4, material));
+	monkey2->add_component(new MeshRenderer(mesh4, material2));
 	monkey2->transform
 		.set_rotation(Quaternion::Rotation_Quaternion(
 			{ 0, 1, 0 }, to_radians(180.0f)))

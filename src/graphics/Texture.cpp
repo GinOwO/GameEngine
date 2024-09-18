@@ -12,32 +12,21 @@
 #include <functional>
 #include <exception>
 
-const Texture Texture::None = { 0x101010 };
+// TODO: comments
+
 const std::function<void(void *)> Texture::deleter{ [](void *ptr) {
 	delete static_cast<Texture *>(ptr);
 } };
+
+std::unordered_map<std::string, std::weak_ptr<TextureResource> >
+	Texture::texture_cache{};
 
 /***************************************************************************
  * @brief Default constructor for Texture.
  *
  * Initializes the Texture object with an ID of 0.
  ***************************************************************************/
-Texture::Texture()
-{
-	id = 0;
-}
-
-/***************************************************************************
- * @brief Constructs a Texture with a specified ID.
- *
- * Initializes the Texture object with the given OpenGL texture ID.
- *
- * @param id The OpenGL texture ID.
- ***************************************************************************/
-Texture::Texture(GLuint id)
-	: id(id)
-{
-}
+Texture::Texture() {};
 
 /***************************************************************************
  * @brief Binds the texture for use in rendering.
@@ -47,9 +36,9 @@ Texture::Texture(GLuint id)
  ***************************************************************************/
 void Texture::bind() const
 {
-	if (id == -1)
+	if (texture_resource->id == -1)
 		return;
-	glBindTexture(GL_TEXTURE_2D, id);
+	glBindTexture(GL_TEXTURE_2D, texture_resource->id);
 }
 
 /***************************************************************************
@@ -61,7 +50,7 @@ void Texture::bind() const
  ***************************************************************************/
 GLuint Texture::get_id() const noexcept
 {
-	return this->id;
+	return this->texture_resource->id;
 }
 
 /***************************************************************************
@@ -76,6 +65,22 @@ GLuint Texture::get_id() const noexcept
  ***************************************************************************/
 Texture *Texture::load_texture(const std::string &file_path)
 {
+	Texture *texture = new Texture();
+
+	if (Texture::texture_cache.count(file_path)) {
+		std::shared_ptr<TextureResource> resource =
+			Texture::texture_cache[file_path].lock();
+		if (resource) {
+			texture->texture_resource = resource;
+			return texture;
+		}
+	}
+
+	if (texture->texture_resource == nullptr) {
+		texture->texture_resource = std::make_shared<TextureResource>();
+		texture_cache[file_path] = texture->texture_resource;
+	}
+
 	int width, height, channels;
 	unsigned char *data =
 		stbi_load(file_path.c_str(), &width, &height, &channels, 0);
@@ -85,9 +90,8 @@ Texture *Texture::load_texture(const std::string &file_path)
 		throw std::runtime_error("Failed to load texture");
 	}
 
-	GLuint texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glGenTextures(1, &texture->texture_resource->id);
+	glBindTexture(GL_TEXTURE_2D, texture->texture_resource->id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -112,12 +116,12 @@ Texture *Texture::load_texture(const std::string &file_path)
 
 	stbi_image_free(data);
 
-	return new Texture(texture);
+	return texture;
 }
 
-constexpr bool Texture::operator==(const Texture &other) const noexcept
+bool Texture::operator==(const Texture &other) const noexcept
 {
-	return id == other.id;
+	return texture_resource->id == other.texture_resource->id;
 }
 
 #undef STB_IMAGE_IMPLEMENTATION

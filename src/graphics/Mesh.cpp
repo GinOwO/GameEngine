@@ -20,8 +20,7 @@
 std::regex extension_regex(R"(.*\.obj$)");
 // clang-format on
 
-std::unordered_map<std::string, std::weak_ptr<MeshResource> >
-	Mesh::loaded_models{};
+std::unordered_map<std::string, std::weak_ptr<MeshResource> > Mesh::mesh_cache{};
 
 /***************************************************************************
  * @brief Loads a mesh from a file.
@@ -36,8 +35,9 @@ std::unordered_map<std::string, std::weak_ptr<MeshResource> >
 Mesh Mesh::load_mesh(const std::string &file_path)
 {
 	Mesh mesh;
-	if (Mesh::loaded_models.count(file_path)) {
-		auto resource = Mesh::loaded_models[file_path].lock();
+	if (Mesh::mesh_cache.count(file_path)) {
+		std::shared_ptr<MeshResource> resource =
+			Mesh::mesh_cache[file_path].lock();
 		if (resource) {
 			mesh.buffers = resource;
 			return mesh;
@@ -46,7 +46,7 @@ Mesh Mesh::load_mesh(const std::string &file_path)
 
 	if (mesh.buffers == nullptr) {
 		mesh.reset_mesh();
-		loaded_models[file_path] = mesh.buffers;
+		mesh_cache[file_path] = mesh.buffers;
 	}
 
 	if (!std::regex_match(file_path, extension_regex)) {
