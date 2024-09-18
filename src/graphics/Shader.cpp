@@ -11,15 +11,22 @@
 
 #include <graphics/Material.h>
 #include <graphics/Specular.h>
+#include <graphics/resource_management/ShaderResource.h>
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <array>
 #include <cstddef>
+#include <string>
+#include <memory>
+#include <unordered_map>
 #include <exception>
 
 // #define _DEBUG_DISPLAY_ALL_UNIFORMS_ON
+std::unordered_map<std::pair<std::string, std::string>,
+		   std::weak_ptr<ShaderResource>, Shader::__pair_hash>
+	Shader::shader_cache{};
 
 /***************************************************************************
  * @brief Reads the shader source code from a file.
@@ -97,6 +104,21 @@ GLuint Shader::create_shader_module(const std::string &shader_source,
 void Shader::load(const std::string &vertex_filepath,
 		  const std::string &fragment_filepath)
 {
+	if (shader_cache.count({ vertex_filepath, fragment_filepath })) {
+		std::shared_ptr<ShaderResource> resource =
+			shader_cache.at({ vertex_filepath, fragment_filepath })
+				.lock();
+		if (resource) {
+			this->shader_resource = resource;
+			return;
+		}
+	}
+	if (this->shader_resource == nullptr) {
+		shader_resource = std::make_shared<ShaderResource>();
+		shader_cache[{ vertex_filepath, fragment_filepath }] =
+			shader_resource;
+	}
+
 	std::array<GLuint, 2> modules;
 	modules[0] = create_shader_module(read_shader(vertex_filepath),
 					  GL_VERTEX_SHADER);
@@ -124,7 +146,7 @@ void Shader::load(const std::string &vertex_filepath,
 		glDeleteShader(module);
 	}
 
-	shader_program = shader;
+	shader_resource->shader_program = shader;
 }
 
 /***************************************************************************
@@ -132,9 +154,7 @@ void Shader::load(const std::string &vertex_filepath,
  *
  * Initializes the Shader object.
  ***************************************************************************/
-Shader::Shader()
-{
-}
+Shader::Shader() {};
 
 /***************************************************************************
  * @brief Gets the ID of the shader program.
@@ -143,17 +163,9 @@ Shader::Shader()
  ***************************************************************************/
 GLuint Shader::get_program() const noexcept
 {
-	return shader_program;
-}
-
-/***************************************************************************
- * @brief Deletes the shader program.
- *
- * Deletes the shader program associated with this Shader object.
- ***************************************************************************/
-void Shader::delete_program() noexcept
-{
-	glDeleteProgram(shader_program);
+	if (shader_resource == nullptr)
+		return 0;
+	return shader_resource->shader_program;
 }
 
 /***************************************************************************
@@ -163,7 +175,7 @@ void Shader::delete_program() noexcept
  ***************************************************************************/
 void Shader::use_program() const noexcept
 {
-	glUseProgram(shader_program);
+	glUseProgram(shader_resource->shader_program);
 }
 
 /***************************************************************************
@@ -179,7 +191,8 @@ void Shader::add_uniform(const std::string &uniform)
 	use_program();
 #ifdef _DEBUG_DISPLAY_ALL_UNIFORMS_ON
 	GLint numUniforms = 0;
-	glGetProgramiv(shader_program, GL_ACTIVE_UNIFORMS, &numUniforms);
+	glGetProgramiv(shader_resource->shader_program, GL_ACTIVE_UNIFORMS,
+		       &numUniforms);
 
 	for (GLint i = 0; i < numUniforms; ++i) {
 		const GLsizei bufSize = 32;
@@ -188,14 +201,14 @@ void Shader::add_uniform(const std::string &uniform)
 		GLint size;
 		GLenum type;
 
-		glGetActiveUniform(shader_program, i, bufSize, &length, &size,
-				   &type, name);
+		glGetActiveUniform(shader_resource->shader_program, i, bufSize,
+				   &length, &size, &type, name);
 		std::cout << "Uniform #" << i << ": Name: " << name << '\n';
 	}
 #endif
 
-	GLuint uniform_location =
-		glGetUniformLocation(shader_program, uniform.c_str());
+	GLuint uniform_location = glGetUniformLocation(
+		shader_resource->shader_program, uniform.c_str());
 
 	if (uniform_location == -1) {
 		std::cerr << "Error: Couldn't add uniform: \"" << uniform
@@ -203,7 +216,7 @@ void Shader::add_uniform(const std::string &uniform)
 		throw std::runtime_error("Couldn't add uniform");
 	}
 
-	uniforms[uniform] = uniform_location;
+	shader_resource->uniforms[uniform] = uniform_location;
 }
 
 /***************************************************************************
@@ -218,12 +231,12 @@ void Shader::add_uniform(const std::string &uniform)
 GLuint Shader::get_uniform(const std::string &uniform) const
 {
 	use_program();
-	if (!uniforms.count(uniform)) {
+	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
 			  << "\"\n";
 		throw std::runtime_error("Uniform Does not exist");
 	}
-	return uniforms.at(uniform);
+	return shader_resource->uniforms.at(uniform);
 }
 
 /***************************************************************************
@@ -238,12 +251,12 @@ GLuint Shader::get_uniform(const std::string &uniform) const
 void Shader::set_uniform(const std::string &uniform, int value)
 {
 	use_program();
-	if (!uniforms.count(uniform)) {
+	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
 			  << "\"\n";
 		throw std::runtime_error("Uniform Does not exist");
 	}
-	glUniform1i(uniforms[uniform], value);
+	glUniform1i(shader_resource->uniforms[uniform], value);
 }
 
 /***************************************************************************
@@ -258,12 +271,12 @@ void Shader::set_uniform(const std::string &uniform, int value)
 void Shader::set_uniform(const std::string &uniform, float value)
 {
 	use_program();
-	if (!uniforms.count(uniform)) {
+	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
 			  << "\"\n";
 		throw std::runtime_error("Uniform Does not exist");
 	}
-	glUniform1f(uniforms[uniform], value);
+	glUniform1f(shader_resource->uniforms[uniform], value);
 }
 
 /***************************************************************************
@@ -278,12 +291,13 @@ void Shader::set_uniform(const std::string &uniform, float value)
 void Shader::set_uniform(const std::string &uniform, Vector3f vec)
 {
 	use_program();
-	if (!uniforms.count(uniform)) {
+	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
 			  << "\"\n";
 		throw std::runtime_error("Uniform Does not exist");
 	}
-	glUniform3f(uniforms[uniform], vec.getX(), vec.getY(), vec.getZ());
+	glUniform3f(shader_resource->uniforms[uniform], vec.getX(), vec.getY(),
+		    vec.getZ());
 }
 
 /***************************************************************************
@@ -298,12 +312,13 @@ void Shader::set_uniform(const std::string &uniform, Vector3f vec)
 void Shader::set_uniform(const std::string &uniform, Matrix4f matrix)
 {
 	use_program();
-	if (!uniforms.count(uniform)) {
+	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
 			  << "\"\n";
 		throw std::runtime_error("Uniform Does not exist");
 	}
-	glUniformMatrix4fv(uniforms[uniform], 1, GL_FALSE, matrix.get_matrix());
+	glUniformMatrix4fv(shader_resource->uniforms[uniform], 1, GL_FALSE,
+			   matrix.get_matrix());
 }
 
 /***************************************************************************

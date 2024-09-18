@@ -22,8 +22,11 @@
 
 #include <graphics/Material.h>
 #include <graphics/Specular.h>
+#include <graphics/resource_management/ShaderResource.h>
 
 #include <string>
+#include <memory>
+#include <utility>
 #include <unordered_map>
 
 /***************************************************************************
@@ -40,9 +43,20 @@ class Shader {
     protected:
 	Transform const *transform; // TODO: Comment
     private:
-	GLuint shader_program; /**< The OpenGL shader program ID. */
-	std::unordered_map<std::string, GLuint>
-		uniforms; /**< Maps uniform names to their location IDs. */
+	struct __pair_hash {
+		template <class T1, class T2>
+		std::size_t operator()(const std::pair<T1, T2> &pair) const
+		{
+			std::size_t hash1 = std::hash<T1>{}(pair.first);
+			std::size_t hash2 = std::hash<T2>{}(pair.second);
+			// Combine the two hash values
+			return hash1 ^ (hash2 << 1);
+		}
+	};
+	std::shared_ptr<ShaderResource> shader_resource;
+	static std::unordered_map<std::pair<std::string, std::string>,
+				  std::weak_ptr<ShaderResource>, __pair_hash>
+		shader_cache;
 
 	/***************************************************************************
 	 * @brief Reads the shader source code from a file.
