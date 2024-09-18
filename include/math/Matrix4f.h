@@ -201,4 +201,6 @@ class Matrix4f {
 	static Matrix4f Rotation_Matrix(const Vector3f &forward,
 					const Vector3f &up,
 					const Vector3f &right);
+
+	Vector3f transform(const Vector3f &r);
 };

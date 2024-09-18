@@ -3,6 +3,7 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
+#include <components/Camera.h>
 #include <components/SharedGlobals.h>
 #include <components/BaseLight.h>
 
@@ -66,10 +67,11 @@ void ForwardDirectional::load_shader()
 void ForwardDirectional::update_uniforms(Transform *transform,
 					 const Material &material)
 {
-	BaseCamera *camera = static_cast<BaseCamera *>(
+	Camera *camera = static_cast<Camera *>(
 		SharedGlobals::get_instance().main_camera);
 
-	Vector3f camera_position = camera->get_position();
+	Vector3f camera_position =
+		camera->get_parent_transform()->get_transformed_position();
 
 	Matrix4f world_matrix = transform->get_transformation();
 	Matrix4f projected_matrix = Matrix4f::flip_matrix(
@@ -103,5 +105,8 @@ void ForwardDirectional::set_uniform(const std::string &uniform,
 	this->set_uniform(uniform + ".base_light.color", base_light.color);
 	this->set_uniform(uniform + ".base_light.intensity",
 			  base_light.intensity);
-	this->set_uniform(uniform + ".direction", base_light.direction);
+	this->set_uniform(uniform + ".direction",
+			  base_light.get_parent_transform()
+				  ->get_transformed_rotation()
+				  .get_forward());
 }

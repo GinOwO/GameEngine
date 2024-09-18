@@ -34,9 +34,7 @@
  *
  ***************************************************************************/
 struct BaseLight : public GameComponent {
-	// Directional Light
-	Vector3f direction; /**< The direction of the light. */
-
+	Vector3f direction;
 	// Point Light
 	Vector3f attenuation; /**< The light's attenuation properties (constant, linear, exponent). */
 	Vector3f position; /**< The position of the light. */

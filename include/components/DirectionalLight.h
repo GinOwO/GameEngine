@@ -39,13 +39,10 @@ struct DirectionalLight : public BaseLight {
 	 * 
 	 * @param color The color of the light, specified as a Vector3f.
 	 * @param intensity The intensity of the light.
-	 * @param d The direction of the light.
 	 ***************************************************************************/
-	DirectionalLight(const Vector3f &color, const float &intensity,
-			 const Vector3f &d)
+	DirectionalLight(const Vector3f &color, const float &intensity)
 		: BaseLight(color, intensity)
 	{
-		direction = d.normalize();
 		shader = &ForwardDirectional::get_instance();
 	}
 
@@ -58,25 +55,12 @@ struct DirectionalLight : public BaseLight {
 	 *
 	 * @param hex The color of the light, specified as a HEX color string.
 	 * @param intensity The intensity of the light.
-	 * @param d The direction of the light.
 	 ***************************************************************************/
-	DirectionalLight(const std::string &hex, const float &intensity,
-			 const Vector3f &d)
+	DirectionalLight(const std::string &hex, const float &intensity)
 		: BaseLight(hex, intensity)
 	{
-		direction = d.normalize();
 		shader = &ForwardDirectional::get_instance();
 	}
 
 	DirectionalLight() = default;
-
-	/***************************************************************************
-	 * @brief Sets the direction of the light.
-	 *
-	 * @param direction The new direction of the light.
-	 ***************************************************************************/
-	void set_direction(const Vector3f &direction)
-	{
-		this->direction = direction.normalize();
-	}
 };

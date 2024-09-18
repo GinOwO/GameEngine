@@ -410,3 +410,13 @@ Matrix4f Matrix4f::Rotation_Matrix(const Vector3f &f, const Vector3f &u,
 
 	return Matrix4f{ matrix };
 }
+
+Vector3f Matrix4f::transform(const Vector3f &r)
+{
+	return { matrix[0][0] * r.getX() + matrix[0][1] * r.getY() +
+			 matrix[0][2] * r.getZ() + matrix[0][3],
+		 matrix[1][0] * r.getX() + matrix[1][1] * r.getY() +
+			 matrix[1][2] * r.getZ() + matrix[1][3],
+		 matrix[2][0] * r.getX() + matrix[2][1] * r.getY() +
+			 matrix[2][2] * r.getZ() + matrix[2][3] };
+}

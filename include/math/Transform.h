@@ -33,7 +33,9 @@ class Transform {
 	Vector3f translation, prev_translation; /**< The translation vector. */
 	Quaternion rotation, prev_rotation; /**< The rotation Quaternion. */
 	Vector3f scale, prev_scale; /**< The scale vector. */
+	// TODO: Comments
 	Matrix4f parent_matrix;
+	bool first_update = true;
 
     public:
 	Transform *parent = nullptr; /**< The parent transform hierarchy. */
@@ -120,5 +122,11 @@ class Transform {
 	 ***************************************************************************/
 	Matrix4f get_projected_camera(BaseCamera *camera) noexcept;
 
+	// TODO: Comment
 	bool has_changed() noexcept;
+
+	Vector3f get_transformed_position() noexcept;
+	Quaternion get_transformed_rotation() noexcept;
+	void update() noexcept;
+	void rotate(const Vector3f &axis, float angle);
 };

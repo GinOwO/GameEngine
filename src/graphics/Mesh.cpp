@@ -5,7 +5,6 @@
 
 #include <graphics/Vertex.h>
 #include <graphics/Material.h>
-#include <graphics/BasicShader.h>
 
 #include <iostream>
 #include <fstream>

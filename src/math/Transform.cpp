@@ -2,6 +2,7 @@
 
 #include <math/Vector3f.h>
 #include <math/Matrix4f.h>
+#include <math/Quaternion.h>
 
 #include <components/BaseCamera.h>
 
@@ -142,10 +143,8 @@ Matrix4f Transform::get_projected_camera(BaseCamera *camera) noexcept
 
 bool Transform::has_changed() noexcept
 {
-	if (prev_translation.getX() == -1e9) {
-		prev_translation = translation;
-		prev_rotation = rotation;
-		prev_scale = scale;
+	if (first_update) {
+		first_update = false;
 		return true;
 	}
 
@@ -154,4 +153,38 @@ bool Transform::has_changed() noexcept
 
 	return !(translation == prev_translation && scale == prev_scale &&
 		 rotation == prev_rotation);
+}
+
+Vector3f Transform::get_transformed_position() noexcept
+{
+	return parent_matrix.transform(translation);
+}
+
+Quaternion Transform::get_transformed_rotation() noexcept
+{
+	Quaternion parent_rotation{ 0, 0, 0, 1 };
+	if (parent != nullptr) {
+		parent_rotation = parent->get_transformed_rotation();
+	}
+
+	return parent_rotation * rotation;
+}
+
+void Transform::update() noexcept
+{
+	if (prev_translation.getX() == -1e9) {
+		prev_translation = translation + 1.0f;
+		prev_rotation = rotation * 0.5f;
+		prev_scale = scale + 1.0f;
+	} else {
+		prev_translation = translation;
+		prev_rotation = rotation;
+		prev_scale = scale;
+	}
+}
+
+void Transform::rotate(const Vector3f &axis, float angle)
+{
+	rotation = (Quaternion::Rotation_Quaternion(axis, angle) * rotation)
+			   .normalize();
 }

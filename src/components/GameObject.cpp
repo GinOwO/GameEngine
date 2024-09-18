@@ -27,6 +27,7 @@ GameObject::GameObject()
  ***************************************************************************/
 void GameObject::input()
 {
+	transform.update();
 	for (GameComponent *component : components) {
 		component->input();
 	}

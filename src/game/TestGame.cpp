@@ -59,9 +59,12 @@ void TestGame::init()
 
 	GameObject *light_object0 = new GameObject();
 	DirectionalLight *directional_light =
-		new DirectionalLight{ "#00F", 0.4f, Vector3f{ 1, 1, 1 } };
-
+		new DirectionalLight{ "#00F", 0.4f };
 	light_object0->add_component(directional_light);
+	light_object0->transform.set_rotation(Quaternion::Rotation_Quaternion(
+		{ 1, 0, 0 }, to_radians(-45.0f)));
+	// directional_light->direction = { 1, 0, 1 }; // TODO: fix
+	light_object0->transform.set_translation({ 0, 0, -10 });
 
 	GameObject *light_object1 = new GameObject();
 	PointLight *point_light = new PointLight{
@@ -78,7 +81,7 @@ void TestGame::init()
 	light_object2->add_component(spot_light);
 	light_object2->transform.set_translation(5, 0, 5);
 	light_object2->transform.set_rotation(Quaternion::Rotation_Quaternion(
-		{ 0, 1, 0 }, (3.14f * 90.0f / 180.0f)));
+		{ 0, 1, 0 }, to_radians(90.0f)));
 
 	get_root_object()->add_child(plane_object);
 	get_root_object()->add_child(light_object0);

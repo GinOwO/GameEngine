@@ -48,10 +48,12 @@ Matrix4f Camera::get_view_projection() const
 		throw std::runtime_error(
 			"ERROR: Perspective matrix not initialized");
 	}
-	Matrix4f camera_rotation =
-		get_parent_transform()->get_rotation().to_rotation_matrix();
+	Matrix4f camera_rotation = get_parent_transform()
+					   ->get_transformed_rotation()
+					   .conjugate()
+					   .to_rotation_matrix();
 	Matrix4f camera_translation = Matrix4f::Translation_Matrix(
-		get_parent_transform()->get_translation() * -1.0f);
+		get_parent_transform()->get_transformed_position() * -1.0f);
 	return projection * camera_rotation * camera_translation;
 }
 
@@ -157,20 +159,15 @@ void Camera::input()
 		float dx = delta[0], dy = delta[1];
 
 		if (abs(dx) > 5e-4) {
-			get_parent_transform()->set_rotation(
-				get_parent_transform()->get_rotation() *
-				Quaternion::Rotation_Quaternion(
-					y_axis,
-					to_radians(-dx * rotate_sensitivity)));
+			get_parent_transform()->rotate(
+				y_axis, to_radians(dx * rotate_sensitivity));
 		}
 		if (abs(dy) > 5e-4) {
-			get_parent_transform()->set_rotation(
-				get_parent_transform()->get_rotation() *
-				Quaternion::Rotation_Quaternion(
-					get_parent_transform()
-						->get_rotation()
-						.get_right(),
-					to_radians(-dy * rotate_sensitivity)));
+			get_parent_transform()->rotate(
+				get_parent_transform()
+					->get_rotation()
+					.get_right(),
+				to_radians(dy * rotate_sensitivity));
 		}
 	}
 }
