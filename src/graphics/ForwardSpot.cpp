@@ -1,6 +1,7 @@
 #include <graphics/ForwardSpot.h>
 
 #include <graphics/Shader.h>
+#include <graphics/Texture.h>
 #include <graphics/Material.h>
 
 #include <components/Camera.h>
@@ -84,12 +85,14 @@ void ForwardSpot::update_uniforms(Transform *transform,
 
 	world_matrix = Matrix4f::flip_matrix(world_matrix);
 
-	material.get_texture().bind();
+	static_cast<Texture *>(material.get_property("diffuse"))->bind();
 
 	this->set_uniform("model", world_matrix);
 	this->set_uniform("MVP", projected_matrix);
 
-	this->set_uniform("specular", material.get_specular());
+	this->set_uniform(
+		"specular",
+		*static_cast<Specular *>(material.get_property("specular")));
 	this->set_uniform("eyePos", camera_position);
 
 	this->set_uniform("spot_light",

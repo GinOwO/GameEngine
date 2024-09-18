@@ -1,115 +1,61 @@
 #include <graphics/Material.h>
 
-#include <math/Vector3f.h>
-
-#include <graphics/Texture.h>
-#include <graphics/Specular.h>
-
 /***************************************************************************
  * @brief Default constructor for Material.
  *
  * Initializes a Material object with default values.
  ***************************************************************************/
 Material::Material()
+	: property{}
 {
 }
 
 /***************************************************************************
- * @brief Constructs a Material with a texture and color.
+ * @brief Default destructor for Material.
  *
- * Initializes a Material object with the specified texture and color. 
- * The specular component is initialized with default values.
- *
- * @param texture The texture to be applied to the material.
- * @param color The color of the material.
+ * Frees properties
  ***************************************************************************/
-Material::Material(const Texture &texture, const Vector3f &color)
+Material::~Material()
 {
-	this->texture = Texture(texture);
-	this->color = Vector3f(color);
-	this->specular = Specular{ 2, 32 };
+	property.clear();
 }
 
 /***************************************************************************
- * @brief Constructs a Material with a texture, color, and specular properties.
+ * @brief Add a new property to the material.
  *
- * Initializes a Material object with the specified texture, color, and 
- * specular properties.
- *
- * @param texture The texture to be applied to the material.
- * @param color The color of the material.
- * @param specular The specular properties of the material.
+ * @param name The name of the new property.
+ * @param property The new property to add.
  ***************************************************************************/
-Material::Material(const Texture &texture, const Vector3f &color,
-		   const Specular &specular)
+void Material::add_property(const std::string &name,
+			    std::shared_ptr<void> property)
 {
-	this->texture = Texture(texture);
-	this->color = Vector3f(color);
-	this->specular = Specular(specular);
+	this->property[name] = property;
 }
 
 /***************************************************************************
- * @brief Sets the texture of the material.
+ * @brief Gets the specified property of the material.
  *
- * Updates the material's texture.
- *
- * @param texture The new texture to be applied to the material.
+ * Returns nullptr if not found
+ * 
+ * @param name The name of the property.
+ * @return The property.
  ***************************************************************************/
-void Material::set_texture(const Texture &texture)
+void *Material::get_property(const std::string &name) const noexcept
 {
-	this->texture = Texture(texture);
+	if (!property.count(name))
+		return nullptr;
+
+	return property.at(name).get();
 }
 
 /***************************************************************************
- * @brief Gets the texture of the material.
+ * @brief Deletes the specified property of the material.
  *
- * @return The texture applied to the material.
+ * 
+ * @param name Name of the property to delete.
  ***************************************************************************/
-Texture Material::get_texture() const noexcept
+void Material::delete_property(const std::string &name) noexcept
 {
-	return this->texture;
-}
-
-/***************************************************************************
- * @brief Sets the color of the material.
- *
- * Updates the material's color.
- *
- * @param color The new color of the material.
- ***************************************************************************/
-void Material::set_color(const Vector3f &color)
-{
-	this->color = Vector3f(color);
-}
-
-/***************************************************************************
- * @brief Gets the color of the material.
- *
- * @return The color of the material.
- ***************************************************************************/
-Vector3f Material::get_color() const noexcept
-{
-	return color;
-}
-
-/***************************************************************************
- * @brief Sets the specular properties of the material.
- *
- * Updates the material's specular properties.
- *
- * @param specular The new specular properties of the material.
- ***************************************************************************/
-void Material::set_specular(const Specular &specular)
-{
-	this->specular = Specular(specular);
-}
-
-/***************************************************************************
- * @brief Gets the specular properties of the material.
- *
- * @return The specular properties of the material.
- ***************************************************************************/
-Specular Material::get_specular() const noexcept
-{
-	return this->specular;
+	if (property.count(name))
+		property.erase(name);
 }

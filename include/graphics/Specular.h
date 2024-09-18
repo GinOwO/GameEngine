@@ -25,9 +25,7 @@ struct Specular {
 
 	Specular()
 		: intensity(0)
-		, exponent(0)
-	{
-	}
+		, exponent(0) {};
 
 	/***************************************************************************
 	 * @brief Constructs a Specular with specified intensity and exponent.
@@ -37,7 +35,5 @@ struct Specular {
 	 ***************************************************************************/
 	Specular(float intensity, float exponent)
 		: intensity(intensity)
-		, exponent(exponent)
-	{
-	}
+		, exponent(exponent) {};
 };

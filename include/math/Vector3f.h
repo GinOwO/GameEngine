@@ -13,6 +13,7 @@
 
 #include <array>
 #include <cmath>
+#include <functional>
 
 /***************************************************************************
  * @class Vector3f
@@ -32,6 +33,9 @@ class Vector3f {
 	float z; /**< The z component of the vector. */
 
     public:
+	//TODO:Comment
+	const static std::function<void(void *)> deleter;
+
 	/***************************************************************************
 	 * @brief Default constructor for the Vector3f class.
 	 *

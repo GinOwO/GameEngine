@@ -10,6 +10,10 @@ template <typename T> inline float to_degrees(T radians)
 	return radians * (180.0 / M_PI);
 }
 
+const std::function<void(void *)> Vector3f::deleter{ [](void *ptr) {
+	delete static_cast<Vector3f *>(ptr);
+} };
+
 /***************************************************************************
  * @brief Default constructor for Vector3f.
  *

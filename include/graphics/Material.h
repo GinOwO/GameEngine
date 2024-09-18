@@ -4,77 +4,58 @@
  * @brief Declares the Material class for material properties.
  *
  * This file contains the declaration of the Material class, which represents
- * the material properties of a 3D object, including its texture, color, and
+ * the generic material properties of a 3D object, including its texture, color, and
  * specular properties.
  *
  ***************************************************************************/
 
 #pragma once
 
-#include <math/Vector3f.h>
-
-#include <graphics/Texture.h>
-#include <graphics/Specular.h>
+#include <string>
+#include <memory>
+#include <unordered_map>
 
 /***************************************************************************
  * @class Material
  *
  * @brief Represents material properties for a 3D object.
  *
- * The Material class includes properties for texture, color, and specular
+ * The Material class includes generic properties for texture, color, and specular
  * attributes. It defines how the material interacts with light.
  *
  ***************************************************************************/
 class Material {
-	Texture texture; /**< Texture associated with the material. */
-	Vector3f color; /**< Color of the material. */
-	Specular specular; /**< Specular properties of the material. */
+	// TODO: comments
+	std::unordered_map<std::string, std::shared_ptr<void> > property;
 
     public:
 	Material();
-	Material(const Texture &texture, const Vector3f &color);
-	Material(const Texture &texture, const Vector3f &color,
-		 const Specular &specular);
+	~Material();
 
 	/***************************************************************************
-	 * @brief Sets the texture of the material.
+	 * @brief Add a new property to the material.
 	 *
-	 * @param texture The new texture.
+	 * @param name The name of the new property.
+	 * @param property Shared pointer to the new property to add.
 	 ***************************************************************************/
-	void set_texture(const Texture &texture);
+	void add_property(const std::string &name,
+			  std::shared_ptr<void> texture);
 
 	/***************************************************************************
-	 * @brief Gets the texture of the material.
+	 * @brief Gets the specified property of the material.
 	 *
-	 * @return The texture.
+	 * Returns nullptr if not found
+	 * 
+	 * @param name The name of the property.
+	 * @return The property as void*.
 	 ***************************************************************************/
-	Texture get_texture() const noexcept;
+	void *get_property(const std::string &name) const noexcept;
 
 	/***************************************************************************
-	 * @brief Sets the color of the material.
+	 * @brief Deletes the specified property of the material.
 	 *
-	 * @param color The new color.
+	 * 
+	 * @param name Name of the property to delete.
 	 ***************************************************************************/
-	void set_color(const Vector3f &color);
-
-	/***************************************************************************
-	 * @brief Gets the color of the material.
-	 *
-	 * @return The color.
-	 ***************************************************************************/
-	Vector3f get_color() const noexcept;
-
-	/***************************************************************************
-	 * @brief Sets the specular properties of the material.
-	 *
-	 * @param specular The new specular properties.
-	 ***************************************************************************/
-	void set_specular(const Specular &specular);
-
-	/***************************************************************************
-	 * @brief Gets the specular properties of the material.
-	 *
-	 * @return The specular properties.
-	 ***************************************************************************/
-	Specular get_specular() const noexcept;
+	void delete_property(const std::string &name) noexcept;
 };

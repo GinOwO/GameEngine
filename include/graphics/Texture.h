@@ -15,6 +15,7 @@
 #include <GLFW/glfw3.h>
 
 #include <string>
+#include <functional>
 
 /***************************************************************************
  * @class Texture
@@ -33,6 +34,9 @@ class Texture {
 	Texture();
 	Texture(GLuint id);
 
+	const static Texture None; // TODO: comment
+	const static std::function<void(void *)> deleter;
+
 	/***************************************************************************
 	 * @brief Gets the texture ID.
 	 *
@@ -49,7 +53,9 @@ class Texture {
 	 * @brief Loads a texture from a file.
 	 *
 	 * @param file_path The path to the texture file.
-	 * @return The loaded Texture.
+	 * @return The loaded Texture as a shared_ptr.
 	 ***************************************************************************/
-	static Texture load_texture(const std::string &file_path);
+	static Texture *load_texture(const std::string &file_path);
+
+	bool operator==(const Texture &other); // TODO: comment
 };

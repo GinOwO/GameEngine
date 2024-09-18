@@ -44,9 +44,16 @@ void TestGame::init()
 
 	Mesh mesh(vertices, indices, true);
 	Mesh mesh2(vertices2, indices, true);
-	Material material(
-		Texture::load_texture("./assets/objects/test_texture.png"),
-		{ 1, 1, 1 }, { 1, 8 });
+	Material material;
+	Texture *tex =
+		Texture::load_texture("./assets/objects/test_texture.png");
+	material.add_property("diffuse",
+			      std::shared_ptr<void>(tex, Texture::deleter));
+	material.add_property(
+		"specular",
+		std::shared_ptr<void>(new Specular{ 1, 8 }, [](void *ptr) {
+			delete static_cast<Specular *>(ptr);
+		}));
 
 	GameObject *camera_object = new GameObject();
 	Camera *camera = new Camera();

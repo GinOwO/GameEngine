@@ -7,9 +7,15 @@
 #include <misc/stb_image.h>
 
 #include <string>
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
+#include <functional>
 #include <exception>
+
+const Texture Texture::None = { 0x101010 };
+const std::function<void(void *)> Texture::deleter{ [](void *ptr) {
+	delete static_cast<Texture *>(ptr);
+} };
 
 /***************************************************************************
  * @brief Default constructor for Texture.
@@ -68,7 +74,7 @@ GLuint Texture::get_id() const noexcept
  * @return A Texture object representing the loaded texture.
  * @throws std::runtime_error if the texture fails to load.
  ***************************************************************************/
-Texture Texture::load_texture(const std::string &file_path)
+Texture *Texture::load_texture(const std::string &file_path)
 {
 	int width, height, channels;
 	unsigned char *data =
@@ -106,7 +112,12 @@ Texture Texture::load_texture(const std::string &file_path)
 
 	stbi_image_free(data);
 
-	return Texture(texture);
+	return new Texture(texture);
+}
+
+bool Texture::operator==(const Texture &other)
+{
+	return id == other.id;
 }
 
 #undef STB_IMAGE_IMPLEMENTATION

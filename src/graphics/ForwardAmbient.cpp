@@ -1,6 +1,7 @@
 #include <graphics/ForwardAmbient.h>
 
 #include <graphics/Shader.h>
+#include <graphics/Texture.h>
 #include <graphics/Material.h>
 
 #include <components/SharedGlobals.h>
@@ -63,7 +64,7 @@ void ForwardAmbient::update_uniforms(Transform *transform,
 		Matrix4f::flip_matrix(camera->get_view_projection() *
 				      transform->get_transformation());
 
-	material.get_texture().bind();
+	static_cast<Texture *>(material.get_property("diffuse"))->bind();
 
 	this->set_uniform("MVP", projected_matrix);
 	this->set_uniform("ambient_intensity",

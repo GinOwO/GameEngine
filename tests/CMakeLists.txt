@@ -37,9 +37,3 @@ add_test(NAME VertexTest COMMAND VertexTest)
 add_executable(TextureTest ${PROJECT_SOURCE_DIR}/tests/graphics/Texture_test.cpp)
 target_link_libraries(TextureTest GTest::gtest GTest::gtest_main GameEngineLib)
 add_test(NAME TextureTest COMMAND TextureTest)
-
-# Material Test
-add_executable(MaterialTest ${PROJECT_SOURCE_DIR}/tests/graphics/Material_test.cpp)
-target_link_libraries(MaterialTest GTest::gtest GTest::gtest_main GameEngineLib)
-add_test(NAME MaterialTest COMMAND MaterialTest)
-
