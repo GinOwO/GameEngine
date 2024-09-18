@@ -310,17 +310,6 @@ Vector2f &Vector2f::operator/=(const float r)
 }
 
 /***************************************************************************
- * @brief Checks if this vector is equal to another vector.
- *
- * @param v The vector to compare with.
- * @return True if the vectors are equal, false otherwise.
- ***************************************************************************/
-bool Vector2f::operator==(const Vector2f &v) const noexcept
-{
-	return this->x == v.x && this->y == v.y;
-}
-
-/***************************************************************************
  * @brief Rotates the vector by a specified angle in degrees.
  *
  * @param degrees The angle to rotate by, in degrees.

@@ -264,7 +264,10 @@ class Vector3f {
 	 * @param v The vector to compare with.
 	 * @return True if the vectors are equal, false otherwise.
 	 ***************************************************************************/
-	bool operator==(const Vector3f &v) const noexcept;
+	constexpr bool operator==(const Vector3f &v) const noexcept
+	{
+		return this->x == v.x && this->y == v.y && this->z == v.z;
+	}
 
 	/***************************************************************************
 	 * @brief Computes the cross product of this vector with another vector.

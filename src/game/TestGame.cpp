@@ -44,6 +44,8 @@ void TestGame::init()
 
 	Mesh mesh(vertices, indices, true);
 	Mesh mesh2(vertices2, indices, true);
+	Mesh mesh3 = Mesh::load_mesh("./assets/objects/monkey.obj");
+	Mesh mesh4 = Mesh::load_mesh("./assets/objects/monkey.obj");
 	Material material;
 	Texture *tex =
 		Texture::load_texture("./assets/objects/test_texture.png");
@@ -69,8 +71,8 @@ void TestGame::init()
 		new DirectionalLight{ "#00F", 0.4f };
 	light_object0->add_component(directional_light);
 	light_object0->transform.set_rotation(Quaternion::Rotation_Quaternion(
-		{ 1, 0, 0 }, to_radians(-45.0f)));
-	// directional_light->direction = { 1, 0, 1 }; // TODO: fix
+		{ 1, 0, 0 }, to_radians(-135.0f)));
+
 	light_object0->transform.set_translation({ 0, 0, -10 });
 
 	GameObject *light_object1 = new GameObject();
@@ -96,15 +98,23 @@ void TestGame::init()
 	get_root_object()->add_child(light_object2);
 	get_root_object()->add_child(camera_object);
 
-	GameObject *plane_object2 = new GameObject();
-	plane_object2->add_component(new MeshRenderer(mesh2, material));
-	plane_object2->transform.set_translation(0, 2, 0);
-	get_root_object()->add_child(plane_object2);
+	camera_object->transform.set_translation({ 5, 0, -10 });
 
-	GameObject *plane_object3 = new GameObject();
-	plane_object3->add_component(new MeshRenderer(mesh2, material));
-	plane_object3->transform.set_translation(0, 0, 5);
-	plane_object2->add_child(plane_object3);
+	GameObject *monkey1 = new GameObject();
+	monkey1->add_component(new MeshRenderer(mesh3, material));
+	monkey1->transform
+		.set_rotation(Quaternion::Rotation_Quaternion(
+			{ 0, 1, 0 }, to_radians(180.0f)))
+		.set_scale(4)
+		.set_translation(5, 5, 5);
+	plane_object->add_child(monkey1);
 
-	camera_object->transform.set_translation({ 0, 0, -10 });
+	GameObject *monkey2 = new GameObject();
+	monkey2->add_component(new MeshRenderer(mesh4, material));
+	monkey2->transform
+		.set_rotation(Quaternion::Rotation_Quaternion(
+			{ 0, 1, 0 }, to_radians(180.0f)))
+		.set_scale(4)
+		.set_translation(20, 5, 5);
+	plane_object->add_child(monkey2);
 }

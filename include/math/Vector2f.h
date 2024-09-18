@@ -236,7 +236,10 @@ class Vector2f {
 	 * @param v The vector to compare with.
 	 * @return True if the vectors are equal, false otherwise.
 	 ***************************************************************************/
-	bool operator==(const Vector2f &v) const noexcept;
+	constexpr bool operator==(const Vector2f &v) const noexcept
+	{
+		return this->x == v.x && this->y == v.y;
+	}
 
 	/***************************************************************************
 	 * @brief Rotates the vector by a given angle.

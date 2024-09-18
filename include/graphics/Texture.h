@@ -57,5 +57,6 @@ class Texture {
 	 ***************************************************************************/
 	static Texture *load_texture(const std::string &file_path);
 
-	bool operator==(const Texture &other); // TODO: comment
+	// TODO: comment
+	constexpr bool operator==(const Texture &other) const noexcept;
 };

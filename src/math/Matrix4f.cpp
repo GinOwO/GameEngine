@@ -331,25 +331,6 @@ const float *Matrix4f::get_matrix() const noexcept
 }
 
 /***************************************************************************
- * @brief Compares two matrices for equality.
- *
- * Checks if the current matrix is equal to another matrix.
- *
- * @param m The matrix to compare with.
- * @return True if the matrices are equal, false otherwise.
- ***************************************************************************/
-bool Matrix4f::operator==(const Matrix4f &m) const noexcept
-{
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (this->matrix[i][j] != m.matrix[i][j])
-				return false;
-		}
-	}
-	return true;
-}
-
-/***************************************************************************
  * @brief Creates an orthogonal projection matrix.
  *
  * Returns a 4x4 matrix for orthogonal projection with specified bounds.

@@ -330,7 +330,11 @@ class Quaternion {
 	 * @param q The quaternion to compare with.
 	 * @return True if the quaternions are equal, false otherwise.
 	 ***************************************************************************/
-	bool operator==(const Quaternion &q) const noexcept;
+	constexpr bool operator==(const Quaternion &q) const noexcept
+	{
+		return this->x == q.x && this->y == q.y && this->z == q.z &&
+		       this->w == q.w;
+	}
 
 	//TODO: Comment
 	Matrix4f to_rotation_matrix() const noexcept;

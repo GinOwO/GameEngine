@@ -115,7 +115,7 @@ Texture *Texture::load_texture(const std::string &file_path)
 	return new Texture(texture);
 }
 
-bool Texture::operator==(const Texture &other)
+constexpr bool Texture::operator==(const Texture &other) const noexcept
 {
 	return id == other.id;
 }

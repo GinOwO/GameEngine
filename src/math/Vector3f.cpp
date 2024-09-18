@@ -383,17 +383,6 @@ Vector3f Vector3f::rotate(const Vector3f &axis,
 }
 
 /***************************************************************************
- * @brief Compares this vector with another vector for equality.
- *
- * @param v The vector to compare with.
- * @return True if the vectors are equal, false otherwise.
- ***************************************************************************/
-bool Vector3f::operator==(const Vector3f &v) const noexcept
-{
-	return this->x == v.x && this->y == v.y && this->z == v.z;
-}
-
-/***************************************************************************
  * @brief Interpolates between the current vector and a destination vector.
  *
  * This function computes the interpolation between the current vector and

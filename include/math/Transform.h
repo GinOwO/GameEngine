@@ -75,28 +75,28 @@ class Transform {
 	 * @param y The y component of the translation.
 	 * @param z The z component of the translation.
 	 ***************************************************************************/
-	void set_translation(float x, float y, float z);
+	Transform &set_translation(float x, float y, float z);
 
 	/***************************************************************************
 	 * @brief Sets the translation vector using a Vector3f object.
 	 *
 	 * @param translation The new translation vector.
 	 ***************************************************************************/
-	void set_translation(Vector3f translation);
+	Transform &set_translation(Vector3f translation);
 
 	/***************************************************************************
 	 * @brief Sets the rotation vector using a Vector3f object.
 	 *
 	 * @param rotation The new rotation vector (Euler angles).
 	 ***************************************************************************/
-	void set_rotation(Quaternion rotation);
+	Transform &set_rotation(Quaternion rotation);
 
 	/***************************************************************************
 	 * @brief Sets the scale vector using a Vector3f object.
 	 *
 	 * @param scale The new scale vector.
 	 ***************************************************************************/
-	void set_scale(Vector3f scale);
+	Transform &set_scale(Vector3f scale);
 
 	/***************************************************************************
 	 * @brief Sets the scale vector using individual float values.
@@ -105,7 +105,7 @@ class Transform {
 	 * @param y The y component of the scale.
 	 * @param z The z component of the scale.
 	 ***************************************************************************/
-	void set_scale(float x, float y, float z);
+	Transform &set_scale(float x, float y, float z);
 
 	/***************************************************************************
 	 * @brief Computes the transformation matrix based on translation, rotation, and scale.

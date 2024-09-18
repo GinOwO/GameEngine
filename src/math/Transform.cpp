@@ -60,9 +60,10 @@ Vector3f Transform::get_scale() const noexcept
  * @param y The y component of the translation.
  * @param z The z component of the translation.
  ***************************************************************************/
-void Transform::set_translation(float x, float y, float z)
+Transform &Transform::set_translation(float x, float y, float z)
 {
 	this->set_translation({ x, y, z });
+	return *this;
 }
 
 /***************************************************************************
@@ -70,9 +71,10 @@ void Transform::set_translation(float x, float y, float z)
  *
  * @param translation The new translation vector.
  ***************************************************************************/
-void Transform::set_translation(Vector3f translation)
+Transform &Transform::set_translation(Vector3f translation)
 {
 	this->translation = translation;
+	return *this;
 }
 
 /***************************************************************************
@@ -80,9 +82,10 @@ void Transform::set_translation(Vector3f translation)
  *
  * @param rotation The new rotation Quaternion.
  ***************************************************************************/
-void Transform::set_rotation(Quaternion rotation)
+Transform &Transform::set_rotation(Quaternion rotation)
 {
 	this->rotation = rotation;
+	return *this;
 }
 
 /***************************************************************************
@@ -92,9 +95,10 @@ void Transform::set_rotation(Quaternion rotation)
  * @param y The y component of the scale.
  * @param z The z component of the scale.
  ***************************************************************************/
-void Transform::set_scale(float x, float y, float z)
+Transform &Transform::set_scale(float x, float y, float z)
 {
 	this->set_scale({ x, y, z });
+	return *this;
 }
 
 /***************************************************************************
@@ -102,9 +106,10 @@ void Transform::set_scale(float x, float y, float z)
  *
  * @param scale The new scale vector.
  ***************************************************************************/
-void Transform::set_scale(Vector3f scale)
+Transform &Transform::set_scale(Vector3f scale)
 {
 	this->scale = scale;
+	return *this;
 }
 
 /***************************************************************************
@@ -115,8 +120,9 @@ void Transform::set_scale(Vector3f scale)
  ***************************************************************************/
 Matrix4f Transform::get_transformation() noexcept
 {
-	if (parent != nullptr && parent->has_changed()) {
+	if (parent != nullptr && (parent->has_changed() || first_update)) {
 		parent_matrix = parent->get_transformation();
+		first_update = false;
 	}
 	if (prev_translation.getX() != -1e9) {
 		prev_translation = translation;
@@ -172,15 +178,9 @@ Quaternion Transform::get_transformed_rotation() noexcept
 
 void Transform::update() noexcept
 {
-	if (prev_translation.getX() == -1e9) {
-		prev_translation = translation + 1.0f;
-		prev_rotation = rotation * 0.5f;
-		prev_scale = scale + 1.0f;
-	} else {
-		prev_translation = translation;
-		prev_rotation = rotation;
-		prev_scale = scale;
-	}
+	prev_translation = translation;
+	prev_rotation = rotation;
+	prev_scale = scale;
 }
 
 void Transform::rotate(const Vector3f &axis, float angle)

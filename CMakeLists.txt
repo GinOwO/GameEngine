@@ -45,10 +45,18 @@ set(CORE_SOURCES
 	${PROJECT_SOURCE_DIR}/src/core/Input.cpp
 )
 
+set(RESOURCE_MANAGEMENT
+	${PROJECT_SOURCE_DIR}/src/graphics/resource_management/MeshResource.cpp
+)
+
+set(MESH_MODELS
+	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/mesh_models/OBJModel.cpp
+)
+
 set(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/Shader.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Vertex.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Texture.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Material.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/ForwardAmbient.cpp
@@ -56,6 +64,7 @@ set(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/ForwardPoint.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/ForwardSpot.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/RenderingEngine.cpp
+	${MESH_MODELS}
 )
 
 set(GAME_SOURCES
@@ -81,6 +90,7 @@ add_library(GameEngineLib STATIC
 	${MISC_SOURCES}
 	${COMPONENT_SOURCES}
 	${GAME_SOURCES}
+	${RESOURCE_MANAGEMENT}
 )
 
 # Add executable target

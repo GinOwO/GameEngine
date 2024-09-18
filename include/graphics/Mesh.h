@@ -17,9 +17,12 @@
 
 #include <graphics/Vertex.h>
 #include <graphics/Material.h>
+#include <graphics/resource_management/MeshResource.h>
 
 #include <vector>
 #include <string>
+#include <memory>
+#include <unordered_map>
 
 /***************************************************************************
  * @class Mesh
@@ -33,13 +36,9 @@
  ***************************************************************************/
 class Mesh {
     private:
-	GLuint vao; /**< Vertex Array Object. */
-	GLuint vbo; /**< Vertex Buffer Object. */
-	GLuint ebo; /**< Element Buffer Object. */
-
-	int size; /**< Size of the mesh. */
-	int isize; /**< Index size of the mesh. */
-
+	std::shared_ptr<MeshResource> buffers;
+	static std::unordered_map<std::string, std::weak_ptr<MeshResource> >
+		loaded_models;
 	/***************************************************************************
 	 * @brief Calculates normals for the mesh vertices.
 	 *
@@ -60,9 +59,9 @@ class Mesh {
 	void draw() const;
 
 	/***************************************************************************
-	 * @brief Deletes the mesh resources.
+	 * @brief Assigns a new MeshResource to this Mesh
 	 ***************************************************************************/
-	void delete_mesh();
+	void reset_mesh();
 
 	/***************************************************************************
 	 * @brief Adds vertices and indices to the mesh.

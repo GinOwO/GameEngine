@@ -418,20 +418,6 @@ Quaternion &Quaternion::operator/=(const float r)
 }
 
 /***************************************************************************
- * @brief Compares two quaternions for equality.
- *
- * Checks if the current quaternion is equal to another quaternion.
- *
- * @param q The quaternion to compare with.
- * @return True if the quaternions are equal, false otherwise.
- ***************************************************************************/
-bool Quaternion::operator==(const Quaternion &q) const noexcept
-{
-	return this->x == q.x && this->y == q.y && this->z == q.z &&
-	       this->w == q.w;
-}
-
-/***************************************************************************
  * @brief Returns the forward direction based on the quaternion.
  *
  * @return A Vector3f representing the forward direction.
