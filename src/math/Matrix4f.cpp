@@ -7,6 +7,7 @@
 #include <cstring>
 #include <iostream>
 #include <exception>
+#include <exception>
 
 template <typename T> inline float to_degrees(T radians)
 {
@@ -239,6 +240,9 @@ void Matrix4f::set(int x, int y, float a)
 		std::cerr << "Matrix setting out of bounds, exiting\n";
 		throw std::invalid_argument(
 			"Matrix setting out of bounds, exiting\n");
+		std::cerr << "Matrix setting out of bounds, exiting\n";
+		throw std::invalid_argument(
+			"Matrix setting out of bounds, exiting\n");
 	}
 	matrix[x][y] = a;
 }
@@ -256,6 +260,9 @@ void Matrix4f::set(int x, int y, float a)
 float Matrix4f::get(int x, int y) const
 {
 	if (x > 3 || y > 3 || x < 0 || y < 0) {
+		std::cerr << "Matrix getting out of bounds, exiting\n";
+		throw std::invalid_argument(
+			"Matrix getting out of bounds, exiting\n");
 		std::cerr << "Matrix getting out of bounds, exiting\n";
 		throw std::invalid_argument(
 			"Matrix getting out of bounds, exiting\n");

@@ -47,6 +47,7 @@ std::string Shader::read_shader(const std::string &filepath) const
 	if (!file.good()) {
 		std::cerr << "File Does not exist: " << filepath << '\n';
 		throw std::runtime_error("File Does not exist");
+		throw std::runtime_error("File Does not exist");
 	}
 
 	while (std::getline(file, line)) {
@@ -86,6 +87,7 @@ GLuint Shader::create_shader_module(const std::string &shader_source,
 		std::cerr << "Error: Shader module compilation error("
 			  << module_type << "):\n"
 			  << error_log << '\n';
+		throw std::runtime_error("Shader module compilation error");
 		throw std::runtime_error("Shader module compilation error");
 	}
 	return shader_module;
@@ -139,6 +141,7 @@ void Shader::load(const std::string &vertex_filepath,
 		glGetProgramInfoLog(shader, 512, NULL, infoLog);
 		std::cerr << "ERROR: Shader linking failed:\n"
 			  << infoLog << '\n';
+		throw std::runtime_error("Shader linking failed");
 		throw std::runtime_error("Shader linking failed");
 	}
 
@@ -214,6 +217,7 @@ void Shader::add_uniform(const std::string &uniform)
 		std::cerr << "Error: Couldn't add uniform: \"" << uniform
 			  << "\"\n";
 		throw std::runtime_error("Couldn't add uniform");
+		throw std::runtime_error("Couldn't add uniform");
 	}
 
 	shader_resource->uniforms[uniform] = uniform_location;
@@ -235,6 +239,7 @@ GLuint Shader::get_uniform(const std::string &uniform) const
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
 			  << "\"\n";
 		throw std::runtime_error("Uniform Does not exist");
+		throw std::runtime_error("Uniform Does not exist");
 	}
 	return shader_resource->uniforms.at(uniform);
 }
@@ -254,6 +259,7 @@ void Shader::set_uniform(const std::string &uniform, int value)
 	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
 			  << "\"\n";
+		throw std::runtime_error("Uniform Does not exist");
 		throw std::runtime_error("Uniform Does not exist");
 	}
 	glUniform1i(shader_resource->uniforms[uniform], value);
@@ -275,6 +281,7 @@ void Shader::set_uniform(const std::string &uniform, float value)
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
 			  << "\"\n";
 		throw std::runtime_error("Uniform Does not exist");
+		throw std::runtime_error("Uniform Does not exist");
 	}
 	glUniform1f(shader_resource->uniforms[uniform], value);
 }
@@ -294,6 +301,7 @@ void Shader::set_uniform(const std::string &uniform, Vector3f vec)
 	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
 			  << "\"\n";
+		throw std::runtime_error("Uniform Does not exist");
 		throw std::runtime_error("Uniform Does not exist");
 	}
 	glUniform3f(shader_resource->uniforms[uniform], vec.getX(), vec.getY(),
@@ -315,6 +323,7 @@ void Shader::set_uniform(const std::string &uniform, Matrix4f matrix)
 	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
 			  << "\"\n";
+		throw std::runtime_error("Uniform Does not exist");
 		throw std::runtime_error("Uniform Does not exist");
 	}
 	glUniformMatrix4fv(shader_resource->uniforms[uniform], 1, GL_FALSE,

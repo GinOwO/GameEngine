@@ -152,6 +152,7 @@ Window::Window()
 	if (!glfwInit()) {
 		std::cerr << "Failed to initialize GLFW\n";
 		throw std::runtime_error("Failed to initialize GLFW\n");
+		throw std::runtime_error("Failed to initialize GLFW\n");
 	}
 	this->window = nullptr;
 }

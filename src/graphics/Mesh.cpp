@@ -53,11 +53,13 @@ Mesh Mesh::load_mesh(const std::string &file_path)
 		std::cerr << "Error: File type is not supported: " << file_path
 			  << '\n';
 		throw std::runtime_error("File type is not supported");
+		throw std::runtime_error("File type is not supported");
 	}
 
 	std::ifstream file(file_path);
 	if (!file.good()) {
 		std::cerr << "File does not exist: " << file_path << '\n';
+		throw std::runtime_error("File does not exist");
 		throw std::runtime_error("File does not exist");
 	}
 
@@ -187,6 +189,7 @@ void Mesh::draw() const
 {
 	if (buffers->vao == 0) {
 		std::cerr << "VAO not initialized\n";
+		throw std::runtime_error("VAO not initialized\n");
 		throw std::runtime_error("VAO not initialized\n");
 	}
 

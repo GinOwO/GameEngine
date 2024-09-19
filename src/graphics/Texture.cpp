@@ -88,6 +88,7 @@ Texture *Texture::load_texture(const std::string &file_path)
 	if (!data) {
 		std::cerr << "Failed to load texture: " << file_path << '\n';
 		throw std::runtime_error("Failed to load texture");
+		throw std::runtime_error("Failed to load texture");
 	}
 
 	glGenTextures(1, &texture->texture_resource->id);

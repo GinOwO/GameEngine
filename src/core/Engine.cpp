@@ -111,9 +111,11 @@ Engine::Engine()
 	if (!glfwInit()) {
 		std::cerr << "Error: Failed to initialize GLFW\n";
 		throw std::runtime_error("Error: Failed to initialize GLFW\n");
+		throw std::runtime_error("Error: Failed to initialize GLFW\n");
 	}
 	if (Engine::created) {
 		std::cerr << "Error: Engine Already Created\n";
+		throw std::runtime_error("Error: Engine Already Created\n");
 		throw std::runtime_error("Error: Engine Already Created\n");
 	}
 	paused = false;
@@ -200,13 +202,16 @@ void Engine::start()
 	if (!window.gl_create_window()) {
 		std::cerr << "Error: Failed to create window\n";
 		throw std::runtime_error("Failed to create window\n");
+		throw std::runtime_error("Failed to create window\n");
 	}
 	if (!window.set_window_context()) {
 		std::cerr << "Error: Failed to set window context\n";
 		throw std::runtime_error("Failed to set window context\n");
+		throw std::runtime_error("Failed to set window context\n");
 	}
 	if (running) {
 		std::cerr << "Error: Engine Already Running\n";
+		throw std::runtime_error("Engine Already Running\n");
 		throw std::runtime_error("Engine Already Running\n");
 	}
 
