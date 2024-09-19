@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.10)
 # Project name and version
 project(GameEngine VERSION 1.0)
 
+SET(CMAKE_BUILD_TYPE DEBUG)
+
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 	option(GIT_SUBMODULE "Check submodules during build" ON)
@@ -84,6 +86,7 @@ set(MISC_SOURCES
 	${PROJECT_SOURCE_DIR}/src/misc/glad.c
 )
 
+
 # Create a static library for common sources
 add_library(GameEngineLib STATIC
 	${MATH_SOURCES}
@@ -93,6 +96,32 @@ add_library(GameEngineLib STATIC
 	${COMPONENT_SOURCES}
 	${GAME_SOURCES}
 	${RESOURCE_MANAGEMENT}
+)
+
+# PhysX
+option(PHYSX_BUILD_TYPE "The build type of PhysX, i.e., one of {debug, checked, profile, release}" "checked")
+SET(PHYSX_DIR ${PROJECT_SOURCE_DIR}/external/PhysX/physx)
+include_directories(${PHYSX_DIR}/include)
+
+if(CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+	message("Building snippet in debug configuration")
+	add_compile_definitions(_DEBUG)
+	link_directories("PhysX/bin/linux.clang/debug") # This is the path where PhysX libraries are installed
+else()
+	message("Building snippet in release configuration with PhysX ${PHYSX_BUILD_TYPE} configuration")
+	add_compile_definitions(NDEBUG)
+	link_directories("PhysX/bin/linux.clang/${PHYSX_BUILD_TYPE}") # This is the path where PhysX libraries are installed
+endif()
+
+target_link_libraries(GameEngine
+	PhysXExtensions_static_64
+	PhysX_static_64
+	PhysXPvdSDK_static_64
+	PhysXCommon_static_64
+	PhysXFoundation_static_64
+
+	pthread
+	dl
 )
 
 # Add executable target
@@ -118,5 +147,5 @@ add_subdirectory(tests)
 SET(GCC_COMPILE_FLAGS "-g -O0")
 SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL")
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS} -DPX_PHYSX_STATIC_LIBS")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_LINK_FLAGS}")

@@ -1,3 +1,6 @@
 [submodule "include/glfw"]
 	path = include/glfw
 	url = https://github.com/glfw/glfw
+[submodule "external/PhysX"]
+	path = external/PhysX
+	url = https://github.com/NVIDIA-Omniverse/PhysX.git
