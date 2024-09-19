@@ -4,24 +4,7 @@ cmake_minimum_required(VERSION 3.10)
 # Project name and version
 project(GameEngine VERSION 1.0)
 
-SET(CMAKE_BUILD_TYPE DEBUG)
-
-find_package(Git QUIET)
-if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
-	option(GIT_SUBMODULE "Check submodules during build" ON)
-	if(GIT_SUBMODULE)
-		execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-			RESULT_VARIABLE GIT_SUBMOD_RESULT)
-		if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-			message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
-		endif()
-	endif()
-endif()
-
-if(NOT EXISTS "${PROJECT_SOURCE_DIR}/include/glfw/CMakeLists.txt")
-    message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
-endif()
+SET(CMAKE_BUILD_TYPE "Debug")
 
 cmake_policy(SET CMP0072 NEW)
 
@@ -99,39 +82,25 @@ add_library(GameEngineLib STATIC
 	${RESOURCE_MANAGEMENT}
 )
 
+#Bullet
+find_package(Bullet REQUIRED)
+include_directories(${BULLET_INCLUDE_DIRS})
+link_libraries(${BULLET_LIBRARIES})
+
 # Assimp
 find_package(assimp REQUIRED)
 include_directories(${ASSIMP_INCLUDE_DIRS})
 
-# PhysX
-set(PHYSX_BUILD_TYPE "release")
-include_directories(${PROJECT_SOURCE_DIR}/external/PhysX/physx/include)
-
-# link_directories(${PROJECT_SOURCE_DIR}/external/PhysX/physx/bin/linux.clang/debug)
-
-if(CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-	message("Building snippet in debug configuration")
-	add_compile_definitions(_DEBUG)
-	link_directories("${PROJECT_SOURCE_DIR}/external/PhysX/physx/bin/linux.clang/debug") # Debug libraries path
-else()
-	message("Building snippet in release configuration with PhysX ${PHYSX_BUILD_TYPE} configuration")
-	add_compile_definitions(NDEBUG)
-	link_directories("${PROJECT_SOURCE_DIR}/external/PhysX/physx/bin/linux.clang/${PHYSX_BUILD_TYPE}") # Release libraries path
-endif()
-
 # Add executable target
 add_executable(GameEngine ${PROJECT_SOURCE_DIR}/main.cpp)
 
-SET(PHYSX_LIBRARIES
-	PhysXExtensions_static_64
-	PhysX_static_64
-	PhysXPvdSDK_static_64
-	PhysXCommon_static_64
-	PhysXFoundation_static_64
-)
-
 # Link the libraries to the executable
-target_link_libraries(GameEngine GameEngineLib glfw OpenGL::GL ${ASSIMP_LIBRARIES} ${PHYSX_LIBRARIES})
+target_link_libraries(GameEngine 
+	GameEngineLib 
+	glfw OpenGL::GL 
+	BulletDynamics BulletCollision LinearMath
+	${ASSIMP_LIBRARIES}
+)
 
 # Add include directories
 target_include_directories(GameEngineLib PRIVATE ${PROJECT_SOURCE_DIR}/include)

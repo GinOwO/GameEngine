@@ -17,7 +17,6 @@
 #include <string>
 
 class Skybox : public GameObject {
-	Vector3f light_prev;
 	Vector3f rotate_sens;
 
     public:
@@ -51,10 +50,22 @@ class Skybox : public GameObject {
 		Vector3f previous_ambient_light =
 			SharedGlobals::get_instance().active_ambient_light;
 
+		float intensity = 0;
+		BaseLight *tmp = static_cast<BaseLight *>(
+			SharedGlobals::get_instance().active_light);
+
+		if (tmp != nullptr) {
+			intensity = tmp->intensity;
+		}
+
 		SharedGlobals::get_instance().active_ambient_light = { 1, 1,
 								       1 };
 
 		GameObject::render(shader);
+
+		if (tmp != nullptr) {
+			tmp->intensity = intensity;
+		}
 
 		SharedGlobals::get_instance().active_ambient_light =
 			previous_ambient_light;
