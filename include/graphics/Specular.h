@@ -23,6 +23,8 @@ struct Specular {
 	float intensity; /**< Intensity of the specular reflection. */
 	float exponent; /**< Exponent for the specular reflection. */
 
+	static const std::function<void(void *)> deleter;
+
 	Specular()
 		: intensity(0)
 		, exponent(0) {};

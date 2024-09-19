@@ -24,23 +24,15 @@ class Skybox : public GameObject {
 	       const Vector3f &rotate_sens = { 1, 1, 1 })
 		: rotate_sens(rotate_sens)
 	{
-		Mesh skbox = Mesh::load_mesh("assets/untitled.fbx");
-
-		Texture *sktex = Texture::load_texture(
-			"./assets/Skybox/fskybg/textures/background.jpg");
-
+		Mesh skbox = Mesh::load_mesh(mesh_path);
 		Material skmaterial;
 
-		skmaterial.add_property(
-			"diffuse",
-			std::shared_ptr<void>(sktex, Texture::deleter));
+		skmaterial.add_property("diffuse",
+					Texture::load_texture(texture_path));
 
 		skmaterial.add_property(
-			"specular",
-			std::shared_ptr<void>(
-				new Specular{ 0, 0 }, [](void *ptr) {
-					delete static_cast<Specular *>(ptr);
-				}));
+			"specular", std::shared_ptr<void>(new Specular{ 0, 0 },
+							  Specular::deleter));
 
 		this->add_component(new MeshRenderer(skbox, skmaterial));
 	}

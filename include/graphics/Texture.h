@@ -60,7 +60,7 @@ class Texture {
 	 * @param file_path The path to the texture file.
 	 * @return The loaded Texture as a shared_ptr.
 	 ***************************************************************************/
-	static Texture *load_texture(const std::string &file_path);
+	static std::shared_ptr<void> load_texture(const std::string &file_path);
 
 	// TODO: comment
 	bool operator==(const Texture &other) const noexcept;

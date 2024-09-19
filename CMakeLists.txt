@@ -82,7 +82,7 @@ add_library(GameEngineLib STATIC
 	${RESOURCE_MANAGEMENT}
 )
 
-#Bullet
+# Bullet
 find_package(Bullet REQUIRED)
 include_directories(${BULLET_INCLUDE_DIRS})
 link_libraries(${BULLET_LIBRARIES})
@@ -91,8 +91,21 @@ link_libraries(${BULLET_LIBRARIES})
 find_package(assimp REQUIRED)
 include_directories(${ASSIMP_INCLUDE_DIRS})
 
+# OpenEXR
+set(IMATH_INCLUDE_DIRS /usr/include/Imath)
+set(IMATH_LIBRARIES Imath-3_1)
+
+set(OPENEXR_INCLUDE_DIRS /usr/include/OpenEXR)
+set(OPENEXR_LIBRARIES OpenEXR-3_1 OpenEXRUtil-3_1 OpenEXRCore-3_1 Iex-3_1 IlmThread-3_1 Imath-3_1)
+
+find_package(Imath REQUIRED)
+include_directories(${IMATH_INCLUDE_DIRS})
+find_package(OpenEXR REQUIRED)
+include_directories(${OPENEXR_INCLUDE_DIRS})
+
 # Add executable target
 add_executable(GameEngine ${PROJECT_SOURCE_DIR}/main.cpp)
+
 
 # Link the libraries to the executable
 target_link_libraries(GameEngine 
@@ -100,8 +113,10 @@ target_link_libraries(GameEngine
 	glfw OpenGL::GL 
 	BulletDynamics BulletCollision LinearMath
 	${ASSIMP_LIBRARIES}
+	${OPENEXR_LIBRARIES}
+	${Imath_LIBRARIES}
 )
-
+	
 # Add include directories
 target_include_directories(GameEngineLib PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_include_directories(GameEngine PRIVATE ${PROJECT_SOURCE_DIR}/include)
@@ -120,5 +135,5 @@ add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
 SET(GCC_COMPILE_FLAGS "-g -O0")
 SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL -ldl -lassimp")
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS} -DPX_PHYSX_STATIC_LIBS")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_LINK_FLAGS}")

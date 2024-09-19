@@ -94,14 +94,12 @@ class FreeLook : public GameComponent {
 			if (dx != 0) {
 				get_parent_transform()->rotate(
 					y_axis,
-					to_radians(dx * rotate_sensitivity *
+					to_radians(-dx * rotate_sensitivity *
 						   sensitivity_x));
 			}
 			if (dy != 0) {
 				get_parent_transform()->rotate(
-					get_parent_transform()
-						->get_rotation()
-						.get_right(),
+					get_right(),
 					to_radians(dy * rotate_sensitivity *
 						   sensitivity_y));
 			}

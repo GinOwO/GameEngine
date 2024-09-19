@@ -29,6 +29,8 @@ class Material {
 	std::unordered_map<std::string, std::shared_ptr<void> > property;
 
     public:
+	static const Material None;
+
 	Material();
 	~Material();
 

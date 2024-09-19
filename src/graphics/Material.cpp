@@ -1,5 +1,7 @@
 #include <graphics/Material.h>
 
+const Material Material::None{};
+
 /***************************************************************************
  * @brief Default constructor for Material.
  *
@@ -43,7 +45,7 @@ void Material::add_property(const std::string &name,
 void *Material::get_property(const std::string &name) const noexcept
 {
 	if (!property.count(name))
-		return nullptr;
+		return (void *)(&Material::None);
 
 	return property.at(name).get();
 }

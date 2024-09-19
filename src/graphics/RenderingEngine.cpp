@@ -37,7 +37,6 @@ void RenderingEngine::clear_screen()
  ***************************************************************************/
 RenderingEngine::RenderingEngine()
 {
-	SharedGlobals::get_instance().active_ambient_light = Vector3f(0.2f);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glFrontFace(GL_CW);
