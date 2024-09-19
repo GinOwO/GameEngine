@@ -48,7 +48,7 @@ struct PointLight : public BaseLight {
 	 * @param attenuation The attenuation properties (constant, linear, exponent).
 	 ***************************************************************************/
 	PointLight(const Vector3f &color, const float &intensity,
-		   const Vector3f &attenuation)
+		   const Attenuation &attenuation)
 		: BaseLight(color, intensity)
 	{
 		this->attenuation = attenuation;
@@ -74,7 +74,7 @@ struct PointLight : public BaseLight {
 	 * @param attenuation The attenuation properties.
 	 ***************************************************************************/
 	PointLight(const std::string &color, const float &intensity,
-		   const Vector3f &attenuation)
+		   const Attenuation &attenuation)
 		: BaseLight(color, intensity)
 	{
 		this->attenuation = attenuation;

@@ -392,6 +392,18 @@ Matrix4f Matrix4f::Rotation_Matrix(const Vector3f &f, const Vector3f &u,
 	return Matrix4f{ matrix };
 }
 
+Matrix4f Matrix4f::Rotation_Matrix(const Vector3f &forward, const Vector3f &up)
+{
+	Vector3f f = forward.normalize();
+
+	Vector3f r = up.normalize();
+	r = r.cross(f);
+
+	Vector3f u = f.cross(r);
+
+	return Rotation_Matrix(f, u, r);
+}
+
 Vector3f Matrix4f::transform(const Vector3f &r)
 {
 	return { matrix[0][0] * r.getX() + matrix[0][1] * r.getY() +

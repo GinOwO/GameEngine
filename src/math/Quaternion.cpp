@@ -512,3 +512,92 @@ std::array<float, 4> Quaternion::get() const noexcept
 {
 	return { x, y, z, w };
 }
+
+// Ken Shoemake's "Quaternion Calculus and Fast Animation"
+Quaternion::Quaternion(const Matrix4f &matrix)
+{
+	float trace = matrix.get(0, 0) + matrix.get(1, 1) + matrix.get(2, 2);
+
+	if (trace > 0) {
+		float s = 0.5f / std::sqrt(trace + 1.0f);
+		w = 0.25f / s;
+		x = (matrix.get(1, 2) - matrix.get(2, 1)) * s;
+		y = (matrix.get(2, 0) - matrix.get(0, 2)) * s;
+		z = (matrix.get(0, 1) - matrix.get(1, 0)) * s;
+	} else {
+		if (matrix.get(0, 0) > matrix.get(1, 1) &&
+		    matrix.get(0, 0) > matrix.get(2, 2)) {
+			float s = 2.0f * std::sqrt(1.0f + matrix.get(0, 0) -
+						   matrix.get(1, 1) -
+						   matrix.get(2, 2));
+			w = (matrix.get(1, 2) - matrix.get(2, 1)) / s;
+			x = 0.25f * s;
+			y = (matrix.get(1, 0) + matrix.get(0, 1)) / s;
+			z = (matrix.get(2, 0) + matrix.get(0, 2)) / s;
+		} else if (matrix.get(1, 1) > matrix.get(2, 2)) {
+			float s = 2.0f * std::sqrt(1.0f + matrix.get(1, 1) -
+						   matrix.get(0, 0) -
+						   matrix.get(2, 2));
+			w = (matrix.get(2, 0) - matrix.get(0, 2)) / s;
+			x = (matrix.get(1, 0) + matrix.get(0, 1)) / s;
+			y = 0.25f * s;
+			z = (matrix.get(2, 1) + matrix.get(1, 2)) / s;
+		} else {
+			float s = 2.0f * std::sqrt(1.0f + matrix.get(2, 2) -
+						   matrix.get(0, 0) -
+						   matrix.get(1, 1));
+			w = (matrix.get(0, 1) - matrix.get(1, 0)) / s;
+			x = (matrix.get(2, 0) + matrix.get(0, 2)) / s;
+			y = (matrix.get(1, 2) + matrix.get(2, 1)) / s;
+			z = 0.25f * s;
+		}
+	}
+
+	float length = std::sqrt(x * x + y * y + z * z + w * w);
+	x /= length;
+	y /= length;
+	z /= length;
+	w /= length;
+}
+
+Quaternion Quaternion::nlerp(Quaternion dest, float lerpFactor, bool shortest)
+{
+	Quaternion correctedDest = dest;
+
+	if (shortest && this->dot(dest) < 0)
+		correctedDest = Quaternion(-dest.getX(), -dest.getY(),
+					   -dest.getZ(), -dest.getW());
+
+	return (((correctedDest - (*this)) * lerpFactor) + (*this)).normalize();
+}
+
+Quaternion Quaternion::slerp(Quaternion dest, float lerpFactor, bool shortest)
+{
+	static const float EPSILON = 1e3f;
+
+	float cos = this->dot(dest);
+	Quaternion correctedDest = dest;
+
+	if (shortest && cos < 0) {
+		cos = -cos;
+		correctedDest = Quaternion(-dest.getX(), -dest.getY(),
+					   -dest.getZ(), -dest.getW());
+	}
+
+	if (std::abs(cos) >= 1 - EPSILON)
+		return nlerp(correctedDest, lerpFactor, false);
+
+	float sin = std::sqrt(1.0f - cos * cos);
+	float angle = std::atan2(sin, cos);
+	float invSin = 1.0f / sin;
+
+	float srcFactor = std::sin((1.0f - lerpFactor) * angle) * invSin;
+	float destFactor = std::sin((lerpFactor)*angle) * invSin;
+
+	return ((*this * srcFactor) + correctedDest) * destFactor;
+}
+
+float Quaternion::dot(const Quaternion &r) const noexcept
+{
+	return x * r.getX() + y * r.getY() + z * r.getZ() + w * r.getW();
+}

@@ -163,8 +163,8 @@ void Engine::run()
 				this->stop();
 			}
 
-			game.input();
-			game.update();
+			game.input(frame_time);
+			game.update(frame_time);
 
 			frame_counter += timer.get_delta_time();
 

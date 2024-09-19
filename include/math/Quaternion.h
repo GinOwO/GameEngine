@@ -340,4 +340,10 @@ class Quaternion {
 	Matrix4f to_rotation_matrix() const noexcept;
 	static Quaternion Rotation_Quaternion(const Vector3f &axis,
 					      float angle) noexcept;
+	Quaternion(const Matrix4f &matrix);
+	float dot(const Quaternion &r) const noexcept;
+	Quaternion nlerp(Quaternion dest, float lerpFactor,
+			 bool shortest = false);
+	Quaternion slerp(Quaternion dest, float lerpFactor,
+			 bool shortest = false);
 };

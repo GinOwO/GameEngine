@@ -26,16 +26,17 @@
  *
  ***************************************************************************/
 class GameComponent {
-	Transform *transform;
+	Transform *transform = nullptr;
 
     public:
+	//TODO: update docs
 	/***************************************************************************
 	 * @brief Pure virtual function to handle input.
 	 *
 	 * @param transform The Transform object representing the component's
 	 *		  position and orientation.
 	 ***************************************************************************/
-	virtual void input() = 0;
+	virtual void input(float delta = 0) = 0;
 
 	/***************************************************************************
 	 * @brief Pure virtual function to update the component.
@@ -43,7 +44,7 @@ class GameComponent {
 	 * @param transform The Transform object representing the component's
 	 *		  position and orientation.
 	 ***************************************************************************/
-	virtual void update() = 0;
+	virtual void update(float delta = 0) = 0;
 
 	/***************************************************************************
 	 * @brief Pure virtual function to render the component.

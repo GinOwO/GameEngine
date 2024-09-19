@@ -49,7 +49,7 @@ class GameObject {
 	/***************************************************************************
 	 * @brief The Transform of this GameObject.
 	 ***************************************************************************/
-	Transform transform;
+	Transform transform{};
 
 	/***************************************************************************
 	 * @brief Constructs a GameObject.
@@ -59,12 +59,12 @@ class GameObject {
 	/***************************************************************************
 	 * @brief Calls the input method for this GameObject and its components.
 	 ***************************************************************************/
-	void input();
+	void input(float delta = 0);
 
 	/***************************************************************************
 	 * @brief Calls the update method for this GameObject and its components.
 	 ***************************************************************************/
-	void update();
+	void update(float delta = 0);
 
 	/***************************************************************************
 	 * @brief Calls the render method for this GameObject and its components.
@@ -78,14 +78,14 @@ class GameObject {
 	 *
 	 * @param obj Pointer to the GameObject to be added as a child.
 	 ***************************************************************************/
-	void add_child(GameObject *obj);
+	GameObject *add_child(GameObject *obj);
 
 	/***************************************************************************
 	 * @brief Adds a component to this GameObject.
 	 *
 	 * @param obj Pointer to the GameComponent to be added.
 	 ***************************************************************************/
-	void add_component(GameComponent *obj);
+	GameObject *add_component(GameComponent *obj);
 
 	// TODO: Comments
 	void add_to_rendering_engine();

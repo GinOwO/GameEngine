@@ -24,28 +24,6 @@ MeshRenderer::MeshRenderer(const Mesh &mesh, const Material &material)
 }
 
 /***************************************************************************
- * @brief Processes input for the MeshRenderer.
- *
- * This function is currently not implemented.
- *
- * @param transform The transform associated with this MeshRenderer.
- ***************************************************************************/
-void MeshRenderer::input()
-{
-}
-
-/***************************************************************************
- * @brief Updates the MeshRenderer.
- *
- * This function is currently not implemented.
- *
- * @param transform The transform associated with this MeshRenderer.
- ***************************************************************************/
-void MeshRenderer::update()
-{
-}
-
-/***************************************************************************
  * @brief Renders the mesh using the provided shader and transform.
  *
  * Uses the shader program, updates the shader's uniforms with the provided 

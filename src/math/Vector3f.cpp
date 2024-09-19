@@ -400,8 +400,8 @@ Vector3f Vector3f::rotate(const Vector3f &axis,
  *
  * @return A new `Vector3f` that represents the interpolated vector.
  ***************************************************************************/
-Vector3f Vector3f::interpolate(const Vector3f &dest,
-			       float interpolation_factor) const noexcept
+Vector3f Vector3f::lerp(const Vector3f &dest,
+			float interpolation_factor) const noexcept
 {
 	return ((dest - *this) * interpolation_factor) + (*this);
 }

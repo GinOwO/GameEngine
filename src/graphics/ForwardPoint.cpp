@@ -110,11 +110,11 @@ void ForwardPoint::set_uniform(const std::string &uniform,
 	this->set_uniform(uniform + ".base_light.intensity",
 			  base_light.intensity);
 	this->set_uniform(uniform + ".attenuation.constant",
-			  base_light.attenuation.getX());
+			  base_light.attenuation.get_constant());
 	this->set_uniform(uniform + ".attenuation.linear",
-			  base_light.attenuation.getY());
+			  base_light.attenuation.get_linear());
 	this->set_uniform(uniform + ".attenuation.exponent",
-			  base_light.attenuation.getZ());
+			  base_light.attenuation.get_exponent());
 	this->set_uniform(
 		uniform + ".position",
 		base_light.get_parent_transform()->get_transformed_position());

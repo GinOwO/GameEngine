@@ -188,3 +188,15 @@ void Transform::rotate(const Vector3f &axis, float angle)
 	rotation = (Quaternion::Rotation_Quaternion(axis, angle) * rotation)
 			   .normalize();
 }
+
+void Transform::look_at(const Vector3f &point, const Vector3f &up) noexcept
+{
+	this->rotation = look_at_direction(point, up);
+}
+
+Quaternion Transform::look_at_direction(const Vector3f &point,
+					const Vector3f &up) noexcept
+{
+	return Quaternion(Matrix4f::Rotation_Matrix(
+		(point - this->translation).normalize(), up));
+}

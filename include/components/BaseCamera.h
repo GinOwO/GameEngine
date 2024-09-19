@@ -39,7 +39,7 @@ class BaseCamera {
 	/***************************************************************************
 	 * @brief Processes input to adjust the camera.
 	 ***************************************************************************/
-	virtual void input() = 0;
+	virtual void input(float delta = 0) = 0;
 
 	/***************************************************************************
 	 * @brief Gets the camera's current position.
@@ -75,15 +75,6 @@ class BaseCamera {
 	 * @return The current right direction of the camera.
 	 ***************************************************************************/
 	virtual Vector3f get_right() const noexcept = 0;
-
-	/***************************************************************************
-	 * @brief Moves the camera in a specified direction.
-	 *
-	 * @param direction Direction to move the camera.
-	 * @param amount Distance to move the camera.
-	 ***************************************************************************/
-	virtual void move_camera(const Vector3f &direction,
-				 float amount) noexcept = 0;
 
 	/***************************************************************************
 	 * @brief Sets the camera's projection parameters.

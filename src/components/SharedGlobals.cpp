@@ -1,5 +1,7 @@
 #include <components/SharedGlobals.h>
 
+#include <unordered_set>
+
 SharedGlobals &SharedGlobals::get_instance()
 {
 	static SharedGlobals instance;
@@ -8,10 +10,10 @@ SharedGlobals &SharedGlobals::get_instance()
 
 void SharedGlobals::add_to_lights(void *light) noexcept
 {
-	lights.push_back(light);
+	lights.insert(light);
 }
 
-std::vector<void *> &SharedGlobals::get_lights()
+std::unordered_set<void *> &SharedGlobals::get_lights()
 {
 	return lights;
 }

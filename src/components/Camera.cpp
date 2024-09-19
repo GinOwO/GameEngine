@@ -1,8 +1,5 @@
 #include <components/Camera.h>
 
-#include <misc/glad.h>
-#include <GLFW/glfw3.h>
-
 #include <core/Input.h>
 #include <core/Timer.h>
 
@@ -11,7 +8,6 @@
 
 #include <exception>
 
-const Vector3f Camera::y_axis{ 0, 1, 0 };
 bool Camera::perspective_set = false;
 
 /***************************************************************************
@@ -105,69 +101,4 @@ Vector3f Camera::get_left() const noexcept
 Vector3f Camera::get_right() const noexcept
 {
 	return get_parent_transform()->get_rotation().get_right();
-}
-
-/***************************************************************************
- * @brief Moves the camera in the specified direction.
- *
- * Adjusts the camera's position based on the given direction vector and amount.
- *
- * @param direction The direction to move the camera.
- * @param amount The distance to move the camera.
- ***************************************************************************/
-void Camera::move_camera(const Vector3f &direction, float amount) noexcept
-{
-	get_parent_transform()->set_translation(
-		get_parent_transform()->get_translation() +
-		(direction * amount));
-}
-
-/***************************************************************************
- * @brief Handles camera input from the user.
- *
- * Processes keyboard and mouse input to move and rotate the camera.
- ***************************************************************************/
-void Camera::input()
-{
-	Timer &timer = Timer::get_instance();
-	Input &input_handler = Input::get_instance();
-
-	float move_multiplier = 15.0f * timer.get_delta_time();
-	float rotate_sensitivity = 35.0f * timer.get_delta_time();
-
-	if (input_handler.is_key_pressed(GLFW_KEY_W)) {
-		this->move_camera(this->get_forward(), move_multiplier);
-	}
-	if (input_handler.is_key_pressed(GLFW_KEY_S)) {
-		this->move_camera(this->get_forward(), -move_multiplier);
-	}
-	if (input_handler.is_key_pressed(GLFW_KEY_A)) {
-		this->move_camera(this->get_left(), move_multiplier);
-	}
-	if (input_handler.is_key_pressed(GLFW_KEY_D)) {
-		this->move_camera(this->get_right(), move_multiplier);
-	}
-	if (input_handler.is_key_pressed(GLFW_KEY_Q)) {
-		this->move_camera(this->get_up(), move_multiplier);
-	}
-	if (input_handler.is_key_pressed(GLFW_KEY_E)) {
-		this->move_camera(this->get_up(), -move_multiplier);
-	}
-
-	if (input_handler.is_mouse_down(GLFW_MOUSE_BUTTON_2)) {
-		const double *delta = input_handler.get_mouse_pos_delta();
-		float dx = delta[0], dy = delta[1];
-
-		if (abs(dx) > 5e-4) {
-			get_parent_transform()->rotate(
-				y_axis, to_radians(dx * rotate_sensitivity));
-		}
-		if (abs(dy) > 5e-4) {
-			get_parent_transform()->rotate(
-				get_parent_transform()
-					->get_rotation()
-					.get_right(),
-				to_radians(dy * rotate_sensitivity));
-		}
-	}
 }

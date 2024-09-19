@@ -11,6 +11,9 @@
 #include <graphics/Material.h>
 
 #include <components/Camera.h>
+#include <components/FreeLook.h>
+#include <components/FreeMove.h>
+#include <components/LookAtComponent.h>
 #include <components/DirectionalLight.h>
 #include <components/PointLight.h>
 #include <components/SpotLight.h>
@@ -70,8 +73,10 @@ void TestGame::init()
 
 	GameObject *camera_object = new GameObject();
 	Camera *camera = new Camera();
-	SharedGlobals::get_instance().main_camera = camera;
-	camera_object->add_component(camera);
+	SharedGlobals::get_instance().main_camera = static_cast<void *>(camera);
+	camera_object->add_component(new FreeMove(2.0f))
+		->add_component(new FreeLook(5.0f))
+		->add_component(camera);
 
 	GameObject *plane_object = new GameObject();
 	plane_object->add_component(new MeshRenderer(mesh, material));
@@ -90,14 +95,14 @@ void TestGame::init()
 	PointLight *point_light = new PointLight{
 		"#0F0",
 		0.4f,
-		{ 0, 0, 1 },
+		Attenuation{ 0, 0, 1 },
 	};
 	light_object1->add_component(point_light);
 	light_object1->transform.set_translation(1, 0, 1);
 
 	GameObject *light_object2 = new GameObject();
 	SpotLight *spot_light =
-		new SpotLight{ "#0Ff", 0.4f, { 0, 0, 0.1f }, 0.7f };
+		new SpotLight{ "#0Ff", 0.4f, Attenuation{ 0, 0, 0.1f }, 0.7f };
 	light_object2->add_component(spot_light);
 	light_object2->transform.set_translation(5, 0, 5);
 	light_object2->transform.set_rotation(Quaternion::Rotation_Quaternion(
@@ -112,7 +117,9 @@ void TestGame::init()
 	camera_object->transform.set_translation({ 5, 0, -10 });
 
 	GameObject *monkey1 = new GameObject();
-	monkey1->add_component(new MeshRenderer(mesh3, material));
+	monkey1->add_component(
+		       new LookAtComponent(camera->get_parent_transform()))
+		->add_component(new MeshRenderer(mesh3, material));
 	monkey1->transform
 		.set_rotation(Quaternion::Rotation_Quaternion(
 			{ 0, 1, 0 }, to_radians(180.0f)))
@@ -121,11 +128,15 @@ void TestGame::init()
 	plane_object->add_child(monkey1);
 
 	GameObject *monkey2 = new GameObject();
-	monkey2->add_component(new MeshRenderer(mesh4, material2));
+	monkey2->add_component(
+		       new LookAtComponent(camera->get_parent_transform()))
+		->add_component(new MeshRenderer(mesh4, material2));
 	monkey2->transform
 		.set_rotation(Quaternion::Rotation_Quaternion(
 			{ 0, 1, 0 }, to_radians(180.0f)))
 		.set_scale(4)
 		.set_translation(20, 5, 5);
 	plane_object->add_child(monkey2);
+
+	get_root_object()->add_to_rendering_engine();
 }

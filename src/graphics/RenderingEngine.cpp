@@ -125,9 +125,6 @@ void RenderingEngine::render(GameObject *object)
 	clear_screen();
 
 	SharedGlobals &light_sources = SharedGlobals::get_instance();
-	light_sources.clear_lights();
-
-	object->add_to_rendering_engine();
 
 	object->render(ForwardAmbient::get_instance());
 

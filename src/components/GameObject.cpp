@@ -25,15 +25,15 @@ GameObject::GameObject()
  * Calls the input function for each component with the GameObject's 
  * transform and recursively processes input for each child GameObject.
  ***************************************************************************/
-void GameObject::input()
+void GameObject::input(float delta)
 {
 	transform.update();
 	for (GameComponent *component : components) {
-		component->input();
+		component->input(delta);
 	}
 
 	for (GameObject *child : children) {
-		child->input();
+		child->input(delta);
 	}
 }
 
@@ -43,14 +43,14 @@ void GameObject::input()
  * Calls the update function for each component with the GameObject's 
  * transform and recursively updates each child GameObject.
  ***************************************************************************/
-void GameObject::update()
+void GameObject::update(float delta)
 {
 	for (GameComponent *component : components) {
-		component->update();
+		component->update(delta);
 	}
 
 	for (GameObject *child : children) {
-		child->update();
+		child->update(delta);
 	}
 }
 
@@ -102,10 +102,11 @@ GameObject::~GameObject()
  *
  * @param obj A pointer to the child GameObject to add.
  ***************************************************************************/
-void GameObject::add_child(GameObject *obj)
+GameObject *GameObject::add_child(GameObject *obj)
 {
 	obj->transform.parent = &transform;
 	children.push_back(obj);
+	return this;
 }
 
 /***************************************************************************
@@ -113,8 +114,9 @@ void GameObject::add_child(GameObject *obj)
  *
  * @param obj A pointer to the GameComponent to add.
  ***************************************************************************/
-void GameObject::add_component(GameComponent *obj)
+GameObject *GameObject::add_component(GameComponent *obj)
 {
 	obj->set_parent_transform(&transform);
 	components.push_back(obj);
+	return this;
 }

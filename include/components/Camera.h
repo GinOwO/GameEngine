@@ -33,20 +33,12 @@
  ***************************************************************************/
 class Camera : public BaseCamera, public GameComponent {
 	/***************************************************************************
-	 * @brief Static member variable representing the Y-axis vector.
-	 ***************************************************************************/
-	static const Vector3f y_axis;
-
-	/***************************************************************************
 	 * @brief Static flag indicating if the perspective projection is set.
 	 ***************************************************************************/
 	static bool perspective_set;
 
     public:
-	/***************************************************************************
-	 * @brief Processes input to adjust the camera.
-	 ***************************************************************************/
-	void input() override;
+	void input(float delta) override {};
 
 	/***************************************************************************
 	 * @brief Gets the camera's current position.
@@ -84,15 +76,6 @@ class Camera : public BaseCamera, public GameComponent {
 	Vector3f get_right() const noexcept override;
 
 	/***************************************************************************
-	 * @brief Moves the camera in a specified direction.
-	 *
-	 * @param direction Direction to move the camera.
-	 * @param amount Distance to move the camera.
-	 ***************************************************************************/
-	void move_camera(const Vector3f &direction,
-			 float amount) noexcept override;
-
-	/***************************************************************************
 	 * @brief Sets the camera's projection parameters.
 	 *
 	 * @param fov Field of view angle in degrees.
@@ -111,5 +94,5 @@ class Camera : public BaseCamera, public GameComponent {
 	Matrix4f get_view_projection() const override;
 
 	void render(Shader &) override {};
-	void update() override {};
+	void update(float delta) override {};
 };

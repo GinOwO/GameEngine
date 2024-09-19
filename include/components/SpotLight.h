@@ -13,6 +13,7 @@
 
 #include <math/Vector3f.h>
 
+#include <graphics/Attenuation.h>
 #include <graphics/ForwardSpot.h>
 
 #include <components/PointLight.h>
@@ -45,7 +46,7 @@ struct SpotLight : public PointLight {
 	 * @param cutoff The cutoff angle of the light.
 	 ***************************************************************************/
 	SpotLight(const Vector3f &color, const float &intensity,
-		  const Vector3f &attenuation, float cutoff)
+		  const Attenuation &attenuation, float cutoff)
 		: PointLight(color, intensity, attenuation)
 	{
 		this->cutoff = cutoff;
@@ -65,7 +66,7 @@ struct SpotLight : public PointLight {
 	 * @param cutoff The cutoff angle of the light.
 	 ***************************************************************************/
 	SpotLight(const std::string &hex, const float &intensity,
-		  const Vector3f &attenuation, float cutoff)
+		  const Attenuation &attenuation, float cutoff)
 		: PointLight(hex, intensity, attenuation)
 	{
 		this->cutoff = cutoff;

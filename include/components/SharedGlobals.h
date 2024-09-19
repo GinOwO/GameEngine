@@ -2,9 +2,8 @@
 #pragma once
 
 #include <math/Vector3f.h>
-#include <math/Transform.h>
 
-#include <vector>
+#include <unordered_set>
 
 class SharedGlobals {
     public:
@@ -15,14 +14,14 @@ class SharedGlobals {
 
     private:
 	SharedGlobals();
-	std::vector<void *> lights;
+	std::unordered_set<void *> lights;
 
     public:
 	Vector3f active_ambient_light; /**< Light responsible for ambient lighting. */
-	void *active_light;
-	void *main_camera;
+	void *active_light = nullptr;
+	void *main_camera = nullptr;
 
 	void add_to_lights(void *light) noexcept;
-	std::vector<void *> &get_lights();
+	std::unordered_set<void *> &get_lights();
 	void clear_lights();
 };

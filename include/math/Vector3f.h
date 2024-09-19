@@ -312,8 +312,8 @@ class Vector3f {
 	 *
 	 * @return A new `Vector3f` that represents the interpolated vector.
 	 ***************************************************************************/
-	Vector3f interpolate(const Vector3f &dest,
-			     float interpolation_factor) const noexcept;
+	Vector3f lerp(const Vector3f &dest,
+		      float interpolation_factor) const noexcept;
 };
 
 /***************************************************************************

@@ -50,9 +50,9 @@ class Game {
 	 *
 	 * This method is used to handle input events for the game.
 	 ***************************************************************************/
-	void input()
+	void input(float delta = 0)
 	{
-		get_root_object()->input();
+		get_root_object()->input(delta);
 	};
 
 	/***************************************************************************
@@ -60,9 +60,9 @@ class Game {
 	 *
 	 * This method is used to update the game state.
 	 ***************************************************************************/
-	void update()
+	void update(float delta = 0)
 	{
-		get_root_object()->update();
+		get_root_object()->update(delta);
 	};
 
 	/***************************************************************************

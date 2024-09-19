@@ -334,8 +334,8 @@ Vector2f Vector2f::rotate(float degrees) const noexcept
  *
  * @return A new `Vector2f` that represents the interpolated vector.
  ***************************************************************************/
-Vector2f Vector2f::interpolate(const Vector2f &dest,
-			       float interpolation_factor) const noexcept
+Vector2f Vector2f::lerp(const Vector2f &dest,
+			float interpolation_factor) const noexcept
 {
 	return ((dest - *this) * interpolation_factor) + (*this);
 }

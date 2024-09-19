@@ -14,6 +14,7 @@
 #include <math/Vector3f.h>
 
 #include <graphics/Shader.h>
+#include <graphics/Attenuation.h>
 
 #include <components/GameComponent.h>
 #include <components/SharedGlobals.h>
@@ -34,9 +35,8 @@
  *
  ***************************************************************************/
 struct BaseLight : public GameComponent {
-	Vector3f direction;
 	// Point Light
-	Vector3f attenuation; /**< The light's attenuation properties (constant, linear, exponent). */
+	Attenuation attenuation; /**< The light's attenuation properties */
 	Vector3f position; /**< The position of the light. */
 	float range; /**< The range of the light. */
 
@@ -152,7 +152,7 @@ struct BaseLight : public GameComponent {
 
     private:
 	// TODO: comments
-	void input() override {};
-	void update() override {};
+	void input(float delta) override {};
+	void update(float delta) override {};
 	void render(Shader &shader) override {};
 };
