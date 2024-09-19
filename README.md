@@ -49,7 +49,7 @@ yay -S \
 1. Clone the repository
 ```bash
 git clone https://github.com/GinOwO/Game-Engine.git
-cd Game-Engine
+cd GameEngine
 ```
 
 2. Create a build directory and configure CMake
