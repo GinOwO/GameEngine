@@ -12,7 +12,7 @@ compile_commands.json
 *.out
 *.tmp
 *.log
-# .vscode
+.vscode
 .cache
 CMakeDoxy*
 Testing

@@ -1,61 +1,27 @@
-/***************************************************************************
- * @file Material.h
- *
- * @brief Declares the Material class for material properties.
- *
- * This file contains the declaration of the Material class, which represents
- * the generic material properties of a 3D object, including its texture, color, and
- * specular properties.
- *
- ***************************************************************************/
-
 #pragma once
 
-#include <string>
-#include <memory>
-#include <unordered_map>
+#include <math/Vector3f.h>
 
-/***************************************************************************
- * @class Material
- *
- * @brief Represents material properties for a 3D object.
- *
- * The Material class includes generic properties for texture, color, and specular
- * attributes. It defines how the material interacts with light.
- *
- ***************************************************************************/
+#include <graphics/Texture.h>
+#include <graphics/Specular.h>
+
 class Material {
-	// TODO: comments
-	std::unordered_map<std::string, std::shared_ptr<void> > property;
+	Texture texture;
+	Vector3f color;
+	Specular specular;
 
     public:
 	Material();
-	~Material();
+	Material(const Texture &texture, const Vector3f &color);
+	Material(const Texture &texture, const Vector3f &color,
+		 const Specular &specular);
 
-	/***************************************************************************
-	 * @brief Add a new property to the material.
-	 *
-	 * @param name The name of the new property.
-	 * @param property Shared pointer to the new property to add.
-	 ***************************************************************************/
-	void add_property(const std::string &name,
-			  std::shared_ptr<void> texture);
+	void set_texture(const Texture &texture);
+	Texture get_texture() const noexcept;
 
-	/***************************************************************************
-	 * @brief Gets the specified property of the material.
-	 *
-	 * Returns nullptr if not found
-	 * 
-	 * @param name The name of the property.
-	 * @return The property as void*.
-	 ***************************************************************************/
-	void *get_property(const std::string &name) const noexcept;
+	void set_color(const Vector3f &color);
+	Vector3f get_color() const noexcept;
 
-	/***************************************************************************
-	 * @brief Deletes the specified property of the material.
-	 *
-	 * 
-	 * @param name Name of the property to delete.
-	 ***************************************************************************/
-	void delete_property(const std::string &name) noexcept;
+	void set_specular(const Specular &specular);
+	Specular get_specular() const noexcept;
 };

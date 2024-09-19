@@ -43,41 +43,22 @@ set(CORE_SOURCES
 	${PROJECT_SOURCE_DIR}/src/core/Engine.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Timer.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Input.cpp
-)
-
-set(RESOURCE_MANAGEMENT
-	${PROJECT_SOURCE_DIR}/src/graphics/resource_management/ShaderResource.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/resource_management/MeshResource.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/resource_management/TextureResource.cpp
-)
-
-set(MESH_MODELS
-	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/mesh_models/OBJModel.cpp
+	${PROJECT_SOURCE_DIR}/src/core/Camera.cpp
+	${PROJECT_SOURCE_DIR}/src/core/RenderUtil.cpp
 )
 
 set(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/Shader.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Vertex.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Texture.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Material.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/ForwardAmbient.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/ForwardDirectional.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/ForwardPoint.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/ForwardSpot.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/RenderingEngine.cpp
-	${MESH_MODELS}
+	${PROJECT_SOURCE_DIR}/src/graphics/BasicShader.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/PhongShader.cpp
 )
 
 set(GAME_SOURCES
-	${PROJECT_SOURCE_DIR}/src/game/TestGame.cpp
-)
-
-set(COMPONENT_SOURCES
-	${PROJECT_SOURCE_DIR}/src/components/GameObject.cpp
-	${PROJECT_SOURCE_DIR}/src/components/Camera.cpp
-	${PROJECT_SOURCE_DIR}/src/components/MeshRenderer.cpp
-	${PROJECT_SOURCE_DIR}/src/components/SharedGlobals.cpp
+	${PROJECT_SOURCE_DIR}/src/game/Game.cpp
 )
 
 set(MISC_SOURCES
@@ -90,9 +71,7 @@ add_library(GameEngineLib STATIC
 	${CORE_SOURCES}
 	${GRAPHICS_SOURCES}
 	${MISC_SOURCES}
-	${COMPONENT_SOURCES}
 	${GAME_SOURCES}
-	${RESOURCE_MANAGEMENT}
 )
 
 # Add executable target
