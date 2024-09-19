@@ -1,3 +1,9 @@
 [submodule "include/glfw"]
 	path = include/glfw
 	url = https://github.com/glfw/glfw
+[submodule "external/assimp"]
+	path = external/assimp
+	url = https://github.com/assimp/assimp
+[submodule "external/bullet"]
+	path = external/bullet
+	url = https://github.com/bulletphysics/bullet3

@@ -12,7 +12,7 @@
 #include <fstream>
 #include <sstream>
 
-OBJIndex OBJModel::parse_obj_index(const std::string &token)
+IndexedModel::Index OBJModel::parse_obj_index(const std::string &token)
 {
 	std::string val;
 	std::stringstream ss(token);
@@ -22,7 +22,7 @@ OBJIndex OBJModel::parse_obj_index(const std::string &token)
 		tokens.push_back(val);
 	}
 
-	OBJIndex result;
+	IndexedModel::Index result;
 	result.vertex_index = std::stoi(tokens[0]) - 1;
 
 	if (tokens.size() > 1) {
@@ -37,8 +37,9 @@ OBJIndex OBJModel::parse_obj_index(const std::string &token)
 	return result;
 }
 
-OBJModel::OBJModel(std::ifstream &file)
+OBJModel::OBJModel(const std::string &file_path)
 {
+	std::ifstream file(file_path);
 	has_normals = false;
 	has_texCoords = false;
 	std::string line, token;
@@ -80,11 +81,13 @@ OBJModel::OBJModel(std::ifstream &file)
 IndexedModel OBJModel::to_indexed_model()
 {
 	IndexedModel model, normal_model;
-	std::unordered_map<OBJIndex, int, OBJIndex::__hash__> model_index_map;
+	std::unordered_map<IndexedModel::Index, int,
+			   IndexedModel::Index::__hash__>
+		model_index_map;
 	std::unordered_map<int, int> normal_index_map, index_map;
 
 	for (int i = 0; i < indices.size(); i++) {
-		OBJIndex &current_index = indices[i];
+		IndexedModel::Index &current_index = indices[i];
 
 		Vector3f position = positions[current_index.vertex_index];
 		Vector2f texCoord;

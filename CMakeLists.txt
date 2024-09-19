@@ -4,22 +4,7 @@ cmake_minimum_required(VERSION 3.10)
 # Project name and version
 project(GameEngine VERSION 1.0)
 
-find_package(Git QUIET)
-if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
-	option(GIT_SUBMODULE "Check submodules during build" ON)
-	if(GIT_SUBMODULE)
-		execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-			RESULT_VARIABLE GIT_SUBMOD_RESULT)
-		if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-			message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
-		endif()
-	endif()
-endif()
-
-if(NOT EXISTS "${PROJECT_SOURCE_DIR}/include/glfw/CMakeLists.txt")
-    message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
-endif()
+SET(CMAKE_BUILD_TYPE "Debug")
 
 cmake_policy(SET CMP0072 NEW)
 
@@ -54,6 +39,7 @@ set(RESOURCE_MANAGEMENT
 set(MESH_MODELS
 	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/mesh_models/OBJModel.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/mesh_models/FBXModel.cpp
 )
 
 set(GRAPHICS_SOURCES
@@ -84,6 +70,7 @@ set(MISC_SOURCES
 	${PROJECT_SOURCE_DIR}/src/misc/glad.c
 )
 
+
 # Create a static library for common sources
 add_library(GameEngineLib STATIC
 	${MATH_SOURCES}
@@ -95,28 +82,43 @@ add_library(GameEngineLib STATIC
 	${RESOURCE_MANAGEMENT}
 )
 
+#Bullet
+find_package(Bullet REQUIRED)
+include_directories(${BULLET_INCLUDE_DIRS})
+link_libraries(${BULLET_LIBRARIES})
+
+# Assimp
+find_package(assimp REQUIRED)
+include_directories(${ASSIMP_INCLUDE_DIRS})
+
 # Add executable target
 add_executable(GameEngine ${PROJECT_SOURCE_DIR}/main.cpp)
 
-# Link the static library to the executable
-target_link_libraries(GameEngine GameEngineLib glfw OpenGL::GL)
+# Link the libraries to the executable
+target_link_libraries(GameEngine 
+	GameEngineLib 
+	glfw OpenGL::GL 
+	BulletDynamics BulletCollision LinearMath
+	${ASSIMP_LIBRARIES}
+)
 
 # Add include directories
 target_include_directories(GameEngineLib PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_include_directories(GameEngine PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(GameEngine PRIVATE ${PHYSX}/include)
 
 add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
 
-# Add GoogleTest
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
-enable_testing()
+# # Add GoogleTest
+# find_package(GTest REQUIRED)
+# include_directories(${GTEST_INCLUDE_DIRS})
+# enable_testing()
 
-# Add test directory
-add_subdirectory(tests)
+# # Add test directory
+# add_subdirectory(tests)
 
 SET(GCC_COMPILE_FLAGS "-g -O0")
-SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL")
+SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL -ldl -lassimp")
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS} -DPX_PHYSX_STATIC_LIBS")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_LINK_FLAGS}")

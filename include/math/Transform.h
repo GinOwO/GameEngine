@@ -128,7 +128,7 @@ class Transform {
 	Vector3f get_transformed_position() noexcept;
 	Quaternion get_transformed_rotation() noexcept;
 	void update() noexcept;
-	void rotate(const Vector3f &axis, float angle);
+	Transform &rotate(const Vector3f &axis, float angle);
 	void look_at(const Vector3f &point, const Vector3f &up) noexcept;
 	Quaternion look_at_direction(const Vector3f &point,
 				     const Vector3f &up) noexcept;

@@ -183,10 +183,11 @@ void Transform::update() noexcept
 	prev_scale = scale;
 }
 
-void Transform::rotate(const Vector3f &axis, float angle)
+Transform &Transform::rotate(const Vector3f &axis, float angle)
 {
 	rotation = (Quaternion::Rotation_Quaternion(axis, angle) * rotation)
 			   .normalize();
+	return *this;
 }
 
 void Transform::look_at(const Vector3f &point, const Vector3f &up) noexcept

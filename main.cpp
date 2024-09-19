@@ -4,11 +4,10 @@
 #include <core/Engine.h>
 #include <graphics/Shader.h>
 
-#include <cstdlib>
-
 int main(int argc, char const *argv[])
 {
 	glfwInit();
+
 	Engine engine;
 	engine.start();
 
