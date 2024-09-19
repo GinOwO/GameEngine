@@ -1,0 +1,54 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+	    {
+		"label": "build",
+		"type": "shell",
+		"command": "cmake",
+		"args": [
+		    "--build",
+		    "${workspaceFolder}/build"
+		],
+		"group": {
+		    "kind": "build",
+		    "isDefault": true
+		},
+		"problemMatcher": ["$gcc"],
+		"detail": "Build GameEngine using CMake"
+	    },
+	    {
+		"label": "CMake: configure",
+		"type": "shell",
+		"command": "cmake",
+		"args": [
+		    "-S",
+		    "${workspaceFolder}",
+		    "-B",
+		    "${workspaceFolder}/build"
+		],
+		"group": {
+		    "kind": "build",
+		    "isDefault": false
+		},
+		"problemMatcher": []
+	    },
+	    {
+		"label": "Run Tests",
+		"type": "shell",
+		"command": "ctest",
+		"args": [
+		    "--output-on-failure",
+		    "-C",
+		    "Debug",
+		    "--test-dir",
+		    "${workspaceFolder}/build/tests"
+		],
+		"group": {
+		    "kind": "test",
+		    "isDefault": true
+		},
+		"dependsOn":["build"],
+		"problemMatcher": []
+	    }
+	]
+}

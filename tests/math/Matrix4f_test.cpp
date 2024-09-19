@@ -61,8 +61,8 @@ TEST_F(Matrix4fTest, TestEquality)
 
 TEST_F(Matrix4fTest, TestProjectionMatrix)
 {
-	Matrix4f projection = Matrix4f::Projection_Matrix(
-		70.0f, 1920.0f, 1080.0f, 0.1f, 1000.0f);
+	Matrix4f projection = Matrix4f::Perspective_Matrix(
+		1.22173f, 1920.0f / 1080.0f, 0.1f, 1000.0f);
 	EXPECT_NEAR(projection.get(0, 0), 0.80333322286605835f, 1e-5);
 	EXPECT_NEAR(projection.get(1, 1), 1.4281480312347412f, 1e-5);
 }

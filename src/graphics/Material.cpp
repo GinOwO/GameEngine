@@ -1,55 +1,61 @@
 #include <graphics/Material.h>
 
-#include <math/Vector3f.h>
-
-#include <graphics/Texture.h>
-#include <graphics/Specular.h>
-
+/***************************************************************************
+ * @brief Default constructor for Material.
+ *
+ * Initializes a Material object with default values.
+ ***************************************************************************/
 Material::Material()
+	: property{}
 {
 }
 
-Material::Material(const Texture &texture, const Vector3f &color)
+/***************************************************************************
+ * @brief Default destructor for Material.
+ *
+ * Frees properties
+ ***************************************************************************/
+Material::~Material()
 {
-	this->texture = Texture(texture);
-	this->color = Vector3f(color);
-	this->specular = Specular{ 2, 32 };
+	property.clear();
 }
 
-Material::Material(const Texture &texture, const Vector3f &color,
-		   const Specular &specular)
+/***************************************************************************
+ * @brief Add a new property to the material.
+ *
+ * @param name The name of the new property.
+ * @param property The new property to add.
+ ***************************************************************************/
+void Material::add_property(const std::string &name,
+			    std::shared_ptr<void> property)
 {
-	this->texture = Texture(texture);
-	this->color = Vector3f(color);
-	this->specular = Specular(specular);
+	this->property[name] = property;
 }
 
-void Material::set_texture(const Texture &texture)
+/***************************************************************************
+ * @brief Gets the specified property of the material.
+ *
+ * Returns nullptr if not found
+ * 
+ * @param name The name of the property.
+ * @return The property.
+ ***************************************************************************/
+void *Material::get_property(const std::string &name) const noexcept
 {
-	this->texture = Texture(texture);
+	if (!property.count(name))
+		return nullptr;
+
+	return property.at(name).get();
 }
 
-Texture Material::get_texture() const noexcept
+/***************************************************************************
+ * @brief Deletes the specified property of the material.
+ *
+ * 
+ * @param name Name of the property to delete.
+ ***************************************************************************/
+void Material::delete_property(const std::string &name) noexcept
 {
-	return this->texture;
-}
-
-void Material::set_color(const Vector3f &color)
-{
-	this->color = Vector3f(color);
-}
-
-Vector3f Material::get_color() const noexcept
-{
-	return color;
-}
-
-void Material::set_specular(const Specular &specular)
-{
-	this->specular = Specular(specular);
-}
-
-Specular Material::get_specular() const noexcept
-{
-	return this->specular;
+	if (property.count(name))
+		property.erase(name);
 }
