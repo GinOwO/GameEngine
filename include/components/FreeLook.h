@@ -86,14 +86,26 @@ class FreeLook : public GameComponent {
 
 		float rotate_sensitivity = 100.0f * delta;
 
+		const double *m_delta = input_handler.get_mouse_pos_delta();
+		float dx = m_delta[0], dy = m_delta[1];
 		if (input_handler.is_mouse_down(GLFW_MOUSE_BUTTON_2)) {
-			const double *delta =
-				input_handler.get_mouse_pos_delta();
-			float dx = delta[0], dy = delta[1];
-
 			if (dx != 0) {
 				get_parent_transform()->rotate(
-					y_axis,
+					get_up(),
+					to_radians(-dx * rotate_sensitivity *
+						   sensitivity_x));
+			}
+			if (dy != 0) {
+				get_parent_transform()->rotate(
+					get_right(),
+					to_radians(dy * rotate_sensitivity *
+						   sensitivity_y));
+			}
+		}
+		if (input_handler.is_mouse_down(GLFW_MOUSE_BUTTON_3)) {
+			if (dx != 0) {
+				get_parent_transform()->rotate(
+					get_forward(),
 					to_radians(-dx * rotate_sensitivity *
 						   sensitivity_x));
 			}

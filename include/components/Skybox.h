@@ -35,6 +35,7 @@ class Skybox : public GameObject {
 							  Specular::deleter));
 
 		this->add_component(new MeshRenderer(skbox, skmaterial));
+		this->transform.set_scale(5);
 	}
 
 	void render(Shader &shader) override
