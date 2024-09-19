@@ -6,6 +6,7 @@
 #include <graphics/Vertex.h>
 #include <graphics/Material.h>
 #include <graphics/mesh_models/OBJModel.h>
+#include <graphics/mesh_models/FBXModel.h>
 #include <graphics/resource_management/MeshResource.h>
 
 #include <iostream>
@@ -15,10 +16,6 @@
 #include <cstdlib>
 #include <regex>
 #include <exception>
-
-// clang-format off
-std::regex extension_regex(R"(.*\.obj$)");
-// clang-format on
 
 std::unordered_map<std::string, std::weak_ptr<MeshResource> > Mesh::mesh_cache{};
 
@@ -49,28 +46,40 @@ Mesh Mesh::load_mesh(const std::string &file_path)
 		mesh_cache[file_path] = mesh.buffers;
 	}
 
-	if (!std::regex_match(file_path, extension_regex)) {
+	if (file_path.ends_with(".obj")) {
+		std::ifstream file(file_path);
+		if (!file.good()) {
+			std::cerr << "File does not exist: " << file_path
+				  << '\n';
+			throw std::runtime_error("File does not exist");
+		}
+		file.close();
+
+		IndexedModel model = OBJModel{ file_path }.to_indexed_model();
+		std::vector<Vertex> vertices;
+
+		for (int i = 0; i < model.positions.size(); i++) {
+			vertices.push_back({ model.positions[i],
+					     model.texCoords[i],
+					     model.normals[i] });
+		}
+		mesh.add_vertices(vertices, model.indices, false);
+	} else if (file_path.ends_with(".fbx")) {
+		IndexedModel model = FBXModel{ file_path }.to_indexed_model();
+		std::vector<Vertex> vertices;
+
+		for (int i = 0; i < model.positions.size(); i++) {
+			vertices.push_back({ model.positions[i],
+					     model.texCoords[i],
+					     model.normals[i] });
+		}
+		mesh.add_vertices(vertices, model.indices, false);
+	} else {
 		std::cerr << "Error: File type is not supported: " << file_path
 			  << '\n';
 		throw std::runtime_error("File type is not supported");
-		throw std::runtime_error("File type is not supported");
 	}
 
-	std::ifstream file(file_path);
-	if (!file.good()) {
-		std::cerr << "File does not exist: " << file_path << '\n';
-		throw std::runtime_error("File does not exist");
-		throw std::runtime_error("File does not exist");
-	}
-
-	IndexedModel model = OBJModel{ file }.to_indexed_model();
-	std::vector<Vertex> vertices;
-
-	for (int i = 0; i < model.positions.size(); i++) {
-		vertices.push_back({ model.positions[i], model.texCoords[i],
-				     model.normals[i] });
-	}
-	mesh.add_vertices(vertices, model.indices, false);
 	return mesh;
 }
 

@@ -56,6 +56,7 @@ set(RESOURCE_MANAGEMENT
 set(MESH_MODELS
 	${PROJECT_SOURCE_DIR}/src/graphics/Mesh.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/mesh_models/OBJModel.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/mesh_models/FBXModel.cpp
 )
 
 set(GRAPHICS_SOURCES
@@ -98,34 +99,39 @@ add_library(GameEngineLib STATIC
 	${RESOURCE_MANAGEMENT}
 )
 
-# PhysX
+# Assimp
+find_package(assimp REQUIRED)
+include_directories(${ASSIMP_INCLUDE_DIRS})
 
+# PhysX
 set(PHYSX_BUILD_TYPE "release")
 include_directories(${PROJECT_SOURCE_DIR}/external/PhysX/physx/include)
 
 # link_directories(${PROJECT_SOURCE_DIR}/external/PhysX/physx/bin/linux.clang/debug)
 
 if(CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message("Building snippet in debug configuration")
-    add_compile_definitions(_DEBUG)
-    link_directories("${PROJECT_SOURCE_DIR}/external/PhysX/physx/bin/linux.clang/debug") # Debug libraries path
+	message("Building snippet in debug configuration")
+	add_compile_definitions(_DEBUG)
+	link_directories("${PROJECT_SOURCE_DIR}/external/PhysX/physx/bin/linux.clang/debug") # Debug libraries path
 else()
-    message("Building snippet in release configuration with PhysX ${PHYSX_BUILD_TYPE} configuration")
-    add_compile_definitions(NDEBUG)
-    link_directories("${PROJECT_SOURCE_DIR}/external/PhysX/physx/bin/linux.clang/${PHYSX_BUILD_TYPE}") # Release libraries path
+	message("Building snippet in release configuration with PhysX ${PHYSX_BUILD_TYPE} configuration")
+	add_compile_definitions(NDEBUG)
+	link_directories("${PROJECT_SOURCE_DIR}/external/PhysX/physx/bin/linux.clang/${PHYSX_BUILD_TYPE}") # Release libraries path
 endif()
 
 # Add executable target
 add_executable(GameEngine ${PROJECT_SOURCE_DIR}/main.cpp)
 
-# Link the static library to the executable
-target_link_libraries(GameEngine GameEngineLib glfw OpenGL::GL
+SET(PHYSX_LIBRARIES
 	PhysXExtensions_static_64
 	PhysX_static_64
 	PhysXPvdSDK_static_64
 	PhysXCommon_static_64
 	PhysXFoundation_static_64
 )
+
+# Link the libraries to the executable
+target_link_libraries(GameEngine GameEngineLib glfw OpenGL::GL ${ASSIMP_LIBRARIES} ${PHYSX_LIBRARIES})
 
 # Add include directories
 target_include_directories(GameEngineLib PRIVATE ${PROJECT_SOURCE_DIR}/include)
@@ -134,16 +140,16 @@ target_include_directories(GameEngine PRIVATE ${PHYSX}/include)
 
 add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
 
-# Add GoogleTest
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
-enable_testing()
+# # Add GoogleTest
+# find_package(GTest REQUIRED)
+# include_directories(${GTEST_INCLUDE_DIRS})
+# enable_testing()
 
-# Add test directory
-add_subdirectory(tests)
+# # Add test directory
+# add_subdirectory(tests)
 
 SET(GCC_COMPILE_FLAGS "-g -O0")
-SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL -ldl")
+SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL -ldl -lassimp")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS} -DPX_PHYSX_STATIC_LIBS")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_LINK_FLAGS}")

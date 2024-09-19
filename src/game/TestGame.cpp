@@ -18,6 +18,7 @@
 #include <components/PointLight.h>
 #include <components/SpotLight.h>
 #include <components/MeshRenderer.h>
+#include <components/Skybox.h>
 
 #include <cmath>
 #include <iostream>
@@ -137,6 +138,14 @@ void TestGame::init()
 		.set_scale(4)
 		.set_translation(20, 5, 5);
 	plane_object->add_child(monkey2);
+
+	GameObject *skybox = new Skybox(
+		"assets/untitled.fbx",
+		"./assets/Skybox/fskybg/textures/background.jpg", { .5 });
+	skybox->transform.set_scale(5).set_rotation(
+		Quaternion::Rotation_Quaternion({ 0, 1, 0 },
+						to_radians(45.0f)));
+	get_root_object()->add_child(skybox);
 
 	get_root_object()->add_to_rendering_engine();
 }

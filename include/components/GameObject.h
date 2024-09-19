@@ -59,19 +59,19 @@ class GameObject {
 	/***************************************************************************
 	 * @brief Calls the input method for this GameObject and its components.
 	 ***************************************************************************/
-	void input(float delta = 0);
+	virtual void input(float delta = 0);
 
 	/***************************************************************************
 	 * @brief Calls the update method for this GameObject and its components.
 	 ***************************************************************************/
-	void update(float delta = 0);
+	virtual void update(float delta = 0);
 
 	/***************************************************************************
 	 * @brief Calls the render method for this GameObject and its components.
 	 *
 	 * @param shader The Shader used for rendering.
 	 ***************************************************************************/
-	void render(Shader &shader);
+	virtual void render(Shader &shader);
 
 	/***************************************************************************
 	 * @brief Adds a child GameObject to this GameObject.
