@@ -7,6 +7,9 @@
 
 #include <core/Input.h>
 
+#include <components/SharedGlobals.h>
+#include <components/BaseCamera.h>
+
 #include <iostream>
 #include <cstdlib>
 #include <exception>
@@ -20,6 +23,9 @@ Window &Window::get_instance()
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
+	SharedGlobals::get_instance().w_height = height;
+	SharedGlobals::get_instance().w_width = width;
+	SharedGlobals::get_instance().resized = true;
 	glViewport(0, 0, width, height);
 }
 

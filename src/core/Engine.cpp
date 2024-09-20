@@ -6,9 +6,11 @@
 #include <graphics/Shader.h>
 #include <graphics/RenderingEngine.h>
 
-#include <components/BaseCamera.h>
 #include <core/Input.h>
 #include <core/Timer.h>
+
+#include <components/BaseCamera.h>
+#include <components/SharedGlobals.h>
 
 #include <game/TestGame.h>
 
@@ -148,6 +150,7 @@ void Engine::start()
 	window.set_mouse_callback(mouse_motion_callback, mouse_button_callback,
 				  mouse_scroll_callback);
 	window.set_focus_callback(handle_window_focus);
+	SharedGlobals::get_instance().window = static_cast<void *>(&window);
 	running = true;
 	this->run();
 }

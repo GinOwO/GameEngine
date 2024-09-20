@@ -65,15 +65,12 @@ Transform &Transform::set_scale(Vector3f scale)
 
 Matrix4f Transform::get_transformation() noexcept
 {
-	if (parent != nullptr && (parent->has_changed() || first_update)) {
-		parent_matrix = parent->get_transformation();
-		first_update = false;
+	if (parent != nullptr) {
+		if (parent->has_changed()) {
+			parent_matrix = parent->get_transformation();
+		}
 	}
-	if (prev_translation.getX() != -1e9) {
-		prev_translation = translation;
-		prev_rotation = rotation;
-		prev_scale = scale;
-	}
+
 	return parent_matrix * (Matrix4f::Translation_Matrix(translation) *
 				(rotation.to_rotation_matrix() *
 				 Matrix4f::Scale_Matrix(scale)));
@@ -86,13 +83,10 @@ Matrix4f Transform::get_projected_camera(BaseCamera *camera) noexcept
 
 bool Transform::has_changed() noexcept
 {
-	if (first_update) {
+	if (parent != nullptr && (parent->has_changed() || first_update)) {
 		first_update = false;
 		return true;
 	}
-
-	if (parent != nullptr && parent->has_changed())
-		return true;
 
 	return !(translation == prev_translation && scale == prev_scale &&
 		 rotation == prev_rotation);

@@ -16,8 +16,8 @@ class Material {
 	Material();
 	~Material();
 
-	void add_property(const std::string &name,
-			  std::shared_ptr<void> texture);
+	Material &add_property(const std::string &name,
+			       std::shared_ptr<void> texture);
 
 	void *get_property(const std::string &name) const noexcept;
 

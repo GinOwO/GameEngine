@@ -38,7 +38,13 @@ struct PointLight : public BaseLight {
 		: BaseLight(color, intensity)
 	{
 		this->attenuation = attenuation;
-		this->range = 1000.0f;
+
+		auto [c, b, a] = attenuation.get();
+		auto [d, e, f] = this->color.get();
+		c -= COLOR_DEPTH * intensity * std::max(d, std::max(e, f));
+
+		this->range = (-b + std::sqrt(b * b - 4 * a * c)) / (2 * a);
+
 		this->shader = &ForwardPoint::get_instance();
 	}
 };

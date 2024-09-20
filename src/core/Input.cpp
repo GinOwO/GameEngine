@@ -43,8 +43,13 @@ void Input::key_callback(int key, int scancode, int action, int mods)
 {
 	if (key >= 0 && key < NUM_KEYS) {
 		if (action == GLFW_PRESS) {
+			if (down_keys[key] || pressed_keys[key]) {
+				down_keys[key] = false;
+			} else {
+				down_keys[key] = true;
+			}
 			pressed_keys[key] = true;
-			down_keys[key] = true;
+			up_keys[key] = false;
 		} else if (action == GLFW_RELEASE) {
 			pressed_keys[key] = false;
 			up_keys[key] = true;

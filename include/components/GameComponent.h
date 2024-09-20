@@ -18,6 +18,8 @@ class GameComponent {
 
 	virtual void render(Shader &shader) = 0;
 
+	virtual void reset() {};
+
 	virtual ~GameComponent() = default;
 
 	// TODO: comments

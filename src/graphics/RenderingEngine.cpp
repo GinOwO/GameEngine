@@ -39,12 +39,6 @@ RenderingEngine::RenderingEngine()
 	glEnable(GL_TEXTURE_2D);
 
 	RenderingEngine::clear_screen();
-	static_cast<BaseCamera *>(SharedGlobals::get_instance().main_camera)
-		->set_projection(
-			to_radians(70.0f),
-			Window::get_instance().get_window_width() /
-				Window::get_instance().get_window_height(),
-			.1f, 1000.0f);
 }
 
 void RenderingEngine::texture_enable(bool enable)

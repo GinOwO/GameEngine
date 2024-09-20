@@ -10,7 +10,7 @@
 #include <graphics/Texture.h>
 #include <graphics/Material.h>
 
-#include <components/Camera.h>
+#include <components/CameraObject.h>
 #include <components/FreeLook.h>
 #include <components/FreeMove.h>
 #include <components/LookAtComponent.h>
@@ -19,6 +19,7 @@
 #include <components/SpotLight.h>
 #include <components/MeshRenderer.h>
 #include <components/Skybox.h>
+#include <components/Person.h>
 
 #include <cmath>
 #include <iostream>
@@ -26,15 +27,6 @@
 void TestGame::init()
 {
 	auto &transform = get_root_object()->transform;
-
-	GameObject *camera_object = new GameObject();
-	Camera *camera = new Camera();
-	SharedGlobals::get_instance().main_camera = static_cast<void *>(camera);
-	camera_object->add_component(new FreeMove(2.0f))
-		->add_component(new FreeLook(5.0f))
-		->add_component(camera);
-
-	camera_object->transform.set_translation({ 5, 0, -10 });
 
 	GameObject *skybox = new Skybox(
 		"./assets/Skybox/fskybg/source/skybox.fbx",
@@ -62,23 +54,35 @@ void TestGame::init()
 			floor_material))
 		->transform.set_scale(10);
 
+	DirectionalLight *dl = new DirectionalLight("#18f", 0.1f);
+	GameObject *lighting_object2 = new GameObject();
+	lighting_object2->add_component(dl)->transform.set_rotation(
+		Quaternion::Rotation_Quaternion({ 1, 0, 0 },
+						to_radians(90.0f)));
+	get_root_object()->add_child(lighting_object2);
+
+	GameObject *player_object = new Person(
+		"assets/BASEmodel.fbx", "assets/objects/test_texture.png");
+
+	player_object->add_component(new FreeMove{ 1.0f, 1.0f, 0 });
+
 	GameObject *lighting_object = new GameObject();
-	// DirectionalLight *dl = new DirectionalLight("#0ff", 0.7f);
-	// lighting_object->add_component(dl)->transform.set_rotation(
-	// 	Quaternion::Rotation_Quaternion({ 1, 0, 0 },
-	// 					to_radians(60.0f)));
-	// get_root_object()->add_child(lighting_object);
+	lighting_object
+		->add_component(new PointLight("#fff", 1.0f, { 0, 0, 0.01f }))
+		->add_component(new FollowComponent({ 0, -0.5, 12 },
+						    &player_object->transform));
+	CameraObject *camera_object = new CameraObject(
+		70.0f, { 0, 7, 5 },
+		{ -0.789864, -0.000487476, -0.00402385, -0.613269 }, { 0 },
+		{ 10, 10 }, &player_object->transform);
+	SharedGlobals::get_instance().main_camera =
+		static_cast<void *>(camera_object->camera);
 
-	get_root_object()->add_child(camera_object);
-	get_root_object()->add_child(skybox);
-	get_root_object()->add_child(floor);
+	get_root_object()->add_child(skybox)->add_child(floor)->add_child(
+		player_object->add_child(camera_object)
+			->add_child(lighting_object));
 
-	camera_object->transform
-		.set_rotation(Quaternion::Rotation_Quaternion(
-			{ 1, 0, 0 }, to_radians(135.0f)))
-		.set_translation({ 0, 30, 30 });
-
-	SharedGlobals::get_instance().active_ambient_light = .4;
+	SharedGlobals::get_instance().active_ambient_light = .1;
 
 	get_root_object()->add_to_rendering_engine();
 }

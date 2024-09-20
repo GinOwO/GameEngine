@@ -48,10 +48,8 @@ void FBXModel::process_mesh(aiMesh *mesh, const aiScene *scene,
 		for (unsigned int j = 0; j < face.mNumIndices; j++) {
 			IndexedModel::Index index;
 			index.vertex_index = face.mIndices[j];
-			index.texCoord_index =
-				index.vertex_index; // Assimp might not directly provide texCoord index
-			index.normal_index =
-				index.vertex_index; // Assimp might not directly provide normal index
+			index.texCoord_index = index.vertex_index;
+			index.normal_index = index.vertex_index;
 			indices.push_back(index);
 		}
 	}

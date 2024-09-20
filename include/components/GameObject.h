@@ -30,6 +30,8 @@ class GameObject {
 
 	virtual void render(Shader &shader);
 
+	virtual void reset();
+
 	GameObject *add_child(GameObject *obj);
 
 	GameObject *add_component(GameComponent *obj);

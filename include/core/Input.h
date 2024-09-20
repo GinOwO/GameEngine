@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #define KB_SIZE 350

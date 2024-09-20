@@ -50,6 +50,17 @@ void GameObject::render(Shader &shader)
 	}
 }
 
+void GameObject::reset()
+{
+	for (GameComponent *component : components) {
+		component->reset();
+	}
+
+	for (GameObject *child : children) {
+		child->reset();
+	}
+}
+
 //TODO:comments
 void GameObject::add_to_rendering_engine()
 {
