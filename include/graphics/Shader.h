@@ -22,7 +22,8 @@
 
 class Shader {
     protected:
-	Transform const *transform; // TODO: Comment
+	Transform const *transform;
+
     private:
 	struct __pair_hash {
 		template <class T1, class T2>

@@ -11,7 +11,6 @@ class Game {
 	GameObject *root = nullptr;
 
     public:
-	// TODO: comments
 	~Game()
 	{
 		delete root;

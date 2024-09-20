@@ -247,7 +247,6 @@ Vector3f Quaternion::get_left() const
 	return Vector3f{ -1, 0, 0 }.rotate(this->get());
 }
 
-// TODO: Comment
 Matrix4f Quaternion::to_rotation_matrix() const noexcept
 {
 	Vector3f forward = Vector3f(2.0f * (x * z - w * y),

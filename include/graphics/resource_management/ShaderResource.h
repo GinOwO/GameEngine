@@ -6,8 +6,6 @@
 #include <string>
 #include <unordered_map>
 
-// TODO: comment
-
 class ShaderResource {
     public:
 	GLuint shader_program;

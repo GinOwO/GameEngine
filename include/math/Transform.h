@@ -13,7 +13,7 @@ class Transform {
 	Vector3f translation, prev_translation;
 	Quaternion rotation, prev_rotation;
 	Vector3f scale, prev_scale;
-	// TODO: Comments
+
 	Matrix4f parent_matrix;
 	bool first_update = true;
 
@@ -42,7 +42,6 @@ class Transform {
 
 	Matrix4f get_projected_camera(BaseCamera *camera) noexcept;
 
-	// TODO: Comment
 	bool has_changed() noexcept;
 
 	Vector3f get_transformed_position() noexcept;

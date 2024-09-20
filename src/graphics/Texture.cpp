@@ -19,8 +19,6 @@
 #include <functional>
 #include <exception>
 
-// TODO: comments
-
 const std::function<void(void *)> Specular::deleter{ [](void *ptr) {
 	delete static_cast<Specular *>(ptr);
 } };

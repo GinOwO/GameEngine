@@ -22,7 +22,6 @@ class GameComponent {
 
 	virtual ~GameComponent() = default;
 
-	// TODO: comments
 	virtual void add_to_rendering_engine(bool id = 0) {};
 
 	Transform *get_parent_transform() const noexcept
