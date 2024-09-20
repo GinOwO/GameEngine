@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <misc/glad.h>
@@ -52,8 +50,6 @@ class Shader {
     public:
 	Shader();
 
-	void delete_program() noexcept;
-
 	GLuint get_program() const noexcept;
 
 	void use_program() const noexcept;
@@ -71,6 +67,9 @@ class Shader {
 	void set_uniform(const std::string &uniform, Matrix4f value);
 
 	void set_uniform(const std::string &uniform, const Specular &specular);
+
+	void set_uniform(const std::string &uniform, const Matrix4f *matrices,
+			 int count);
 
 	virtual void update_uniforms(Transform *transform,
 				     const Material &material) = 0;

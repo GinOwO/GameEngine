@@ -3,8 +3,6 @@
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <graphics/Vertex.h>
-
 TextureResource::TextureResource()
 	: id(0)
 {

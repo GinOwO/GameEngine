@@ -12,10 +12,10 @@ class Vertex {
 	Vector2f texCoord;
 
     public:
-	std::array<int, 4> boneIndices{ 0, 0, 0, 0 }; // Indices of the bones
-	std::array<float, 4> boneWeights{ 0, 0, 0, 0 }; // Weights for each bone
+	std::array<int, 4> boneIndices{ 0, 0, 0, 0 };
+	std::array<float, 4> boneWeights{ 0, 0, 0, 0 };
 
-	static const int SIZE = 8;
+	static const int SIZE = 3 + 3 + 2 + 4 + 4;
 
 	Vertex();
 	Vertex(const Vector3f &pos);

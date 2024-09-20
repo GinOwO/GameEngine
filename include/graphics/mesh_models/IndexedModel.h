@@ -38,6 +38,8 @@ struct IndexedModel {
 	std::vector<Vector3f> positions;
 	std::vector<Vector3f> normals;
 	std::vector<Vector2f> texCoords;
+	std::vector<std::array<float, 4> > bone_weights;
+	std::vector<std::array<int, 4> > bone_indices;
 	std::vector<int> indices;
 
 	void calculate_normals()

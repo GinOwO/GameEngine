@@ -3,8 +3,6 @@
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <graphics/Vertex.h>
-
 ShaderResource::ShaderResource()
 	: shader_program(0)
 	, uniforms{}
