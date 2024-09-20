@@ -32,19 +32,8 @@ const std::function<void(void *)> Texture::deleter{ [](void *ptr) {
 std::unordered_map<std::string, std::weak_ptr<TextureResource> >
 	Texture::texture_cache{};
 
-/***************************************************************************
- * @brief Default constructor for Texture.
- *
- * Initializes the Texture object with an ID of 0.
- ***************************************************************************/
 Texture::Texture() {};
 
-/***************************************************************************
- * @brief Binds the texture for use in rendering.
- *
- * Binds the texture to the current OpenGL context. If the texture ID is -1,
- * no texture is bound.
- ***************************************************************************/
 void Texture::bind() const
 {
 	if (texture_resource == nullptr || texture_resource->id == -1)
@@ -52,28 +41,11 @@ void Texture::bind() const
 	glBindTexture(GL_TEXTURE_2D, texture_resource->id);
 }
 
-/***************************************************************************
- * @brief Gets the ID of the texture.
- *
- * Retrieves the OpenGL texture ID associated with this Texture object.
- *
- * @return The OpenGL texture ID.
- ***************************************************************************/
 GLuint Texture::get_id() const noexcept
 {
 	return this->texture_resource->id;
 }
 
-/***************************************************************************
- * @brief Loads a texture from a file.
- *
- * Loads a texture image from the specified file path and generates an OpenGL
- * texture object.
- *
- * @param file_path The path to the texture image file.
- * @return A Texture object representing the loaded texture.
- * @throws std::runtime_error if the texture fails to load.
- ***************************************************************************/
 std::shared_ptr<void> Texture::load_texture(const std::string &file_path)
 {
 	Texture *texture = new Texture();

@@ -8,9 +8,6 @@
 #include <components/GameComponent.h>
 
 class FreeLook : public GameComponent {
-	/***************************************************************************
-	 * @brief Static member variable representing the Y-axis vector.
-	 ***************************************************************************/
 	const Vector3f y_axis{ 0, 1, 0 };
 
 	float sensitivity_x, sensitivity_y;
@@ -22,14 +19,7 @@ class FreeLook : public GameComponent {
 	FreeLook(float sensitivity_x, float sensitivity_y)
 		: sensitivity_x(sensitivity_x)
 		, sensitivity_y(sensitivity_y) {};
-	/***************************************************************************
-	 * @brief Moves the transform in the specified direction.
-	 *
-	 * Adjusts the transforms's position based on the given direction vector and amount.
-	 *
-	 * @param direction The direction to move the transform.
-	 * @param amount The distance to move the transform.
-	 ***************************************************************************/
+
 	void move(const Vector3f &direction, float amount) noexcept
 	{
 		get_parent_transform()->set_translation(
@@ -37,49 +27,26 @@ class FreeLook : public GameComponent {
 			(direction * amount));
 	}
 
-	/***************************************************************************
-	 * @brief Gets the forward direction of the camera.
-	 *
-	 * @return The forward direction of the camera.
-	 ***************************************************************************/
 	Vector3f get_forward() const noexcept
 	{
 		return get_parent_transform()->get_rotation().get_forward();
 	}
 
-	/***************************************************************************
-	 * @brief Gets the up direction of the camera.
-	 *
-	 * @return The up direction of the camera.
-	 ***************************************************************************/
 	Vector3f get_up() const noexcept
 	{
 		return get_parent_transform()->get_rotation().get_up();
 	}
 
-	/***************************************************************************
-	 * @brief Gets the left direction of the camera.
-	 *
-	 * @return The left direction of the camera.
-	 ***************************************************************************/
 	Vector3f get_left() const noexcept
 	{
 		return get_parent_transform()->get_rotation().get_left();
 	}
 
-	/***************************************************************************
-	 * @brief Gets the right direction of the camera.
-	 *
-	 * @return The right direction of the camera.
-	 ***************************************************************************/
 	Vector3f get_right() const noexcept
 	{
 		return get_parent_transform()->get_rotation().get_right();
 	}
 
-	/***************************************************************************
-	 * @brief Processes input to adjust the transform.
-	 ***************************************************************************/
 	void input(float delta) override
 	{
 		Input &input_handler = Input::get_instance();

@@ -10,35 +10,18 @@
 
 #include <iostream>
 
-/***************************************************************************
- * @brief Constructs a ForwardSpot instance.
- *
- * This constructor initializes a ForwardSpot object by calling the base 
- * Shader constructor.
- ***************************************************************************/
 ForwardSpot::ForwardSpot()
 	: Shader()
 {
 	this->load_shader();
 }
 
-/***************************************************************************
- * @brief Retrieves the singleton instance of ForwardSpot.
- *
- * @return The singleton instance of ForwardSpot.
- ***************************************************************************/
 ForwardSpot &ForwardSpot::get_instance()
 {
 	static ForwardSpot instance;
 	return instance;
 }
 
-/***************************************************************************
- * @brief Loads shader files and initializes uniforms.
- *
- * Loads the vertex and fragment shader files, and adds the necessary 
- * uniforms "model" and "MVP" to the shader.
- ***************************************************************************/
 void ForwardSpot::load_shader()
 {
 	this->load("shaders/forwardSpot.vert", "shaders/forwardSpot.frag");
@@ -61,15 +44,6 @@ void ForwardSpot::load_shader()
 	this->add_uniform("eyePos");
 }
 
-/***************************************************************************
- * @brief Updates shader uniforms with the given model and material.
- *
- * Sets the shader uniforms for "model" and "MVP" using the provided
- * model and material. Binds the texture from the material.
- *
- * @param model The model to be used for the shader's "model" uniform.
- * @param material The material to be used for the shader's "MVP" uniform and texture.
- ***************************************************************************/
 void ForwardSpot::update_uniforms(Transform *transform,
 				  const Material &material)
 {
@@ -100,14 +74,6 @@ void ForwardSpot::update_uniforms(Transform *transform,
 				  SharedGlobals::get_instance().active_light));
 }
 
-/***************************************************************************
- * @brief Sets uniform values for a base light.
- *
- * Updates the shader uniform for a base light, including color and intensity.
- *
- * @param uniform The base name of the uniform.
- * @param base_light The base light data to set.
- ***************************************************************************/
 void ForwardSpot::set_uniform(const std::string &uniform,
 			      const BaseLight &base_light) noexcept
 {

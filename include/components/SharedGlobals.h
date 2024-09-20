@@ -17,7 +17,7 @@ class SharedGlobals {
 	std::unordered_set<void *> lights;
 
     public:
-	Vector3f active_ambient_light; /**< Light responsible for ambient lighting. */
+	Vector3f active_ambient_light;
 	void *active_light = nullptr;
 	void *main_camera = nullptr;
 

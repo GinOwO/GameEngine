@@ -19,16 +19,6 @@
 
 std::unordered_map<std::string, std::weak_ptr<MeshResource> > Mesh::mesh_cache{};
 
-/***************************************************************************
- * @brief Loads a mesh from a file.
- *
- * Reads a mesh from the specified file path. Supports only OBJ file format.
- *
- * @param file_path The path to the file from which to load the mesh.
- * @return A Mesh object initialized with the loaded vertices and indices.
- * @throws std::runtime_error If the file type is not supported or the file 
- *			     does not exist.
- ***************************************************************************/
 Mesh Mesh::load_mesh(const std::string &file_path)
 {
 	Mesh mesh;
@@ -83,49 +73,19 @@ Mesh Mesh::load_mesh(const std::string &file_path)
 	return mesh;
 }
 
-/***************************************************************************
- * @brief Default constructor for Mesh.
- *
- * Initializes a Mesh object with default values.
- ***************************************************************************/
 Mesh::Mesh() {};
 
-/***************************************************************************
- * @brief Constructs a Mesh with specified vertices, indices, and optional normals.
- *
- * Initializes a Mesh object with the provided vertices and indices. If 
- * `normals` is true, the mesh will also calculate normals.
- *
- * @param vertices The vertices to be used in the mesh.
- * @param indices The indices to be used in the mesh.
- * @param normals Whether to calculate normals for the mesh.
- ***************************************************************************/
 Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<int> &indices,
 	   bool normals)
 {
 	this->add_vertices(vertices, indices, normals);
 }
 
-/***************************************************************************
- * @brief Acquires a new mesh resource.
- *
- * Assigns a new MeshResource to this Mesh
- ***************************************************************************/
 void Mesh::reset_mesh()
 {
 	this->buffers = std::make_shared<MeshResource>();
 }
 
-/***************************************************************************
- * @brief Adds vertices and indices to the mesh.
- *
- * Updates the mesh with the specified vertices and indices. Optionally 
- * calculates normals if `normals` is true.
- *
- * @param vertices The vertices to be added to the mesh.
- * @param indices The indices to be added to the mesh.
- * @param normals Whether to calculate normals for the mesh.
- ***************************************************************************/
 void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 			bool normals)
 {
@@ -188,12 +148,6 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 	glBindVertexArray(0);
 }
 
-/***************************************************************************
- * @brief Draws the mesh.
- *
- * Renders the mesh using the currently bound VAO.
- * @throws std::runtime_error If the VAO is not initialized.
- ***************************************************************************/
 void Mesh::draw() const
 {
 	if (buffers->vao == 0) {
@@ -207,15 +161,6 @@ void Mesh::draw() const
 	glBindVertexArray(0);
 }
 
-/***************************************************************************
- * @brief Calculates normals for the mesh vertices.
- *
- * Computes normals for each vertex based on the mesh indices and updates
- * the vertex normals.
- *
- * @param vertices The vertices of the mesh.
- * @param indices The indices of the mesh.
- ***************************************************************************/
 void Mesh::calculate_normals(std::vector<Vertex> &vertices,
 			     std::vector<int> &indices)
 {
