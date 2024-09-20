@@ -15,9 +15,7 @@ class LookAtComponent : public GameComponent {
     public:
 	LookAtComponent(double delay = 0.0f, Transform *target = nullptr)
 		: target(target)
-		, time_delay(delay)
-	{
-	}
+		, time_delay(delay) {};
 
 	void update(float delta) override
 	{
