@@ -7,7 +7,7 @@
 
 class TextureResource {
     public:
-	GLuint id; /**< Texture ID. */
+	GLuint id;
 
 	TextureResource();
 	~TextureResource();

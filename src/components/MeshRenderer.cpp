@@ -11,27 +11,12 @@
 #include <components/SharedGlobals.h>
 #include <components/GameComponent.h>
 
-/***************************************************************************
- * @brief Constructs a MeshRenderer with the specified mesh and material.
- *
- * @param mesh The mesh to be rendered.
- * @param material The material to be used for rendering.
- ***************************************************************************/
 MeshRenderer::MeshRenderer(const Mesh &mesh, const Material &material)
 	: mesh(mesh)
 	, material(material)
 {
 }
 
-/***************************************************************************
- * @brief Renders the mesh using the provided shader and transform.
- *
- * Uses the shader program, updates the shader's uniforms with the provided 
- * transform and material, and draws the mesh.
- *
- * @param transform The transform to apply to the mesh.
- * @param shader The shader to use for rendering the mesh.
- ***************************************************************************/
 void MeshRenderer::render(Shader &shader)
 {
 	shader.use_program();

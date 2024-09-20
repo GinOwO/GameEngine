@@ -10,9 +10,8 @@
 
 class ShaderResource {
     public:
-	GLuint shader_program; /**< The OpenGL shader program ID. */
-	std::unordered_map<std::string, GLuint>
-		uniforms; /**< Maps uniform names to their location IDs. */
+	GLuint shader_program;
+	std::unordered_map<std::string, GLuint> uniforms;
 
 	ShaderResource();
 	~ShaderResource();

@@ -7,12 +7,12 @@
 
 class MeshResource {
     public:
-	GLuint vao; /**< Vertex Array Object. */
-	GLuint vbo; /**< Vertex Buffer Object. */
-	GLuint ebo; /**< Element Buffer Object. */
+	GLuint vao;
+	GLuint vbo;
+	GLuint ebo;
 
-	int size; /**< Size of the mesh. */
-	int isize; /**< Index size of the mesh. */
+	int size;
+	int isize;
 
 	MeshResource();
 	~MeshResource();
