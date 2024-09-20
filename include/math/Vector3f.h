@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <array>
@@ -13,7 +11,6 @@ class Vector3f {
 	float z;
 
     public:
-	//TODO:Comment
 	const static std::function<void(void *)> deleter;
 
 	Vector3f();

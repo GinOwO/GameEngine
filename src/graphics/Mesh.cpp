@@ -14,7 +14,6 @@
 #include <sstream>
 #include <string>
 #include <cstdlib>
-#include <regex>
 #include <exception>
 
 std::unordered_map<std::string, std::weak_ptr<MeshResource> > Mesh::mesh_cache{};

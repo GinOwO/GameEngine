@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <math/Transform.h>
@@ -10,8 +8,6 @@ class GameComponent {
 	Transform *transform = nullptr;
 
     public:
-	//TODO: update docs
-
 	virtual void input(float delta = 0) = 0;
 
 	virtual void update(float delta = 0) = 0;

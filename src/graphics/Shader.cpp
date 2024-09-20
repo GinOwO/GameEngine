@@ -239,7 +239,7 @@ void Shader::set_uniform(const std::string &uniform, const Specular &specular)
 	set_uniform(uniform + ".exponent", specular.exponent);
 }
 
-void Shader::set_uniform(const std::string &uniform, const Matrix4f *matrices,
+void Shader::set_uniform(const std::string &uniform, const Matrix4f &matrix,
 			 int count)
 {
 	use_program(); // Make sure the shader program is active
@@ -251,5 +251,5 @@ void Shader::set_uniform(const std::string &uniform, const Matrix4f *matrices,
 	}
 
 	glUniformMatrix4fv(shader_resource->uniforms[uniform], count, GL_FALSE,
-			   &matrices[0].get_matrix()[0]);
+			   &matrix.get_matrix()[0]);
 }

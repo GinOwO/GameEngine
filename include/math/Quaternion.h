@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <math/Vector3f.h>
@@ -97,7 +95,6 @@ class Quaternion {
 		       this->w == q.w;
 	}
 
-	//TODO: Comment
 	Matrix4f to_rotation_matrix() const noexcept;
 	static Quaternion Rotation_Quaternion(const Vector3f &axis,
 					      float angle) noexcept;

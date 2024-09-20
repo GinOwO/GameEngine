@@ -61,7 +61,6 @@ void GameObject::reset()
 	}
 }
 
-//TODO:comments
 void GameObject::add_to_rendering_engine()
 {
 	for (GameComponent *component : components) {

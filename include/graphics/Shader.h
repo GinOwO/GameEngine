@@ -68,7 +68,7 @@ class Shader {
 
 	void set_uniform(const std::string &uniform, const Specular &specular);
 
-	void set_uniform(const std::string &uniform, const Matrix4f *matrices,
+	void set_uniform(const std::string &uniform, const Matrix4f &matrix,
 			 int count);
 
 	virtual void update_uniforms(Transform *transform,
