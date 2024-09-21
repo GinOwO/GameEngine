@@ -28,7 +28,8 @@ jobs:
           cmake pkg-config \
           libgl1-mesa-dev libwayland-dev wayland-protocols \
           libgtest-dev libxkbcommon-dev libxrandr-dev \
-          libxinerama-dev libxcursor-dev libxi-dev
+          libxinerama-dev libxcursor-dev libxi-dev \
+          libbullet-dev libassimp-dev
 
     - name: Install Dependencies (Windows)
       if: matrix.os == 'windows-latest'
