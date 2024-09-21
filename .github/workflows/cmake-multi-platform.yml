@@ -29,7 +29,7 @@ jobs:
           libgl1-mesa-dev libwayland-dev wayland-protocols \
           libgtest-dev libxkbcommon-dev libxrandr-dev \
           libxinerama-dev libxcursor-dev libxi-dev \
-          libbullet-dev libassimp-dev
+          libbullet-dev libassimp-dev libimath-dev
 
     - name: Install Dependencies (Windows)
       if: matrix.os == 'windows-latest'
