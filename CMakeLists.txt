@@ -42,16 +42,21 @@ set(MESH_MODELS
 	${PROJECT_SOURCE_DIR}/src/graphics/mesh_models/FBXModel.cpp
 )
 
+SET(SHADER_CLASSES
+	${PROJECT_SOURCE_DIR}/src/graphics/ForwardAmbient.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/ForwardDirectional.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/ForwardPoint.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/ForwardSpot.cpp
+	${PROJECT_SOURCE_DIR}/src/graphics/ForwardAnimation.cpp
+)
+
 set(GRAPHICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/graphics/Shader.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Vertex.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Texture.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/Material.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/ForwardAmbient.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/ForwardDirectional.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/ForwardPoint.cpp
-	${PROJECT_SOURCE_DIR}/src/graphics/ForwardSpot.cpp
 	${PROJECT_SOURCE_DIR}/src/graphics/RenderingEngine.cpp
+	${SHADER_CLASSES}
 	${MESH_MODELS}
 )
 
@@ -64,6 +69,10 @@ set(COMPONENT_SOURCES
 	${PROJECT_SOURCE_DIR}/src/components/Camera.cpp
 	${PROJECT_SOURCE_DIR}/src/components/MeshRenderer.cpp
 	${PROJECT_SOURCE_DIR}/src/components/SharedGlobals.cpp
+)
+
+set(PHYSICS_SOURCES
+	${PROJECT_SOURCE_DIR}/src/physics/Skeleton.cpp
 )
 
 set(MISC_SOURCES
@@ -80,6 +89,7 @@ add_library(GameEngineLib STATIC
 	${COMPONENT_SOURCES}
 	${GAME_SOURCES}
 	${RESOURCE_MANAGEMENT}
+	${PHYSICS_SOURCES}
 )
 
 # Bullet

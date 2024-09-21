@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <misc/glad.h>
@@ -21,7 +19,7 @@ class Texture {
     public:
 	Texture();
 
-	const static Texture None; // TODO: comment
+	const static Texture None;
 	const static std::function<void(void *)> deleter;
 
 	GLuint get_id() const noexcept;
@@ -30,6 +28,5 @@ class Texture {
 
 	static std::shared_ptr<void> load_texture(const std::string &file_path);
 
-	// TODO: comment
 	bool operator==(const Texture &other) const noexcept;
 };

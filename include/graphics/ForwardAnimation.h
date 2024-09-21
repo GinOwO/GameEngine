@@ -8,14 +8,14 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
-class ForwardAmbient : public Shader {
-	ForwardAmbient();
-
+class ForwardAnimation : public Shader {
     public:
-	ForwardAmbient(const ForwardAmbient &) = delete;
-	ForwardAmbient &operator=(const ForwardAmbient &) = delete;
+	ForwardAnimation();
 
-	static ForwardAmbient &get_instance();
+	ForwardAnimation(const ForwardAnimation &) = delete;
+	ForwardAnimation &operator=(const ForwardAnimation &) = delete;
+
+	static ForwardAnimation &get_instance();
 
 	void load_shader();
 

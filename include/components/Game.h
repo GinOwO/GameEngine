@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <graphics/Shader.h>
@@ -11,7 +9,6 @@ class Game {
 	GameObject *root = nullptr;
 
     public:
-	// TODO: comments
 	~Game()
 	{
 		delete root;

@@ -1,7 +1,5 @@
 #include <graphics/mesh_models/OBJModel.h>
 
-// TODO: comments
-
 #include <math/Vector2f.h>
 #include <math/Vector3f.h>
 

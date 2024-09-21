@@ -2,13 +2,17 @@
 
 #include <math/Vector2f.h>
 #include <math/Vector3f.h>
+
 #include <graphics/mesh_models/IndexedModel.h>
 
-#include <vector>
-#include <string>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include <assimp/anim.h>
 #include <assimp/postprocess.h>
+
+#include <vector>
+#include <array>
+#include <string>
 
 class FBXModel {
     private:
@@ -16,17 +20,23 @@ class FBXModel {
 			  std::vector<Vector3f> &positions,
 			  std::vector<Vector2f> &texCoords,
 			  std::vector<Vector3f> &normals,
+			  std::vector<std::array<int, 4> > &bone_indices,
+			  std::vector<std::array<float, 4> > &bone_weights,
 			  std::vector<IndexedModel::Index> &indices);
 	void process_mesh(aiMesh *mesh, const aiScene *scene,
 			  std::vector<Vector3f> &positions,
 			  std::vector<Vector2f> &texCoords,
 			  std::vector<Vector3f> &normals,
-			  std::vector<IndexedModel::Index> &indices);
+			  std::vector<IndexedModel::Index> &indices,
+			  std::vector<std::array<int, 4> > &boneIndices,
+			  std::vector<std::array<float, 4> > &boneWeights);
 
     public:
 	std::vector<Vector3f> positions;
 	std::vector<Vector3f> normals;
 	std::vector<Vector2f> texCoords;
+	std::vector<std::array<float, 4> > bone_weights;
+	std::vector<std::array<int, 4> > bone_indices;
 	std::vector<IndexedModel::Index> indices;
 	bool has_normals;
 	bool has_texCoords;

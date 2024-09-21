@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <math/Vector3f.h>
@@ -81,7 +79,6 @@ struct BaseLight : public GameComponent {
 	{
 	}
 
-	// TODO: Comments
 	void add_to_rendering_engine(bool id) override
 	{
 		SharedGlobals::get_instance().add_to_lights(
@@ -89,7 +86,6 @@ struct BaseLight : public GameComponent {
 	}
 
     private:
-	// TODO: comments
 	void input(float delta) override {};
 	void update(float delta) override {};
 	void render(Shader &shader) override {};

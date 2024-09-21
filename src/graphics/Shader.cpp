@@ -238,3 +238,18 @@ void Shader::set_uniform(const std::string &uniform, const Specular &specular)
 	set_uniform(uniform + ".intensity", specular.intensity);
 	set_uniform(uniform + ".exponent", specular.exponent);
 }
+
+void Shader::set_uniform(const std::string &uniform, const Matrix4f &matrix,
+			 int count)
+{
+	use_program(); // Make sure the shader program is active
+
+	if (!shader_resource->uniforms.count(uniform)) {
+		std::cerr << "Error: Uniform Does not exist: \"" << uniform
+			  << "\"\n";
+		throw std::runtime_error("Uniform Does not exist");
+	}
+
+	glUniformMatrix4fv(shader_resource->uniforms[uniform], count, GL_FALSE,
+			   &matrix.get_matrix()[0]);
+}

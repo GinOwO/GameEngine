@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <math/Vector3f.h>
@@ -59,7 +57,6 @@ class Matrix4f {
 
 	const float *get_matrix() const noexcept;
 
-	//TODO: comment
 	static Matrix4f Rotation_Matrix(const Vector3f &forward,
 					const Vector3f &up,
 					const Vector3f &right);

@@ -6,7 +6,6 @@
 #include <math/Vector3f.h>
 
 #include <graphics/Mesh.h>
-#include <graphics/Vertex.h>
 #include <graphics/Texture.h>
 #include <graphics/Material.h>
 
@@ -48,11 +47,8 @@ void TestGame::init()
 	floor_material.add_property("specular",
 				    std::shared_ptr<void>(new Specular{ 1, 8 },
 							  Specular::deleter));
-	floor
-		->add_component(new MeshRenderer(
-			Mesh::load_mesh("./assets/terrain/floor.fbx"),
-			floor_material))
-		->transform.set_scale(10);
+	floor->add_component(new MeshRenderer(
+		Mesh::load_mesh("./assets/terrain/floor.fbx"), floor_material));
 
 	DirectionalLight *dl = new DirectionalLight("#18f", 0.1f);
 	GameObject *lighting_object2 = new GameObject();
@@ -62,7 +58,7 @@ void TestGame::init()
 	get_root_object()->add_child(lighting_object2);
 
 	GameObject *player_object = new Person(
-		"assets/BASEmodel.fbx", "assets/objects/test_texture.png");
+		"assets/Player E04.fbx", "assets/objects/test_texture.png");
 
 	player_object->add_component(new FreeMove{ 1.0f, 1.0f, 0 });
 
@@ -72,7 +68,7 @@ void TestGame::init()
 		->add_component(new FollowComponent({ 0, -0.5, 12 },
 						    &player_object->transform));
 	CameraObject *camera_object = new CameraObject(
-		70.0f, { 0, 7, 5 },
+		75.0f, { 0, 3, 2 },
 		{ -0.789864, -0.000487476, -0.00402385, -0.613269 }, { 0 },
 		{ 10, 10 }, &player_object->transform);
 	SharedGlobals::get_instance().main_camera =

@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <string>
@@ -7,7 +5,6 @@
 #include <unordered_map>
 
 class Material {
-	// TODO: comments
 	std::unordered_map<std::string, std::shared_ptr<void> > property;
 
     public:

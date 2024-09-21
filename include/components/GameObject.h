@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <math/Transform.h>
@@ -17,7 +15,6 @@ class GameObject {
 	std::vector<GameComponent *> components;
 
     public:
-	// TODO: Comment
 	~GameObject();
 
 	Transform transform{};
@@ -36,6 +33,5 @@ class GameObject {
 
 	GameObject *add_component(GameComponent *obj);
 
-	// TODO: Comments
 	void add_to_rendering_engine();
 };

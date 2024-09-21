@@ -3,8 +3,6 @@
 #include <misc/glad.h>
 #include <GLFW/glfw3.h>
 
-// TODO: comment
-
 class MeshResource {
     public:
 	GLuint vao;

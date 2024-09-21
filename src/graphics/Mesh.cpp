@@ -14,7 +14,6 @@
 #include <sstream>
 #include <string>
 #include <cstdlib>
-#include <regex>
 #include <exception>
 
 std::unordered_map<std::string, std::weak_ptr<MeshResource> > Mesh::mesh_cache{};
@@ -59,9 +58,11 @@ Mesh Mesh::load_mesh(const std::string &file_path)
 		std::vector<Vertex> vertices;
 
 		for (int i = 0; i < model.positions.size(); i++) {
-			vertices.push_back({ model.positions[i],
-					     model.texCoords[i],
-					     model.normals[i] });
+			Vertex vertex(model.positions[i], model.texCoords[i],
+				      model.normals[i]);
+			vertex.boneIndices = model.bone_indices[i];
+			vertex.boneWeights = model.bone_weights[i];
+			vertices.push_back(vertex);
 		}
 		mesh.add_vertices(vertices, model.indices, false);
 	} else {
@@ -118,14 +119,23 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 		buffer[i++] = normal.getX();
 		buffer[i++] = normal.getY();
 		buffer[i++] = normal.getZ();
+
+		for (int j = 0; j < 4; ++j) {
+			buffer[i++] = v.boneIndices[j];
+		}
+		for (int j = 0; j < 4; ++j) {
+			buffer[i++] = v.boneWeights[j];
+		}
 	}
 
 	glGenVertexArrays(1, &buffers->vao);
 	glBindVertexArray(buffers->vao);
 
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(0); // Position
+	glEnableVertexAttribArray(1); // TexCoord
+	glEnableVertexAttribArray(2); // Normal
+	glEnableVertexAttribArray(3); // Bone Indices
+	glEnableVertexAttribArray(4); // Bone Weights
 
 	glGenBuffers(1, &buffers->vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, buffers->vbo);
@@ -135,9 +145,16 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
 			      Vertex::SIZE * sizeof(float), (void *)0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
-			      Vertex::SIZE * sizeof(float), (void *)12);
+			      Vertex::SIZE * sizeof(float),
+			      (void *)(3 * sizeof(float)));
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,
-			      Vertex::SIZE * sizeof(float), (void *)20);
+			      Vertex::SIZE * sizeof(float),
+			      (void *)(5 * sizeof(float)));
+	glVertexAttribIPointer(3, 4, GL_INT, Vertex::SIZE * sizeof(float),
+			       (void *)(8 * sizeof(float)));
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE,
+			      Vertex::SIZE * sizeof(float),
+			      (void *)(12 * sizeof(float)));
 
 	glGenBuffers(1, &buffers->ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers->ebo);
