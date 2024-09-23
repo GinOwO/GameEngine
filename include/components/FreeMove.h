@@ -56,11 +56,11 @@ class FreeMove : public GameComponent {
 		float move_multiplier = 10.0f * delta;
 
 		if (input_handler.is_key_pressed(GLFW_KEY_W)) {
-			this->move(this->get_up(),
+			this->move(this->get_forward(),
 				   move_multiplier * sensitivity_x);
 		}
 		if (input_handler.is_key_pressed(GLFW_KEY_S)) {
-			this->move(this->get_up(),
+			this->move(this->get_forward(),
 				   -move_multiplier * sensitivity_x);
 		}
 		if (input_handler.is_key_pressed(GLFW_KEY_A)) {
@@ -72,11 +72,11 @@ class FreeMove : public GameComponent {
 				   move_multiplier * sensitivity_y);
 		}
 		if (input_handler.is_key_pressed(GLFW_KEY_Q)) {
-			this->move(this->get_forward(),
+			this->move(this->get_up(),
 				   move_multiplier * sensitivity_z);
 		}
 		if (input_handler.is_key_pressed(GLFW_KEY_E)) {
-			this->move(this->get_forward(),
+			this->move(this->get_up(),
 				   -move_multiplier * sensitivity_z);
 		}
 	}

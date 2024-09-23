@@ -79,6 +79,11 @@
                 "future": "cpp",
                 "cfenv": "cpp",
                 "valarray": "cpp",
-                "source_location": "cpp"
+                "source_location": "cpp",
+                "csignal": "cpp",
+                "strstream": "cpp",
+                "shared_mutex": "cpp",
+                "stdfloat": "cpp",
+                "typeindex": "cpp"
         }
 }

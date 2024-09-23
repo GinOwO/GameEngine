@@ -219,22 +219,22 @@ Quaternion &Quaternion::operator/=(const float r)
 
 Vector3f Quaternion::get_forward() const
 {
-	return Vector3f{ 0, 0, 1 }.rotate(this->get());
+	return Vector3f{ 0, -1, 0 }.rotate(this->get());
 }
 
 Vector3f Quaternion::get_backward() const
 {
-	return Vector3f{ 0, 0, -1 }.rotate(this->get());
+	return Vector3f{ 0, 1, 0 }.rotate(this->get());
 }
 
 Vector3f Quaternion::get_up() const
 {
-	return Vector3f{ 0, -1, 0 }.rotate(this->get());
+	return Vector3f{ 0, 0, 1 }.rotate(this->get());
 }
 
 Vector3f Quaternion::get_down() const
 {
-	return Vector3f{ 0, -1, 0 }.rotate(this->get());
+	return Vector3f{ 0, 0, -1 }.rotate(this->get());
 }
 
 Vector3f Quaternion::get_right() const

@@ -13,9 +13,7 @@
 
 MeshRenderer::MeshRenderer(const Mesh &mesh, const Material &material)
 	: mesh(mesh)
-	, material(material)
-{
-}
+	, material(material) {};
 
 void MeshRenderer::render(Shader &shader)
 {

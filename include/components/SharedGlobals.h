@@ -2,6 +2,8 @@
 
 #include <math/Vector3f.h>
 
+#include <btBulletDynamicsCommon.h>
+
 #include <unordered_set>
 
 class SharedGlobals {
@@ -16,6 +18,12 @@ class SharedGlobals {
 	std::unordered_set<void *> lights;
 
     public:
+	btDiscreteDynamicsWorld *dynamics_world;
+	btAlignedObjectArray<btCollisionShape *> collision_shapes;
+	std::vector<btRigidBody *> rigid_bodies;
+	btRigidBody *current_rigid_body = nullptr;
+	const int GRAVITY = 1.0f;
+
 	Vector3f active_ambient_light;
 	void *active_light = nullptr;
 	void *main_camera = nullptr;

@@ -15,6 +15,7 @@ class GameObject {
 	std::vector<GameComponent *> components;
 
     public:
+	int physics_type = 0; // default type no physics
 	~GameObject();
 
 	Transform transform{};

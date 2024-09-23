@@ -73,14 +73,13 @@ set(COMPONENT_SOURCES
 
 set(PHYSICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/physics/Skeleton.cpp
+	${PROJECT_SOURCE_DIR}/src/physics/Collision.cpp
 )
 
 set(MISC_SOURCES
 	${PROJECT_SOURCE_DIR}/src/misc/glad.c
 )
 
-
-# Create a static library for common sources
 add_library(GameEngineLib STATIC
 	${MATH_SOURCES}
 	${CORE_SOURCES}
@@ -95,7 +94,6 @@ add_library(GameEngineLib STATIC
 # Bullet
 find_package(Bullet REQUIRED)
 include_directories(${BULLET_INCLUDE_DIRS})
-link_libraries(${BULLET_LIBRARIES})
 
 # Assimp
 find_package(assimp REQUIRED)
@@ -116,15 +114,18 @@ include_directories(${OPENEXR_INCLUDE_DIRS})
 # Add executable target
 add_executable(GameEngine ${PROJECT_SOURCE_DIR}/main.cpp)
 
-
 # Link the libraries to the executable
 target_link_libraries(GameEngine 
 	GameEngineLib 
-	glfw OpenGL::GL 
-	BulletDynamics BulletCollision LinearMath
+	OpenGL::GL 
+	glfw 
+	BulletDynamics 
+	BulletCollision 
+	LinearMath
 	${ASSIMP_LIBRARIES}
 	${OPENEXR_LIBRARIES}
 	${Imath_LIBRARIES}
+	${BULLET_LIBRARIES}
 )
 	
 # Add include directories
@@ -143,7 +144,7 @@ add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
 # add_subdirectory(tests)
 
 SET(GCC_COMPILE_FLAGS "-g -O0")
-SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL -ldl -lassimp")
+SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL -ldl")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_LINK_FLAGS}")

@@ -7,14 +7,14 @@
 #include <components/SharedGlobals.h>
 #include <components/GameComponent.h>
 
+#include <physics/Collision.h>
+
 #include <vector>
 
 GameObject::GameObject()
 	: children()
 	, components()
-	, transform()
-{
-}
+	, transform() {};
 
 void GameObject::input(float delta)
 {
