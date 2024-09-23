@@ -32,9 +32,13 @@ sudo dnf install \
 	cmake pkgconfig \
 	mesa-libGL-devel \
 	wayland-devel wayland-protocols \
-	gtest-devel xkbcommon-devel \
+	gtest-devel libxkbcommon-devel \
 	libXrandr-devel libXinerama-devel \
-	libXcursor-devel libXi-devel
+	libXcursor-devel libXi-devel \
+	bullet bullet-devel \
+	assimp assimp-devel \
+	openexr openexr-devel \
+	imath imath-devel
 ```
 
 On Arch-based systems, you can install the following packages:
@@ -70,8 +74,9 @@ cd ../../
 
 4. Build the project
 ```bash
-cmake --build /home/gin/Desktop/GameEngine/build --config Debug --target all --
+cmake --build <Repository directory>/GameEngine/build --config Debug --target all --
 ```
+Note: Copy the absolute path to the build folder and replace "<Repository Directory>/GameEngine/build"
 
 5. Run the project from the build directory
 ```bash
