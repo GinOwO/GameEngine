@@ -87,7 +87,7 @@ void Engine::run()
 	int frames = 0;
 	double frame_counter = 0;
 	double frame_time = 1.0 / this->FRAME_CAP;
-	// glfwSwapInterval(frame_time);
+	// glfwSwapInterval(0); // Disable Vsync
 
 	timer.reset();
 	while (this->running) {
