@@ -27,13 +27,9 @@ class Game {
 
 	void update(float delta = 0)
 	{
-		for (auto &rigid_body :
-		     SharedGlobals::get_instance().rigid_bodies) {
-			CollisionCallback collision_callback;
-			SharedGlobals::get_instance()
-				.dynamics_world->contactTest(
-					rigid_body, collision_callback);
-		}
+		SharedGlobals &globals = SharedGlobals::get_instance();
+		globals.dynamics_world->stepSimulation(delta);
+
 		get_root_object()->update(delta);
 	};
 

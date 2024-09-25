@@ -20,6 +20,8 @@
 
 std::unordered_map<std::string, std::weak_ptr<MeshResource> > Mesh::mesh_cache{};
 
+std::vector<std::vector<btScalar> > all_bullet_vertices{};
+
 Mesh Mesh::load_mesh(const std::string &file_path,
 		     MeshPhysicsType mesh_physics_type)
 {
@@ -173,12 +175,19 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 
 	btRigidBody *rigid_body = nullptr;
 	SharedGlobals &globals = SharedGlobals::get_instance();
+	all_bullet_vertices.push_back({});
+	std::vector<btScalar> *bullet_vertices = &all_bullet_vertices.back();
+
+	for (Vertex &vertex : vertices) {
+		bullet_vertices->push_back(vertex.get_pos().getX());
+		bullet_vertices->push_back(vertex.get_pos().getY());
+		bullet_vertices->push_back(vertex.get_pos().getZ());
+	}
 	switch (mesh_physics_type) {
 	case MeshPhysicsType::ENTITY: {
-		btCollisionShape *shape =
-			new btConvexHullShape((btScalar *)&vertices[0],
-					      vertices.size(), sizeof(Vertex));
-		globals.collision_shapes.push_back(shape);
+		btConvexHullShape *shape = new btConvexHullShape(
+			bullet_vertices->data(), vertices.size(),
+			sizeof(btScalar) * 3);
 
 		btDefaultMotionState *motion_state = new btDefaultMotionState();
 		btScalar mass = 1.0f;
@@ -193,9 +202,10 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 
 	case MeshPhysicsType::TERRAIN: {
 		auto *index_vertex_array = new btTriangleIndexVertexArray(
-			indices.size() / 3, &indices[0], sizeof(int) * 3,
-			vertices.size(), (btScalar *)&vertices[0],
-			sizeof(Vertex));
+			static_cast<int>(indices.size() / 3), indices.data(),
+			sizeof(int) * 3,
+			static_cast<int>(bullet_vertices->size() / 3),
+			bullet_vertices->data(), sizeof(btScalar) * 3);
 
 		btBvhTriangleMeshShape *shape =
 			new btBvhTriangleMeshShape(index_vertex_array, true);

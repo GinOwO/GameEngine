@@ -9,6 +9,9 @@
 #include <vector>
 
 class GameObject {
+    protected:
+	bool will_collide = false;
+
     private:
 	std::vector<GameObject *> children;
 
@@ -29,6 +32,8 @@ class GameObject {
 	virtual void render(Shader &shader);
 
 	virtual void reset();
+
+	virtual void handle_collision(GameObject *obj) {};
 
 	GameObject *add_child(GameObject *obj);
 

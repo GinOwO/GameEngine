@@ -46,10 +46,16 @@ void TestGame::init()
 
 	get_root_object()->add_child(lighting_object2);
 
-	GameObject *player_object = new Person(
-		"assets/Player E04.fbx", "assets/objects/test_texture.png");
+	// Person *player_object = new Person("assets/Player E04.fbx",
+	// 				   "assets/objects/test_texture.png");
+
+	// player_object->move(
+	// 	player_object->transform.get_rotation().get_forward(), 10.0f);
+	// player_object->update_physics();
+	// get_root_object()->add_child(player_object);
 
 	// player_object->add_component(new FreeMove{ 1.0f, 1.0f, 1.0f });
+
 	Person *player_object1 = new Person("assets/Player E04.fbx",
 					    "assets/objects/test_texture.png");
 	player_object1->player = true;
@@ -66,12 +72,9 @@ void TestGame::init()
 	SharedGlobals::get_instance().main_camera =
 		static_cast<void *>(camera_object->camera);
 
-	get_root_object()
-		->add_child(player_object)
-		->add_child(skybox)
-		->add_child(floor)
-		->add_child(player_object1->add_child(camera_object)
-				    ->add_child(lighting_object));
+	get_root_object()->add_child(skybox)->add_child(floor)->add_child(
+		player_object1->add_child(camera_object)
+			->add_child(lighting_object));
 
 	SharedGlobals::get_instance().active_ambient_light = .1;
 

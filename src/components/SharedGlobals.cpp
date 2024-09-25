@@ -37,5 +37,5 @@ SharedGlobals::SharedGlobals()
 
 	dynamics_world = new btDiscreteDynamicsWorld(
 		dispatcher, broadphase, solver, collision_configuration);
-	dynamics_world->setGravity(btVector3(0, -9.81f, 0));
+	dynamics_world->setGravity(btVector3(0, 0, 0));
 }

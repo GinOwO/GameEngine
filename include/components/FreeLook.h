@@ -69,8 +69,9 @@ class FreeLook : public GameComponent {
 
 		if (dx != 0) {
 			get_parent_transform()->rotate(
-				get_up(), to_radians(-dx * rotate_sensitivity *
-						     sensitivity_x));
+				get_forward(),
+				to_radians(-dx * rotate_sensitivity *
+					   sensitivity_x));
 		}
 		if (dy != 0) {
 			get_parent_transform()->rotate(
@@ -81,7 +82,7 @@ class FreeLook : public GameComponent {
 		if (input_handler.is_mouse_down(GLFW_MOUSE_BUTTON_3)) {
 			if (dx != 0) {
 				get_parent_transform()->rotate(
-					get_forward(),
+					get_up(),
 					to_radians(-dx * rotate_sensitivity *
 						   sensitivity_x));
 			}

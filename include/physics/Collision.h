@@ -13,6 +13,4 @@ class CollisionCallback : public btCollisionWorld::ContactResultCallback {
 				 int partId0, int index0,
 				 const btCollisionObjectWrapper *colObj1Wrap,
 				 int partId1, int index1) override;
-
-	void handle_collision(GameObject *obj0, GameObject *obj1);
 };

@@ -49,9 +49,13 @@ class Person : public GameObject {
 
 	void update(float delta) override
 	{
-		if (!on_ground) {
-			move(transform.get_rotation().get_up(),
-			     -SharedGlobals::get_instance().GRAVITY * delta);
+		if (rigid_body) {
+			btTransform world_transform =
+				rigid_body->getWorldTransform();
+			btVector3 position = world_transform.getOrigin();
+			transform.set_translation(Vector3f(position.getX(),
+							   position.getY(),
+							   position.getZ()));
 		}
 
 		GameObject::update();
@@ -59,19 +63,11 @@ class Person : public GameObject {
 
 	void move(const Vector3f &direction, float amount) noexcept
 	{
-		transform.set_translation(transform.get_translation() +
-					  (direction * amount));
-
-		btTransform new_transform;
-		new_transform.setIdentity();
-		new_transform.setOrigin(
-			btVector3(transform.get_translation().getX(),
-				  transform.get_translation().getY(),
-				  transform.get_translation().getZ()));
-
-		auto rigid_body = dynamic_cast<btRigidBody *>(this->rigid_body);
 		if (rigid_body) {
-			rigid_body->setWorldTransform(new_transform);
+			btVector3 impulse(direction.getX() * amount * 10,
+					  direction.getY() * amount * 10,
+					  direction.getZ() * amount * 10);
+			rigid_body->applyCentralImpulse(impulse);
 		}
 	}
 
@@ -97,5 +93,11 @@ class Person : public GameObject {
 			}
 		}
 		GameObject::input(delta);
+	}
+
+	void handle_collision(GameObject *obj)
+	{
+		will_collide = true;
+		// std::cout << "Colliding" << '\n';
 	}
 };

@@ -20,11 +20,11 @@ class Transform {
 
 	Transform();
 
-	Vector3f get_translation() const noexcept;
+	Vector3f &get_translation() noexcept;
 
-	Quaternion get_rotation() const noexcept;
+	Quaternion &get_rotation() noexcept;
 
-	Vector3f get_scale() const noexcept;
+	Vector3f &get_scale() noexcept;
 
 	Transform &set_translation(float x, float y, float z);
 

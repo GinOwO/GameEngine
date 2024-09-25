@@ -18,17 +18,17 @@ Transform::Transform()
 	prev_translation = Vector3f(-1e9);
 }
 
-Vector3f Transform::get_translation() const noexcept
+Vector3f &Transform::get_translation() noexcept
 {
 	return translation;
 }
 
-Quaternion Transform::get_rotation() const noexcept
+Quaternion &Transform::get_rotation() noexcept
 {
 	return rotation;
 }
 
-Vector3f Transform::get_scale() const noexcept
+Vector3f &Transform::get_scale() noexcept
 {
 	return scale;
 }
