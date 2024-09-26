@@ -57,8 +57,8 @@ void TestGame::init()
 	// player_object->add_component(new FreeMove{ 1.0f, 1.0f, 1.0f });
 
 	Entity *player_object1 = new Entity("assets/Player E04.fbx",
-					    "assets/objects/test_texture.png");
-	player_object1->player = true;
+					    "assets/objects/test_texture.png",
+					    true);
 
 	GameObject *lighting_object = new GameObject();
 	lighting_object

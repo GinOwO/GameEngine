@@ -24,9 +24,12 @@ class Entity : public GameObject {
 	const btScalar jump_units = 1.0f;
 	const btScalar max_move_velocity = 7.5f;
 	const btScalar max_jump_velocity = 5.0f;
-	bool on_ground = true, player = false;
+	bool on_ground = true;
+	bool player;
 
-	Entity(const std::string &mesh_path, const std::string &diffuse_path)
+	Entity(const std::string &mesh_path, const std::string &diffuse_path,
+	       bool player = false)
+		: player(player)
 	{
 		this->physics_type = 20; // Physics for person entities
 		Mesh mesh = Mesh::load_mesh(mesh_path,
