@@ -18,7 +18,7 @@
 #include <components/SpotLight.h>
 #include <components/MeshRenderer.h>
 #include <components/Skybox.h>
-#include <components/Person.h>
+#include <components/Entity.h>
 #include <components/Terrain.h>
 
 #include <cmath>
@@ -36,7 +36,7 @@ void TestGame::init()
 	tex_paths["diffuse"] = "./assets/terrain/Baking.jpg";
 
 	GameObject *floor =
-		new Terrain("./assets/terrain/floor.fbx", tex_paths);
+		new Terrain("./assets/terrain/test_floor.fbx", tex_paths);
 
 	DirectionalLight *dl = new DirectionalLight("#18f", 0.1f);
 	GameObject *lighting_object2 = new GameObject();
@@ -56,7 +56,7 @@ void TestGame::init()
 
 	// player_object->add_component(new FreeMove{ 1.0f, 1.0f, 1.0f });
 
-	Person *player_object1 = new Person("assets/Player E04.fbx",
+	Entity *player_object1 = new Entity("assets/Player E04.fbx",
 					    "assets/objects/test_texture.png");
 	player_object1->player = true;
 

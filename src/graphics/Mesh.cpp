@@ -20,27 +20,31 @@
 
 std::unordered_map<std::string, std::weak_ptr<MeshResource> > Mesh::mesh_cache{};
 
-std::vector<std::vector<btScalar> > all_bullet_vertices{};
+std::unordered_map<GLuint, std::pair<std::vector<btScalar>, std::vector<int> > >
+	all_bullet_vertices{};
 
 Mesh Mesh::load_mesh(const std::string &file_path,
 		     MeshPhysicsType mesh_physics_type)
 {
 	Mesh mesh;
 	mesh.mesh_physics_type = mesh_physics_type;
-	// if (Mesh::mesh_cache.count(file_path)) {
-	// 	std::shared_ptr<MeshResource> resource =
-	// 		Mesh::mesh_cache[file_path].lock();
-	// 	if (resource) {
-	// 		mesh.buffers = resource;
-	// 		return mesh;
-	// 	}
-	// }
+	if (Mesh::mesh_cache.count(file_path)) {
+		std::shared_ptr<MeshResource> resource =
+			Mesh::mesh_cache[file_path].lock();
+		if (resource) {
+			mesh.buffers = resource;
+			mesh.update_physics();
+			return mesh;
+		}
+	}
 
 	if (mesh.buffers == nullptr) {
 		mesh.reset_mesh();
-		// mesh_cache[file_path] = mesh.buffers;
+		mesh_cache[file_path] = mesh.buffers;
 	}
 
+	std::vector<Vertex> vertices;
+	IndexedModel model;
 	if (file_path.ends_with(".obj")) {
 		std::ifstream file(file_path);
 		if (!file.good()) {
@@ -50,50 +54,88 @@ Mesh Mesh::load_mesh(const std::string &file_path,
 		}
 		file.close();
 
-		IndexedModel model = OBJModel{ file_path }.to_indexed_model();
-		std::vector<Vertex> vertices;
-
-		for (int i = 0; i < model.positions.size(); i++) {
-			vertices.push_back({ model.positions[i],
-					     model.texCoords[i],
-					     model.normals[i] });
-		}
-		mesh.add_vertices(vertices, model.indices, false,
-				  mesh_physics_type);
+		model = OBJModel{ file_path }.to_indexed_model();
 	} else if (file_path.ends_with(".fbx")) {
-		IndexedModel model = FBXModel{ file_path }.to_indexed_model();
-		std::vector<Vertex> vertices;
-
-		for (int i = 0; i < model.positions.size(); i++) {
-			Vertex vertex(model.positions[i], model.texCoords[i],
-				      model.normals[i]);
-			vertex.boneIndices = model.bone_indices[i];
-			vertex.boneWeights = model.bone_weights[i];
-			vertices.push_back(vertex);
-		}
-		mesh.add_vertices(vertices, model.indices, false,
-				  mesh_physics_type);
+		model = FBXModel{ file_path }.to_indexed_model();
 	} else {
 		std::cerr << "Error: File type is not supported: " << file_path
 			  << '\n';
 		throw std::runtime_error("File type is not supported");
 	}
+	for (int i = 0; i < model.positions.size(); i++) {
+		Vertex vertex(model.positions[i], model.texCoords[i],
+			      model.normals[i]);
+		vertex.boneIndices = model.bone_indices[i];
+		vertex.boneWeights = model.bone_weights[i];
+		vertices.push_back(vertex);
+	}
+	mesh.add_vertices(vertices, model.indices, false, mesh_physics_type);
+
+	all_bullet_vertices[mesh.buffers->vao] = { {}, model.indices };
+	auto &[bullet_vertices, _] = all_bullet_vertices[mesh.buffers->vao];
+	for (Vertex &vertex : vertices) {
+		bullet_vertices.push_back(vertex.get_pos().getX());
+		bullet_vertices.push_back(vertex.get_pos().getY());
+		bullet_vertices.push_back(vertex.get_pos().getZ());
+	}
+	mesh.update_physics();
 
 	return mesh;
 }
 
-Mesh::Mesh() {};
-
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<int> &indices,
-	   bool normals, MeshPhysicsType mesh_physics_type)
+void Mesh::update_physics()
 {
-	this->mesh_physics_type = mesh_physics_type;
-	this->add_vertices(vertices, indices, normals, mesh_physics_type);
-}
+	btRigidBody *rigid_body = nullptr;
+	SharedGlobals &globals = SharedGlobals::get_instance();
+	auto &[bullet_vertices, indices] = all_bullet_vertices.at(buffers->vao);
 
-void Mesh::reset_mesh()
-{
-	this->buffers = std::make_shared<MeshResource>();
+	switch (mesh_physics_type) {
+	case Mesh::MeshPhysicsType::ENTITY: {
+		btConvexHullShape *shape = new btConvexHullShape(
+			bullet_vertices.data(),
+			static_cast<int>(bullet_vertices.size() / 3),
+			sizeof(btScalar) * 3);
+
+		btDefaultMotionState *motion_state = new btDefaultMotionState();
+		btScalar mass = 1.0f;
+		btVector3 inertia(0, 0, 0);
+		shape->calculateLocalInertia(mass, inertia);
+		// shape->setMargin(0.5f);
+
+		btRigidBody::btRigidBodyConstructionInfo rigid_body_info(
+			mass, motion_state, shape, inertia);
+		rigid_body = new btRigidBody(rigid_body_info);
+		rigid_body->setDamping(0.2f, 0.0f);
+		break;
+	}
+
+	case Mesh::MeshPhysicsType::TERRAIN: {
+		auto *index_vertex_array = new btTriangleIndexVertexArray(
+			static_cast<int>(indices.size() / 3), indices.data(),
+			sizeof(int) * 3,
+			static_cast<int>(bullet_vertices.size() / 3),
+			bullet_vertices.data(), sizeof(btScalar) * 3);
+
+		btBvhTriangleMeshShape *shape =
+			new btBvhTriangleMeshShape(index_vertex_array, true);
+		shape->setMargin(0.5f);
+		globals.collision_shapes.push_back(shape);
+
+		btDefaultMotionState *motion_state = new btDefaultMotionState();
+		btRigidBody::btRigidBodyConstructionInfo rigid_body_info(
+			0, motion_state, shape, btVector3(0, 0, 0));
+		rigid_body = new btRigidBody(rigid_body_info);
+		break;
+	}
+
+	case MeshPhysicsType::NO_PHYSICS:
+	default:
+		break;
+	}
+	if (rigid_body != nullptr) {
+		globals.dynamics_world->addRigidBody(rigid_body);
+	}
+	globals.current_rigid_body = rigid_body;
 }
 
 void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
@@ -172,60 +214,20 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+}
 
-	btRigidBody *rigid_body = nullptr;
-	SharedGlobals &globals = SharedGlobals::get_instance();
-	all_bullet_vertices.push_back({});
-	std::vector<btScalar> *bullet_vertices = &all_bullet_vertices.back();
+Mesh::Mesh() {};
 
-	for (Vertex &vertex : vertices) {
-		bullet_vertices->push_back(vertex.get_pos().getX());
-		bullet_vertices->push_back(vertex.get_pos().getY());
-		bullet_vertices->push_back(vertex.get_pos().getZ());
-	}
-	switch (mesh_physics_type) {
-	case MeshPhysicsType::ENTITY: {
-		btConvexHullShape *shape = new btConvexHullShape(
-			bullet_vertices->data(), vertices.size(),
-			sizeof(btScalar) * 3);
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<int> &indices,
+	   bool normals, MeshPhysicsType mesh_physics_type)
+{
+	this->mesh_physics_type = mesh_physics_type;
+	this->add_vertices(vertices, indices, normals, mesh_physics_type);
+}
 
-		btDefaultMotionState *motion_state = new btDefaultMotionState();
-		btScalar mass = 1.0f;
-		btVector3 inertia(0, 0, 0);
-		shape->calculateLocalInertia(mass, inertia);
-
-		btRigidBody::btRigidBodyConstructionInfo rigid_body_info(
-			mass, motion_state, shape, inertia);
-		rigid_body = new btRigidBody(rigid_body_info);
-		break;
-	}
-
-	case MeshPhysicsType::TERRAIN: {
-		auto *index_vertex_array = new btTriangleIndexVertexArray(
-			static_cast<int>(indices.size() / 3), indices.data(),
-			sizeof(int) * 3,
-			static_cast<int>(bullet_vertices->size() / 3),
-			bullet_vertices->data(), sizeof(btScalar) * 3);
-
-		btBvhTriangleMeshShape *shape =
-			new btBvhTriangleMeshShape(index_vertex_array, true);
-		globals.collision_shapes.push_back(shape);
-
-		btDefaultMotionState *motion_state = new btDefaultMotionState();
-		btRigidBody::btRigidBodyConstructionInfo rigid_body_info(
-			0, motion_state, shape, btVector3(0, 0, 0));
-		rigid_body = new btRigidBody(rigid_body_info);
-		break;
-	}
-
-	case MeshPhysicsType::NO_PHYSICS:
-	default:
-		break;
-	}
-	if (rigid_body != nullptr) {
-		globals.dynamics_world->addRigidBody(rigid_body);
-	}
-	globals.current_rigid_body = rigid_body;
+void Mesh::reset_mesh()
+{
+	this->buffers = std::make_shared<MeshResource>();
 }
 
 void Mesh::draw() const

@@ -13,15 +13,20 @@
 #include <components/GameComponent.h>
 
 #include <string>
+#include <cmath>
+#include <algorithm>
 
-class Person : public GameObject {
-	float move_speed = 5.0f;
+class Entity : public GameObject {
 	btRigidBody *rigid_body = nullptr;
 
     public:
+	const btScalar move_impulse_factor = 10.0f;
+	const btScalar jump_units = 1.0f;
+	const btScalar max_move_velocity = 7.5f;
+	const btScalar max_jump_velocity = 5.0f;
 	bool on_ground = true, player = false;
 
-	Person(const std::string &mesh_path, const std::string &diffuse_path)
+	Entity(const std::string &mesh_path, const std::string &diffuse_path)
 	{
 		this->physics_type = 20; // Physics for person entities
 		Mesh mesh = Mesh::load_mesh(mesh_path,
@@ -50,6 +55,23 @@ class Person : public GameObject {
 	void update(float delta) override
 	{
 		if (rigid_body) {
+			btVector3 velocity = rigid_body->getLinearVelocity();
+
+			btScalar x = velocity.getX();
+			btScalar y = velocity.getY();
+			btScalar z = velocity.getZ();
+
+			btScalar xy_length = std::sqrt(x * x + y * y);
+
+			if (xy_length > max_move_velocity) {
+				btScalar scale = max_move_velocity / xy_length;
+
+				velocity.setX(x * scale);
+				velocity.setY(y * scale);
+				velocity.setZ(std::min(z, max_jump_velocity));
+
+				rigid_body->setLinearVelocity(velocity);
+			}
 			btTransform world_transform =
 				rigid_body->getWorldTransform();
 			btVector3 position = world_transform.getOrigin();
@@ -64,9 +86,9 @@ class Person : public GameObject {
 	void move(const Vector3f &direction, float amount) noexcept
 	{
 		if (rigid_body) {
-			btVector3 impulse(direction.getX() * amount * 10,
-					  direction.getY() * amount * 10,
-					  direction.getZ() * amount * 10);
+			btVector3 impulse(direction.getX() * amount,
+					  direction.getY() * amount,
+					  direction.getZ() * amount);
 			rigid_body->applyCentralImpulse(impulse);
 		}
 	}
@@ -74,30 +96,38 @@ class Person : public GameObject {
 	void input(float delta) override
 	{
 		static Input &input_handler = Input::get_instance();
-		if (on_ground && player) {
-			if (input_handler.is_key_pressed(GLFW_KEY_UP)) {
+		if (player) {
+			if (input_handler.is_key_pressed(GLFW_KEY_W)) {
 				move(transform.get_rotation().get_forward(),
-				     move_speed * delta);
+				     move_impulse_factor * delta);
 			}
-			if (input_handler.is_key_pressed(GLFW_KEY_DOWN)) {
-				move(transform.get_rotation().get_backward(),
-				     move_speed * delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_LEFT)) {
+			if (input_handler.is_key_pressed(GLFW_KEY_A)) {
 				move(transform.get_rotation().get_left(),
-				     move_speed * delta);
+				     move_impulse_factor * delta);
 			}
-			if (input_handler.is_key_pressed(GLFW_KEY_RIGHT)) {
+			if (input_handler.is_key_pressed(GLFW_KEY_S)) {
+				move(transform.get_rotation().get_backward(),
+				     move_impulse_factor * delta);
+			}
+			if (input_handler.is_key_pressed(GLFW_KEY_D)) {
 				move(transform.get_rotation().get_right(),
-				     move_speed * delta);
+				     move_impulse_factor * delta);
+			}
+
+			if (on_ground &&
+			    input_handler.is_key_pressed(GLFW_KEY_SPACE)) {
+				move(transform.get_rotation().get_up(),
+				     jump_units);
 			}
 		}
+		on_ground = false;
 		GameObject::input(delta);
 	}
 
-	void handle_collision(GameObject *obj)
+	void handle_collision(GameObject *obj) override
 	{
-		will_collide = true;
-		// std::cout << "Colliding" << '\n';
+		if (obj->physics_type == 10) {
+			on_ground = true;
+		}
 	}
 };

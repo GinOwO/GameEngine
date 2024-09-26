@@ -37,6 +37,8 @@ class Mesh {
 
 	void reset_mesh();
 
+	void update_physics();
+
 	void add_vertices(std::vector<Vertex> vertices,
 			  std::vector<int> indices, bool normals = false,
 			  MeshPhysicsType mesh_physics_type =
