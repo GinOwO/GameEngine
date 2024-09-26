@@ -55,27 +55,27 @@ class FreeMove : public GameComponent {
 
 		float move_multiplier = 10.0f * delta;
 
-		if (input_handler.is_key_pressed(GLFW_KEY_W)) {
+		if (input_handler.is_key_pressed(GLFW_KEY_KP_8)) {
 			this->move(this->get_forward(),
 				   move_multiplier * sensitivity_x);
 		}
-		if (input_handler.is_key_pressed(GLFW_KEY_S)) {
+		if (input_handler.is_key_pressed(GLFW_KEY_KP_5)) {
 			this->move(this->get_forward(),
 				   -move_multiplier * sensitivity_x);
 		}
-		if (input_handler.is_key_pressed(GLFW_KEY_A)) {
+		if (input_handler.is_key_pressed(GLFW_KEY_KP_4)) {
 			this->move(this->get_left(),
 				   move_multiplier * sensitivity_y);
 		}
-		if (input_handler.is_key_pressed(GLFW_KEY_D)) {
+		if (input_handler.is_key_pressed(GLFW_KEY_KP_6)) {
 			this->move(this->get_right(),
 				   move_multiplier * sensitivity_y);
 		}
-		if (input_handler.is_key_pressed(GLFW_KEY_Q)) {
+		if (input_handler.is_key_pressed(GLFW_KEY_KP_7)) {
 			this->move(this->get_up(),
 				   move_multiplier * sensitivity_z);
 		}
-		if (input_handler.is_key_pressed(GLFW_KEY_E)) {
+		if (input_handler.is_key_pressed(GLFW_KEY_KP_9)) {
 			this->move(this->get_up(),
 				   -move_multiplier * sensitivity_z);
 		}
