@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/Input.h>
+#include <core/Timer.h>
 
 #include <graphics/Mesh.h>
 #include <graphics/Shader.h>
@@ -16,14 +17,14 @@
 #include <cmath>
 #include <algorithm>
 
-#define SPAWN_HEIGHT 3.0f
+#define SPAWN_HEIGHT 7.5f
 
 class Entity : public GameObject {
 	btRigidBody *rigid_body = nullptr;
 
     public:
 	const btScalar move_impulse_factor = 500.0f;
-	const btScalar jump_units = 50.0f;
+	const btScalar jump_units = 500.0f;
 	const btScalar max_move_velocity = 7.5f;
 	const btScalar max_jump_velocity = 5.0f;
 	bool on_ground = true;
@@ -111,6 +112,7 @@ class Entity : public GameObject {
 	void input(float delta) override
 	{
 		static Input &input_handler = Input::get_instance();
+		static Timer &timer = Timer::get_instance();
 		if (player) {
 			if (input_handler.is_key_pressed(GLFW_KEY_W)) {
 				move(transform.get_rotation().get_forward(),
@@ -129,10 +131,16 @@ class Entity : public GameObject {
 				     move_impulse_factor * delta);
 			}
 
-			if (on_ground &&
-			    input_handler.is_key_pressed(GLFW_KEY_SPACE)) {
-				move(transform.get_rotation().get_up(),
-				     jump_units);
+			static float jump_cd = 0.0;
+			if (jump_cd > 0) {
+				jump_cd -= timer.get_delta_time();
+			} else {
+				if (on_ground && input_handler.is_key_pressed(
+							 GLFW_KEY_SPACE)) {
+					move(transform.get_rotation().get_up(),
+					     jump_units);
+					jump_cd = 1.5f;
+				}
 			}
 		}
 		on_ground = false;
