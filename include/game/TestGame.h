@@ -4,5 +4,6 @@
 
 class TestGame : public Game {
     public:
+	TestGame();
 	void init() override;
 };

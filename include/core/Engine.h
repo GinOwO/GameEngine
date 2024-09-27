@@ -16,6 +16,7 @@ class Engine {
 	double FRAME_CAP = 1000.0;
 
 	Window &window;
+	Game *game;
 
 	bool running;
 

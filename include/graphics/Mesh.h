@@ -15,8 +15,6 @@
 class Mesh {
     private:
 	std::shared_ptr<MeshResource> buffers;
-	static std::unordered_map<std::string, std::weak_ptr<MeshResource> >
-		mesh_cache;
 
 	void calculate_normals(std::vector<Vertex> &vertices,
 			       std::vector<int> &indices);
@@ -37,7 +35,7 @@ class Mesh {
 
 	void reset_mesh();
 
-	void update_physics();
+	void update_physics(int id);
 
 	void add_vertices(std::vector<Vertex> vertices,
 			  std::vector<int> indices, bool normals = false,
@@ -47,4 +45,6 @@ class Mesh {
 	static Mesh load_mesh(const std::string &file_path,
 			      MeshPhysicsType mesh_physics_type =
 				      MeshPhysicsType::NO_PHYSICS);
+
+	static void pre_load(const std::string &file_path);
 };

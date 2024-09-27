@@ -16,12 +16,14 @@
 #include <cmath>
 #include <algorithm>
 
+#define SPAWN_HEIGHT 3.0f
+
 class Entity : public GameObject {
 	btRigidBody *rigid_body = nullptr;
 
     public:
-	const btScalar move_impulse_factor = 10.0f;
-	const btScalar jump_units = 1.0f;
+	const btScalar move_impulse_factor = 500.0f;
+	const btScalar jump_units = 50.0f;
 	const btScalar max_move_velocity = 7.5f;
 	const btScalar max_jump_velocity = 5.0f;
 	bool on_ground = true;
@@ -32,6 +34,8 @@ class Entity : public GameObject {
 		: player(player)
 	{
 		this->physics_type = 20; // Physics for person entities
+		transform.set_translation(Vector3f(0.0f, 0.0f, SPAWN_HEIGHT));
+
 		Mesh mesh = Mesh::load_mesh(mesh_path,
 					    Mesh::MeshPhysicsType::ENTITY);
 		Material material;
@@ -50,6 +54,12 @@ class Entity : public GameObject {
 				SharedGlobals::get_instance().current_rigid_body;
 			rigid_body->setUserPointer(this);
 
+			btTransform transform;
+			transform.setIdentity();
+			transform.setOrigin(
+				btVector3(0.0f, 0.0f, SPAWN_HEIGHT));
+			rigid_body->setWorldTransform(transform);
+
 			SharedGlobals::get_instance().rigid_bodies.push_back(
 				rigid_body);
 		}
@@ -64,7 +74,7 @@ class Entity : public GameObject {
 			btScalar y = velocity.getY();
 			btScalar z = velocity.getZ();
 
-			btScalar xy_length = std::sqrt(x * x + y * y);
+			btScalar xy_length = std::sqrt(x * x + y * y) + 1e-9;
 
 			if (xy_length > max_move_velocity) {
 				btScalar scale = max_move_velocity / xy_length;
@@ -78,9 +88,10 @@ class Entity : public GameObject {
 			btTransform world_transform =
 				rigid_body->getWorldTransform();
 			btVector3 position = world_transform.getOrigin();
-			transform.set_translation(Vector3f(position.getX(),
-							   position.getY(),
-							   position.getZ()));
+			x = position.getX();
+			y = position.getY();
+			z = position.getZ();
+			transform.set_translation(Vector3f(x, y, z));
 		}
 
 		GameObject::update();
@@ -89,6 +100,7 @@ class Entity : public GameObject {
 	void move(const Vector3f &direction, float amount) noexcept
 	{
 		if (rigid_body) {
+			rigid_body->activate();
 			btVector3 impulse(direction.getX() * amount,
 					  direction.getY() * amount,
 					  direction.getZ() * amount);

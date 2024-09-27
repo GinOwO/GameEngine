@@ -55,7 +55,8 @@ void mouse_scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 }
 
 Engine::Engine()
-	: window(Window::get_instance())
+	: game(new TestGame())
+	, window(Window::get_instance())
 {
 	if (!glfwInit()) {
 		std::cerr << "Error: Failed to initialize GLFW\n";
@@ -78,13 +79,12 @@ Engine::~Engine()
 void Engine::run()
 {
 	Timer &timer = Timer::get_instance();
-	TestGame game;
-	game.init();
+	game->init();
 	RenderingEngine &rendering_engine = RenderingEngine::get_instance();
 
 	int frames = 0;
 	double frame_counter = 0;
-	double frame_time = 1.0 / this->FRAME_CAP;
+	double frame_time = 1.0f / this->FRAME_CAP;
 	// glfwSwapInterval(0); // Disable Vsync
 
 	timer.reset();
@@ -102,8 +102,8 @@ void Engine::run()
 				this->stop();
 			}
 
-			game.input(frame_time);
-			game.update(frame_time);
+			game->input(frame_time);
+			game->update(frame_time);
 
 			frame_counter += timer.get_delta_time();
 
@@ -118,7 +118,7 @@ void Engine::run()
 		}
 
 		if (render_frame) {
-			rendering_engine.render(game.get_root_object());
+			rendering_engine.render(game->get_root_object());
 			window.swap_buffers();
 			frames++;
 		}

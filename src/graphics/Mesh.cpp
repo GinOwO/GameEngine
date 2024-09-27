@@ -18,32 +18,25 @@
 #include <cstdlib>
 #include <exception>
 
-std::unordered_map<std::string, std::weak_ptr<MeshResource> > Mesh::mesh_cache{};
+std::unordered_map<std::string, int> loaded_file_ids;
 
-std::unordered_map<GLuint, std::pair<std::vector<btScalar>, std::vector<int> > >
+std::unordered_map<int, std::weak_ptr<MeshResource> > mesh_cache{};
+
+std::unordered_map<int, std::pair<std::vector<btScalar>, std::vector<int> > >
 	all_bullet_vertices{};
 
-Mesh Mesh::load_mesh(const std::string &file_path,
-		     MeshPhysicsType mesh_physics_type)
+std::unordered_map<int, std::vector<Vertex> > all_vertices{};
+
+void Mesh::pre_load(const std::string &file_path)
 {
-	Mesh mesh;
-	mesh.mesh_physics_type = mesh_physics_type;
-	if (Mesh::mesh_cache.count(file_path)) {
-		std::shared_ptr<MeshResource> resource =
-			Mesh::mesh_cache[file_path].lock();
-		if (resource) {
-			mesh.buffers = resource;
-			mesh.update_physics();
-			return mesh;
-		}
-	}
+	if (loaded_file_ids.count(file_path))
+		return;
 
-	if (mesh.buffers == nullptr) {
-		mesh.reset_mesh();
-		mesh_cache[file_path] = mesh.buffers;
-	}
+	static int id = -1;
+	loaded_file_ids[file_path] = ++id;
+	std::cout << "Preloading Mesh Asset (" << id << "): " << file_path
+		  << '\n';
 
-	std::vector<Vertex> vertices;
 	IndexedModel model;
 	if (file_path.ends_with(".obj")) {
 		std::ifstream file(file_path);
@@ -62,6 +55,12 @@ Mesh Mesh::load_mesh(const std::string &file_path,
 			  << '\n';
 		throw std::runtime_error("File type is not supported");
 	}
+
+	std::cout << "Preloading (" << id << "): Loaded into memory\n";
+
+	all_vertices[id] = {};
+	auto &vertices = all_vertices[id];
+
 	for (int i = 0; i < model.positions.size(); i++) {
 		Vertex vertex(model.positions[i], model.texCoords[i],
 			      model.normals[i]);
@@ -69,25 +68,53 @@ Mesh Mesh::load_mesh(const std::string &file_path,
 		vertex.boneWeights = model.bone_weights[i];
 		vertices.push_back(vertex);
 	}
-	mesh.add_vertices(vertices, model.indices, false, mesh_physics_type);
 
-	all_bullet_vertices[mesh.buffers->vao] = { {}, model.indices };
-	auto &[bullet_vertices, _] = all_bullet_vertices[mesh.buffers->vao];
+	all_bullet_vertices[id] = { {}, model.indices };
+	auto &[bullet_vertices, _] = all_bullet_vertices[id];
 	for (Vertex &vertex : vertices) {
 		bullet_vertices.push_back(vertex.get_pos().getX());
 		bullet_vertices.push_back(vertex.get_pos().getY());
 		bullet_vertices.push_back(vertex.get_pos().getZ());
 	}
-	mesh.update_physics();
+
+	std::cout << "Preloading (" << id << "): Done\n";
+}
+
+Mesh Mesh::load_mesh(const std::string &file_path,
+		     MeshPhysicsType mesh_physics_type)
+{
+	pre_load(file_path);
+	int id = loaded_file_ids[file_path];
+
+	Mesh mesh;
+	mesh.mesh_physics_type = mesh_physics_type;
+	if (mesh_cache.count(id)) {
+		std::shared_ptr<MeshResource> resource = mesh_cache[id].lock();
+		if (resource) {
+			mesh.buffers = resource;
+			mesh.update_physics(id);
+			return mesh;
+		}
+	}
+
+	if (mesh.buffers == nullptr) {
+		mesh.reset_mesh();
+		mesh_cache[id] = mesh.buffers;
+	}
+
+	mesh.add_vertices(all_vertices[id], all_bullet_vertices[id].second,
+			  false, mesh_physics_type);
+
+	mesh.update_physics(id);
 
 	return mesh;
 }
 
-void Mesh::update_physics()
+void Mesh::update_physics(int id)
 {
 	btRigidBody *rigid_body = nullptr;
 	SharedGlobals &globals = SharedGlobals::get_instance();
-	auto &[bullet_vertices, indices] = all_bullet_vertices.at(buffers->vao);
+	auto &[bullet_vertices, indices] = all_bullet_vertices.at(id);
 
 	switch (mesh_physics_type) {
 	case Mesh::MeshPhysicsType::ENTITY: {
@@ -97,10 +124,10 @@ void Mesh::update_physics()
 			sizeof(btScalar) * 3);
 
 		btDefaultMotionState *motion_state = new btDefaultMotionState();
-		btScalar mass = 1.0f;
+		btScalar mass = 50.0f;
 		btVector3 inertia(0, 0, 0);
 		shape->calculateLocalInertia(mass, inertia);
-		// shape->setMargin(0.5f);
+		// shape->setMargin(5e-5);
 
 		btRigidBody::btRigidBodyConstructionInfo rigid_body_info(
 			mass, motion_state, shape, inertia);
@@ -118,7 +145,7 @@ void Mesh::update_physics()
 
 		btBvhTriangleMeshShape *shape =
 			new btBvhTriangleMeshShape(index_vertex_array, true);
-		shape->setMargin(0.5f);
+		shape->setMargin(5e-5);
 		globals.collision_shapes.push_back(shape);
 
 		btDefaultMotionState *motion_state = new btDefaultMotionState();
@@ -234,7 +261,6 @@ void Mesh::draw() const
 {
 	if (buffers->vao == 0) {
 		std::cerr << "VAO not initialized\n";
-		throw std::runtime_error("VAO not initialized\n");
 		throw std::runtime_error("VAO not initialized\n");
 	}
 
