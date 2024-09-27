@@ -62,12 +62,13 @@ class CameraObject : public GameObject {
 			this->transform.set_rotation(init_rotation);
 			globals.resized = false;
 		}
+		debug();
 		GameObject::update(delta);
 	}
 
-#if CAMERA_DEBUG
 	void debug()
 	{
+#if CAMERA_DEBUG
 		Quaternion q = transform.get_rotation();
 		// Get the components of the quaternion
 		float x = q.getX();
@@ -107,6 +108,6 @@ class CameraObject : public GameObject {
 		std::cout << "Yaw:   " << yaw << std::endl;
 		std::cout << "WXYZ:  " << w << " " << x << " " << y << " " << z
 			  << std::endl;
-	}
 #endif // CAMERA_DEBUG
+	}
 };

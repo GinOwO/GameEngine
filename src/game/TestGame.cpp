@@ -27,9 +27,9 @@
 const std::unordered_map<std::string, std::string> mesh_assets = {
 	{ "skybox", "./assets/Skybox/fskybg/source/skybox.fbx" },
 	{ "terrain_test", "./assets/terrain/test_floor.fbx" },
-	{ "terrain", "./assets/terrain/floor.fbx" },
-	{ "player", "assets/Player E04.fbx" },
-	{ "mech", "assets/objects/Main_model.fbx" }
+	{ "arena", "./assets/terrain/arena.fbx" },
+	{ "player", "./assets/Player E04.fbx" },
+	{ "mech", "./assets/objects/Main_model.fbx" }
 };
 
 TestGame::TestGame()
@@ -49,10 +49,9 @@ void TestGame::init()
 		"./assets/Skybox/fskybg/textures/background.jpg", { .5 });
 
 	std::map<std::string, std::string> tex_paths;
-	tex_paths["diffuse"] = "./assets/terrain/Baking.jpg";
+	tex_paths["diffuse"] = "./assets/terrain/arena.png";
 
-	GameObject *floor =
-		new Terrain(mesh_assets.at("terrain_test"), tex_paths);
+	GameObject *floor = new Terrain(mesh_assets.at("arena"), tex_paths);
 
 	DirectionalLight *dl = new DirectionalLight("#18f", 0.1f);
 	GameObject *lighting_object2 = new GameObject();
@@ -78,15 +77,16 @@ void TestGame::init()
 
 	GameObject *lighting_object = new GameObject();
 	lighting_object
-		->add_component(new PointLight("#fff", 1.0f, { 0, 0, 0.01f }))
+		->add_component(new PointLight("#fff", 1.0f, { 0, 0, 0.02f }))
 		->add_component(new FollowComponent(
-			{ 0, -0.5, 12 }, &player_object1->transform));
+			{ 0, -0.5, 10 }, &player_object1->transform));
+
 	CameraObject *camera_object = new CameraObject(
 		75.0f, { 0, 0, 0 },
-		{ -0.789864, -0.000487476, -0.00402385, -0.613269 }, { 1 },
+		{ -0.82597, -0.00809713, -0.000692113, -0.563655 }, { 1 },
 		{ 10, 10 });
 
-	camera_object->transform.set_translation({ 0, 5, 3 });
+	camera_object->transform.set_translation({ 0, 30, 20 });
 
 	SharedGlobals::get_instance().main_camera =
 		static_cast<void *>(camera_object->camera);
