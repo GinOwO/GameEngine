@@ -11,7 +11,10 @@ class Vector3f {
 	float z;
 
     public:
-	const static std::function<void(void *)> deleter;
+	static const std::function<void(void *)> deleter;
+	static const Vector3f x_axis;
+	static const Vector3f y_axis;
+	static const Vector3f z_axis;
 
 	Vector3f();
 
@@ -84,6 +87,9 @@ class Vector3f {
 
 	Vector3f lerp(const Vector3f &dest,
 		      float interpolation_factor) const noexcept;
+
+	bool is_close(const Vector3f &other,
+		      float tolerance = 1e-6) const noexcept;
 };
 
 template <typename T> inline float to_radians(T degrees)

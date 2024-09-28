@@ -154,3 +154,5 @@ class Entity : public GameObject {
 		}
 	}
 };
+
+#undef SPAWN_HEIGHT

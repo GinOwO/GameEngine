@@ -371,3 +371,11 @@ float Quaternion::dot(const Quaternion &r) const noexcept
 {
 	return x * r.getX() + y * r.getY() + z * r.getZ() + w * r.getW();
 }
+
+Vector3f Quaternion::rotate(const Vector3f &v) const noexcept
+{
+	Quaternion qv(0, v.getX(), v.getY(), v.getZ());
+	Quaternion inv = this->conjugate();
+	Quaternion result = (*this) * qv * inv;
+	return Vector3f(result.x, result.y, result.z);
+}

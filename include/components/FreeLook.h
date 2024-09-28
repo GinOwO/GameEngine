@@ -75,7 +75,7 @@ class FreeLook : public GameComponent {
 		}
 		if (dy != 0) {
 			get_parent_transform()->rotate(
-				get_right(),
+				Vector3f::z_axis,
 				to_radians(dy * rotate_sensitivity *
 					   sensitivity_y));
 		}

@@ -14,6 +14,10 @@ const std::function<void(void *)> Vector3f::deleter{ [](void *ptr) {
 	delete static_cast<Vector3f *>(ptr);
 } };
 
+const Vector3f Vector3f::x_axis{ 1, 0, 0 };
+const Vector3f Vector3f::y_axis{ 0, 1, 0 };
+const Vector3f Vector3f::z_axis{ 0, 0, 1 };
+
 Vector3f::Vector3f()
 {
 	x = y = z = 0;
@@ -219,4 +223,11 @@ Vector3f Vector3f::rotate(const std::array<float, 4> &quaternion) const noexcept
 	Quaternion w = (rotation * (*this)) * conjugate;
 
 	return { w.getX(), w.getY(), w.getZ() };
+}
+
+bool Vector3f::is_close(const Vector3f &other, float tolerance) const noexcept
+{
+	return (std::abs(other.x - x) <= tolerance) &&
+	       (std::abs(other.y - y) <= tolerance) &&
+	       (std::abs(other.y - y) <= tolerance);
 }

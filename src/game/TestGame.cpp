@@ -20,9 +20,10 @@
 #include <components/Skybox.h>
 #include <components/Entity.h>
 #include <components/Terrain.h>
+#include <components/ArcBall.h>
 
-#include <cmath>
 #include <iostream>
+#include <cmath>
 
 const std::unordered_map<std::string, std::string> mesh_assets = {
 	{ "skybox", "./assets/Skybox/fskybg/source/skybox.fbx" },
@@ -81,12 +82,10 @@ void TestGame::init()
 		->add_component(new FollowComponent(
 			{ 0, -0.5, 10 }, &player_object1->transform));
 
-	CameraObject *camera_object = new CameraObject(
-		75.0f, { 0, 0, 0 },
-		{ -0.82597, -0.00809713, -0.000692113, -0.563655 }, { 1 },
-		{ 10, 10 });
+	CameraObject *camera_object = new CameraObject(75.0f);
 
-	camera_object->transform.set_translation({ 0, 30, 20 });
+	camera_object->add_component(
+		new ArcBall(5.0f, &player_object1->transform));
 
 	SharedGlobals::get_instance().main_camera =
 		static_cast<void *>(camera_object->camera);

@@ -25,7 +25,7 @@ class LookAtComponent : public GameComponent {
 				Quaternion newRot =
 					get_parent_transform()->look_at_direction(
 						target->get_transformed_position(),
-						Vector3f(0, 1, 0));
+						Vector3f{ 0, 0, 1 });
 
 				get_parent_transform()->set_rotation(
 					get_parent_transform()

@@ -25,7 +25,12 @@ class Quaternion {
 
 	Vector3f get_left() const;
 
+	static Quaternion Rotation_Quaternion(const Vector3f &axis,
+					      float angle) noexcept;
+
 	Quaternion();
+
+	Quaternion(const Matrix4f &matrix);
 
 	Quaternion(float a, float b, float c, float d);
 
@@ -95,13 +100,15 @@ class Quaternion {
 		       this->w == q.w;
 	}
 
-	Matrix4f to_rotation_matrix() const noexcept;
-	static Quaternion Rotation_Quaternion(const Vector3f &axis,
-					      float angle) noexcept;
-	Quaternion(const Matrix4f &matrix);
-	float dot(const Quaternion &r) const noexcept;
 	Quaternion nlerp(Quaternion dest, float lerpFactor,
 			 bool shortest = false);
+
 	Quaternion slerp(Quaternion dest, float lerpFactor,
 			 bool shortest = false);
+
+	Matrix4f to_rotation_matrix() const noexcept;
+
+	Vector3f rotate(const Vector3f &v) const noexcept;
+
+	float dot(const Quaternion &r) const noexcept;
 };

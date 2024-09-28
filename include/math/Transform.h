@@ -40,13 +40,18 @@ class Transform {
 
 	Matrix4f get_projected_camera(BaseCamera *camera) noexcept;
 
-	bool has_changed() noexcept;
-
 	Vector3f get_transformed_position() noexcept;
+
 	Quaternion get_transformed_rotation() noexcept;
-	void update() noexcept;
+
 	Transform &rotate(const Vector3f &axis, float angle);
-	void look_at(const Vector3f &point, const Vector3f &up) noexcept;
+
 	Quaternion look_at_direction(const Vector3f &point,
 				     const Vector3f &up) noexcept;
+
+	bool has_changed() noexcept;
+
+	void look_at(const Vector3f &point, const Vector3f &up) noexcept;
+
+	void update() noexcept;
 };
