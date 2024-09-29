@@ -3,6 +3,7 @@
 #include <array>
 #include <cmath>
 #include <functional>
+#include <iostream>
 
 class Vector3f {
     private:
@@ -90,6 +91,8 @@ class Vector3f {
 
 	bool is_close(const Vector3f &other,
 		      float tolerance = 1e-6) const noexcept;
+
+	friend std::ostream &operator<<(std::ostream &os, const Vector3f &v);
 };
 
 template <typename T> inline float to_radians(T degrees)

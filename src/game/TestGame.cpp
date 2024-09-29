@@ -85,7 +85,7 @@ void TestGame::init()
 	CameraObject *camera_object = new CameraObject(75.0f);
 
 	camera_object->add_component(
-		new ArcBall(5.0f, &player_object1->transform));
+		new ArcBall(&player_object1->transform, 7.5f));
 
 	SharedGlobals::get_instance().main_camera =
 		static_cast<void *>(camera_object->camera);

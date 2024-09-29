@@ -231,3 +231,9 @@ bool Vector3f::is_close(const Vector3f &other, float tolerance) const noexcept
 	       (std::abs(other.y - y) <= tolerance) &&
 	       (std::abs(other.y - y) <= tolerance);
 }
+
+std::ostream &operator<<(std::ostream &os, const Vector3f &v)
+{
+	os << v.getX() << ',' << v.getY() << ',' << v.getZ();
+	return os;
+}
