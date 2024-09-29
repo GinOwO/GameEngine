@@ -24,4 +24,6 @@ class MeshRenderer : public GameComponent {
 	void update(float delta) override {};
 
 	void render(Shader &shader) override;
+
+	Material &get_material();
 };

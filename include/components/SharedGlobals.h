@@ -30,6 +30,7 @@ class SharedGlobals {
 	int w_width = 1, w_height = 1;
 	bool resized = false;
 	void *window = nullptr;
+	void *player_transform = nullptr;
 
 	void add_to_lights(void *light) noexcept;
 	std::unordered_set<void *> &get_lights();

@@ -13,12 +13,13 @@
 #include <components/FreeLook.h>
 #include <components/FreeMove.h>
 #include <components/LookAtComponent.h>
-#include <components/DirectionalLight.h>
 #include <components/PointLight.h>
+#include <components/DirectionalLight.h>
 #include <components/SpotLight.h>
 #include <components/MeshRenderer.h>
 #include <components/Skybox.h>
-#include <components/Entity.h>
+#include <components/PlayerEntity.h>
+#include <components/EnemyEntity.h>
 #include <components/Terrain.h>
 #include <components/ArcBall.h>
 
@@ -30,7 +31,8 @@ const std::unordered_map<std::string, std::string> mesh_assets = {
 	{ "terrain_test", "./assets/terrain/test_floor.fbx" },
 	{ "arena", "./assets/terrain/arena.fbx" },
 	{ "player", "./assets/Player E04.fbx" },
-	{ "mech", "./assets/objects/Main_model.fbx" }
+	{ "mech", "./assets/objects/Main_model.fbx" },
+	{ "bullet", "./assets/objects/bullet.fbx" }
 };
 
 TestGame::TestGame()
@@ -62,30 +64,14 @@ void TestGame::init()
 
 	get_root_object()->add_child(lighting_object2);
 
-	// Person *player_object = new Person("assets/Player E04.fbx",
-	// 				   "assets/objects/test_texture.png");
+	Entity *player_entity = new PlayerEntity();
 
-	// player_object->move(
-	// 	player_object->transform.get_rotation().get_forward(), 10.0f);
-	// player_object->update_physics();
-	// get_root_object()->add_child(player_object);
+	Entity *enemy_entity = new EnemyEntity();
 
-	// player_object->add_component(new FreeMove{ 1.0f, 1.0f, 1.0f });
-
-	Entity *player_object1 = new Entity(mesh_assets.at("mech"),
-					    "assets/objects/test_texture.png",
-					    true);
-
-	GameObject *lighting_object = new GameObject();
-	lighting_object
-		->add_component(new PointLight("#fff", 1.0f, { 0, 0, 0.02f }))
-		->add_component(new FollowComponent(
-			{ 0, -0.5, 10 }, &player_object1->transform));
-
-	CameraObject *camera_object = new CameraObject(75.0f);
+	CameraObject *camera_object = new CameraObject(85.0f);
 
 	camera_object->add_component(
-		new ArcBall(&player_object1->transform, 7.5f));
+		new ArcBall(&player_entity->transform, 6.5f));
 
 	SharedGlobals::get_instance().main_camera =
 		static_cast<void *>(camera_object->camera);
@@ -93,10 +79,11 @@ void TestGame::init()
 	get_root_object()
 		->add_child(skybox)
 		->add_child(floor)
-		->add_child(player_object1->add_child(lighting_object))
+		->add_child(player_entity)
+		->add_child(enemy_entity)
 		->add_child(camera_object);
 
-	SharedGlobals::get_instance().active_ambient_light = .1;
+	SharedGlobals::get_instance().active_ambient_light = .2;
 
 	get_root_object()->add_to_rendering_engine();
 }

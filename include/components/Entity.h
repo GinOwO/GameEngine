@@ -17,17 +17,20 @@
 #include <cmath>
 #include <algorithm>
 
-#define SPAWN_HEIGHT 7.5f
+#define SPAWN_POS { 0.0f, 5.0f, 10.0f }
 
 class Entity : public GameObject {
+    protected:
 	btRigidBody *rigid_body = nullptr;
-
-    public:
 	const btScalar move_impulse_factor = 2e3;
 	const btScalar rotate_impulse_factor = 4e2;
 	const btScalar jump_units = 1.5e3;
 	const btScalar max_move_velocity = 8.5f;
 	const btScalar max_jump_velocity = 6.0f;
+	float hp = 1.0f, rec_dmg = 1.0f;
+	MeshRenderer *mesh = nullptr;
+
+    public:
 	bool on_ground = true;
 	bool player;
 
@@ -35,8 +38,8 @@ class Entity : public GameObject {
 	       bool player = false)
 		: player(player)
 	{
-		this->physics_type = 20; // Physics for person entities
-		transform.set_translation(Vector3f(0.0f, 0.0f, SPAWN_HEIGHT));
+		this->physics_type = 20; // Physics for Entity entities
+		transform.set_translation(Vector3f(SPAWN_POS));
 
 		Mesh mesh = Mesh::load_mesh(mesh_path,
 					    Mesh::MeshPhysicsType::ENTITY);
@@ -49,7 +52,8 @@ class Entity : public GameObject {
 			"specular", std::shared_ptr<void>(new Specular{ 0, 0 },
 							  Specular::deleter));
 
-		this->add_component(new MeshRenderer(mesh, material));
+		this->add_component(this->mesh =
+					    new MeshRenderer(mesh, material));
 
 		if (SharedGlobals::get_instance().current_rigid_body) {
 			this->rigid_body =
@@ -58,8 +62,7 @@ class Entity : public GameObject {
 
 			btTransform transform;
 			transform.setIdentity();
-			transform.setOrigin(
-				btVector3(0.0f, 0.0f, SPAWN_HEIGHT));
+			transform.setOrigin(btVector3(SPAWN_POS));
 			rigid_body->setWorldTransform(transform);
 
 			SharedGlobals::get_instance().rigid_bodies.push_back(
@@ -131,47 +134,6 @@ class Entity : public GameObject {
 
 	void input(float delta) override
 	{
-		static Input &input_handler = Input::get_instance();
-		static Timer &timer = Timer::get_instance();
-		if (player) {
-			if (input_handler.is_key_pressed(GLFW_KEY_W)) {
-				move(transform.get_rotation().get_forward(),
-				     move_impulse_factor * delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_A)) {
-				move(transform.get_rotation().get_left(),
-				     move_impulse_factor * delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_S)) {
-				move(transform.get_rotation().get_backward(),
-				     move_impulse_factor * delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_D)) {
-				move(transform.get_rotation().get_right(),
-				     move_impulse_factor * delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_E)) {
-				rotate(Vector3f::z_axis,
-				       rotate_impulse_factor * delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_Q)) {
-				rotate(Vector3f::z_axis,
-				       -rotate_impulse_factor * delta);
-			}
-
-			static float jump_cd = 0.0;
-			if (jump_cd > 0) {
-				jump_cd -= timer.get_delta_time();
-			} else {
-				if (on_ground && input_handler.is_key_pressed(
-							 GLFW_KEY_SPACE)) {
-					move(transform.get_rotation().get_up(),
-					     jump_units);
-					jump_cd = 1.5f;
-				}
-			}
-		}
-		on_ground = false;
 		GameObject::input(delta);
 	}
 
@@ -181,6 +143,54 @@ class Entity : public GameObject {
 			on_ground = true;
 		}
 	}
+
+	virtual float get_hp() const noexcept
+	{
+		return hp;
+	}
+
+	virtual void set_hp(float hp) noexcept
+	{
+		this->hp = hp;
+	}
+
+	virtual void shoot()
+	{
+		Vector3f direction = transform.get_rotation().get_forward();
+
+		Vector3f start = transform.get_translation();
+
+		Vector3f end = start + direction * 100.0f;
+
+		btCollisionWorld::ClosestRayResultCallback rayCallback(
+			btVector3(start.getX(), start.getY(), start.getZ()),
+			btVector3(end.getX(), end.getY(), end.getZ()));
+
+		SharedGlobals::get_instance().dynamics_world->rayTest(
+			btVector3(start.getX(), start.getY(), start.getZ()),
+			btVector3(end.getX(), end.getY(), end.getZ()),
+			rayCallback);
+
+		if (rayCallback.hasHit()) {
+			const btCollisionObject *hitObject =
+				rayCallback.m_collisionObject;
+
+			if (hitObject && hitObject->getUserPointer()) {
+				if (static_cast<GameObject *>(
+					    hitObject->getUserPointer())
+					    ->physics_type == 20) {
+					Entity *hitEntity = static_cast<Entity *>(
+						hitObject->getUserPointer());
+					hitEntity->get_hit();
+				}
+			}
+		}
+	}
+
+	virtual void get_hit()
+	{
+		hp -= rec_dmg * (hp > 0);
+	}
 };
 
-#undef SPAWN_HEIGHT
+#undef SPAWN_POS

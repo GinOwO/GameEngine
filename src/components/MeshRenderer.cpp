@@ -21,3 +21,8 @@ void MeshRenderer::render(Shader &shader)
 	shader.update_uniforms(get_parent_transform(), material);
 	mesh.draw();
 }
+
+Material &MeshRenderer::get_material()
+{
+	return material;
+}
