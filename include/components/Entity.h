@@ -23,10 +23,11 @@ class Entity : public GameObject {
 	btRigidBody *rigid_body = nullptr;
 
     public:
-	const btScalar move_impulse_factor = 500.0f;
-	const btScalar jump_units = 500.0f;
-	const btScalar max_move_velocity = 7.5f;
-	const btScalar max_jump_velocity = 5.0f;
+	const btScalar move_impulse_factor = 2e3;
+	const btScalar rotate_impulse_factor = 4e2;
+	const btScalar jump_units = 1.5e3;
+	const btScalar max_move_velocity = 8.5f;
+	const btScalar max_jump_velocity = 6.0f;
 	bool on_ground = true;
 	bool player;
 
@@ -63,6 +64,8 @@ class Entity : public GameObject {
 
 			SharedGlobals::get_instance().rigid_bodies.push_back(
 				rigid_body);
+
+			rigid_body->setDamping(0.1f, 0.4f);
 		}
 	}
 
@@ -88,11 +91,17 @@ class Entity : public GameObject {
 			}
 			btTransform world_transform =
 				rigid_body->getWorldTransform();
+
 			btVector3 position = world_transform.getOrigin();
 			x = position.getX();
 			y = position.getY();
 			z = position.getZ();
 			transform.set_translation(Vector3f(x, y, z));
+
+			btQuaternion quaternion = world_transform.getRotation();
+			transform.set_rotation(
+				{ quaternion.getX(), quaternion.getY(),
+				  quaternion.getZ(), quaternion.getW() });
 		}
 
 		GameObject::update();
@@ -106,6 +115,17 @@ class Entity : public GameObject {
 					  direction.getY() * amount,
 					  direction.getZ() * amount);
 			rigid_body->applyCentralImpulse(impulse);
+		}
+	}
+
+	void rotate(const Vector3f &direction, float amount) noexcept
+	{
+		if (rigid_body) {
+			rigid_body->activate();
+			btVector3 impulse(direction.getX() * amount,
+					  direction.getY() * amount,
+					  direction.getZ() * amount);
+			rigid_body->applyTorqueImpulse(impulse);
 		}
 	}
 
@@ -129,6 +149,14 @@ class Entity : public GameObject {
 			if (input_handler.is_key_pressed(GLFW_KEY_D)) {
 				move(transform.get_rotation().get_right(),
 				     move_impulse_factor * delta);
+			}
+			if (input_handler.is_key_pressed(GLFW_KEY_E)) {
+				rotate(Vector3f::z_axis,
+				       rotate_impulse_factor * delta);
+			}
+			if (input_handler.is_key_pressed(GLFW_KEY_Q)) {
+				rotate(Vector3f::z_axis,
+				       -rotate_impulse_factor * delta);
 			}
 
 			static float jump_cd = 0.0;

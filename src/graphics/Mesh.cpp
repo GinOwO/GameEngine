@@ -124,7 +124,7 @@ void Mesh::update_physics(int id)
 			sizeof(btScalar) * 3);
 
 		btDefaultMotionState *motion_state = new btDefaultMotionState();
-		btScalar mass = 50.0f;
+		btScalar mass = 200.0f;
 		btVector3 inertia(0, 0, 0);
 		shape->calculateLocalInertia(mass, inertia);
 		// shape->setMargin(5e-5);
