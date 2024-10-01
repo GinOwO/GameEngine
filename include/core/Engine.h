@@ -13,7 +13,7 @@ class Engine {
     private:
 	static bool created;
 
-	double FRAME_CAP = 1000.0;
+	double FRAME_CAP = 60.0;
 
 	Window &window;
 	Game *game;

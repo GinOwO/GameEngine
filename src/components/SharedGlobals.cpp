@@ -4,6 +4,9 @@
 
 #include <unordered_set>
 
+void *SharedGlobals::player_entity = nullptr;
+void *SharedGlobals::enemy_entity = nullptr;
+
 SharedGlobals &SharedGlobals::get_instance()
 {
 	static SharedGlobals instance;

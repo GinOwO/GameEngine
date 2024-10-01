@@ -28,6 +28,7 @@ class Entity : public GameObject {
 	const btScalar max_move_velocity = 8.5f;
 	const btScalar max_jump_velocity = 6.0f;
 	float hp = 1.0f, rec_dmg = 1.0f;
+	float jump_cd = 0.0;
 	MeshRenderer *mesh = nullptr;
 
     public:
@@ -69,6 +70,12 @@ class Entity : public GameObject {
 				rigid_body);
 
 			rigid_body->setDamping(0.1f, 0.4f);
+		}
+
+		if (player) {
+			SharedGlobals::player_entity = this;
+		} else {
+			SharedGlobals::enemy_entity = this;
 		}
 	}
 
@@ -134,6 +141,9 @@ class Entity : public GameObject {
 
 	void input(float delta) override
 	{
+		if (jump_cd > 0)
+			jump_cd -= delta;
+
 		GameObject::input(delta);
 	}
 
@@ -190,6 +200,50 @@ class Entity : public GameObject {
 	virtual void get_hit()
 	{
 		hp -= rec_dmg * (hp > 0);
+	}
+
+	void move_forward(float delta)
+	{
+		move(transform.get_rotation().get_forward(),
+		     move_impulse_factor * delta);
+	}
+
+	void move_left(float delta)
+	{
+		move(transform.get_rotation().get_left(),
+		     move_impulse_factor * delta);
+	}
+
+	void move_backward(float delta)
+	{
+		move(transform.get_rotation().get_backward(),
+		     move_impulse_factor * delta);
+	}
+
+	void move_right(float delta)
+	{
+		move(transform.get_rotation().get_right(),
+		     move_impulse_factor * delta);
+	}
+
+	void rotate_left(float delta)
+	{
+		rotate(Vector3f::z_axis, rotate_impulse_factor * delta);
+	}
+
+	void rotate_right(float delta)
+	{
+		rotate(Vector3f::z_axis, -rotate_impulse_factor * delta);
+	}
+
+	void jump(float delta)
+	{
+		if (jump_cd <= 0) {
+			if (on_ground)
+				move(transform.get_rotation().get_up(),
+				     jump_units);
+			jump_cd = 1.5f;
+		}
 	}
 };
 

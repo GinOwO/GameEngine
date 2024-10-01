@@ -41,6 +41,8 @@ TestGame::TestGame()
 	for (auto &[_, path] : mesh_assets) {
 		Mesh::pre_load(path);
 	}
+
+	SocketManager::get_instance().initialize("config.conf");
 }
 
 void TestGame::init()

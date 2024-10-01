@@ -127,11 +127,10 @@ target_link_libraries(GameEngine
 	${Imath_LIBRARIES}
 	${BULLET_LIBRARIES}
 )
-	
+
 # Add include directories
 target_include_directories(GameEngineLib PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_include_directories(GameEngine PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_include_directories(GameEngine PRIVATE ${PHYSX}/include)
 
 add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
 
