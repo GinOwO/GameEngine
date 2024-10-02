@@ -1,49 +1,56 @@
 {
 	"version": "0.2.0",
 	"configurations": [
-	    {
-		"name": "Launch GameEngine(Tests)",
-		"type": "cppdbg",
-		"request": "launch",
-		"program": "${workspaceFolder}/build/GameEngine",
-		"args": [],
-		"stopAtEntry": false,
-		"cwd": "${workspaceFolder}",
-		"environment": [],
-		"externalConsole": false,
-		"MIMode": "gdb",
-		"miDebuggerPath": "/usr/bin/gdb",
-		"setupCommands": [
-		    {
-			"description": "Enable pretty-printing for gdb",
-			"text": "-enable-pretty-printing",
-			"ignoreFailures": true
-		    }
-		],
-		"preLaunchTask": "Run Tests",
-		"internalConsoleOptions": "openOnSessionStart"
-	    },
-	    {
-		"name": "Launch GameEngine",
-		"type": "cppdbg",
-		"request": "launch",
-		"program": "${workspaceFolder}/build/GameEngine",
-		"args": [],
-		"stopAtEntry": false,
-		"cwd": "${workspaceFolder}",
-		"environment": [],
-		"externalConsole": false,
-		"MIMode": "gdb",
-		"miDebuggerPath": "/usr/bin/gdb",
-		"setupCommands": [
-		    {
-			"description": "Enable pretty-printing for gdb",
-			"text": "-enable-pretty-printing",
-			"ignoreFailures": true
-		    }
-		],
-		"preLaunchTask": "build",
-		"internalConsoleOptions": "openOnSessionStart"
-	    }
+		{
+			"name": "Launch GameEngine(Tests)",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/GameEngine",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"miDebuggerPath": "/usr/bin/gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"preLaunchTask": "Run Tests",
+			"internalConsoleOptions": "openOnSessionStart"
+		},
+		{
+			"name": "Launch GameEngine",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/GameEngine",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"miDebuggerPath": "/usr/bin/gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"preLaunchTask": "build",
+			"internalConsoleOptions": "openOnSessionStart"
+		},
+		{
+			"name": "Python Debugger",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "./AI/AI_Mode.py",
+			"console": "integratedTerminal"
+		}
 	]
 }

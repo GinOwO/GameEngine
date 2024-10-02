@@ -66,6 +66,7 @@ class PlayerEntity : public Entity {
 			"./assets/objects/Main_model_100.png"
 		};
 
+		float hp = this->hp * 100.0f / this->max_hp;
 		new_stage =
 			4 - (hp <= 75) - (hp <= 50) - (hp <= 25) - (hp <= 0);
 

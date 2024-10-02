@@ -34,10 +34,17 @@ class SocketManager {
 			throw std::runtime_error("Socket not initialized");
 		}
 		try {
-			send(sock_fd, data.c_str(), data.size(), 0) < 0;
+			char buffer[2048] = { 0 };
+			strncpy(buffer, data.c_str(), data.size());
+			send(sock_fd, buffer, sizeof(buffer), 0) < 0;
 		} catch (std::exception) {
 			std::cout << "Error\n";
 		}
+
+		// std::string ack = receive_data();
+		// if (ack != "ACK") {
+		// 	throw std::runtime_error("No ack after sending");
+		// }
 	}
 
 	std::string receive_data()
@@ -46,13 +53,18 @@ class SocketManager {
 			throw std::runtime_error("Socket not initialized");
 		}
 
-		char buffer[1024] = { 0 };
-		int bytes_received = recv(sock_fd, buffer, sizeof(buffer), 0);
+		char buffer[2048] = { 0 };
+		size_t bytes_received = (size_t)recv(
+			sock_fd, buffer, sizeof(buffer), MSG_WAITALL);
 		if (bytes_received < 0) {
 			throw std::runtime_error("Failed to receive data");
 		}
 
-		return std::string(buffer, bytes_received);
+		std::string message{ buffer, (size_t)bytes_received };
+		message.erase(std::remove(message.begin(), message.end(), '\0'),
+			      message.end());
+
+		return message;
 	}
 
     private:

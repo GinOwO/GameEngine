@@ -19,7 +19,7 @@
 #include <exception>
 #include <string>
 
-#define _DEBUG_FPS_ON
+#define _DEBUG_FPS_ON 0
 
 Input &input_handler = Input::get_instance();
 bool paused = false;
@@ -28,7 +28,7 @@ bool Engine::created = false;
 void handle_window_focus(GLFWwindow *window, int focused)
 {
 	paused = focused != GLFW_TRUE;
-#ifdef _DEBUG_FPS_ON
+#if _DEBUG_FPS_ON
 	std::cout << "Paused: " << paused << '\n';
 #endif
 }
@@ -108,7 +108,7 @@ void Engine::run()
 			frame_counter += timer.get_delta_time();
 
 			if (frame_counter >= 1) {
-#ifdef _DEBUG_FPS_ON
+#if _DEBUG_FPS_ON
 				std::cout << "FPS: " << frames << ' '
 					  << frame_counter << '\n';
 #endif

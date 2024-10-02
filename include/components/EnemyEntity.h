@@ -23,14 +23,36 @@ class EnemyEntity : public Entity {
 					->add_component(new FollowComponent(
 						{ 0, -0.5, 10 }, &transform)));
 		this->set_hp(100.0f);
+		this->max_hp = 100.0f;
 		this->rec_dmg = 0.05f;
+		rigid_body->setDamping(0.0f, 0.0f);
+		this->move_impulse_factor = 1e4;
+		this->rotate_impulse_factor = 7e3;
 	}
 
 	void input(float delta) override
 	{
+		static SocketManager &sock_manager =
+			SocketManager::get_instance();
+		static Entity *p_ent =
+			static_cast<Entity *>(SharedGlobals::player_entity);
+		std::string received_data = sock_manager.receive_data();
+
+		int action = -1;
+		if (received_data.find("reset") != std::string::npos) {
+			p_ent->set_hp(0.0025f * 3);
+			p_ent->set_max_hp(0.0025f * 3);
+			this->set_hp(0.05f * 10);
+			this->set_max_hp(0.05f * 10);
+			sock_manager.send_data(get_state());
+		} else if (received_data.find("action") != std::string::npos) {
+			std::stringstream ss(received_data);
+			std::string command;
+
+			std::getline(ss, command, ',');
+			ss >> action;
+		}
 		if (hp > 0) {
-			static Entity *p_ent = static_cast<Entity *>(
-				SharedGlobals::player_entity);
 			if (should_shoot) {
 				float p_hp = p_ent->get_hp();
 				Entity::shoot();
@@ -43,50 +65,22 @@ class EnemyEntity : public Entity {
 				should_shoot = false;
 			}
 
-			static SocketManager &sock_manager =
-				SocketManager::get_instance();
-			std::string received_data = sock_manager.receive_data();
-
-			int action = -1;
-			if (received_data.find("action") != std::string::npos) {
-				std::stringstream ss(received_data);
-				std::string command;
-
-				std::getline(ss, command, ',');
-				ss >> action;
-			} else if (received_data.find("reset") !=
-				   std::string::npos) {
-				p_ent->set_hp(0.0025f * 3);
-				this->set_hp(10);
-				sock_manager.send_data(get_state());
-			}
-			switch (action) {
-			case 0:
+			if (action == 0) {
 				move_forward(delta);
-				break;
-			case 1:
+			} else if (action == 1) {
 				move_backward(delta);
-				break;
-			case 2:
+			} else if (action == 2) {
 				move_left(delta);
-				break;
-			case 3:
+			} else if (action == 3) {
 				move_right(delta);
-				break;
-			case 4:
-				jump(delta);
-				break;
-			case 5:
-				rotate_left(delta);
-				break;
-			case 6:
-				rotate_right(delta);
-				break;
-			case 7:
+			} else if (action == 4) {
 				shoot();
-				break;
-			default:
-				break;
+			} else if (action == 5) {
+				rotate_left(delta);
+			} else if (action == 6) {
+				rotate_right(delta);
+			} else if (action == 7) {
+				jump(delta);
 			}
 
 			Entity::input(delta);
@@ -145,6 +139,30 @@ class EnemyEntity : public Entity {
 		return "0,0,0";
 	}
 
+	std::string get_enemy_rotation_string()
+	{
+		Quaternion enemy_rot = transform.get_rotation();
+		return std::to_string(enemy_rot.getW()) + "," +
+		       std::to_string(enemy_rot.getX()) + "," +
+		       std::to_string(enemy_rot.getY()) + "," +
+		       std::to_string(enemy_rot.getZ());
+	}
+
+	std::string get_player_rotation_string()
+	{
+		if (SharedGlobals::player_entity) {
+			Quaternion player_rot =
+				static_cast<Entity *>(
+					SharedGlobals::player_entity)
+					->transform.get_rotation();
+			return std::to_string(player_rot.getW()) + "," +
+			       std::to_string(player_rot.getX()) + "," +
+			       std::to_string(player_rot.getY()) + "," +
+			       std::to_string(player_rot.getZ());
+		}
+		return "0,0,0,0";
+	}
+
 	void update_material()
 	{
 		static Material &mat = mesh->get_material();
@@ -157,6 +175,7 @@ class EnemyEntity : public Entity {
 			"./assets/objects/Main_model_100.png"
 		};
 
+		float hp = this->hp * 100.0f / this->max_hp;
 		new_stage =
 			4 - (hp <= 75) - (hp <= 50) - (hp <= 25) - (hp <= 0);
 
@@ -171,11 +190,14 @@ class EnemyEntity : public Entity {
 	std::string get_state()
 	{
 		std::stringstream state;
-		state << get_enemy_position_string() << ","
-		      << get_player_position_string() << "," << hp << ","
+		state << hp << ","
 		      << static_cast<Entity *>(SharedGlobals::player_entity)
 				 ->get_hp()
-		      << "," << (shot_hit ? "True" : "False");
+		      << "," << get_enemy_position_string() << ","
+		      << get_player_position_string() << ","
+		      << (shot_hit ? "True" : "False") << ','
+		      << get_enemy_rotation_string() << ','
+		      << get_player_rotation_string() << ',';
 		return state.str();
 	}
 };

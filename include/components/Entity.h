@@ -22,12 +22,12 @@
 class Entity : public GameObject {
     protected:
 	btRigidBody *rigid_body = nullptr;
-	const btScalar move_impulse_factor = 2e3;
-	const btScalar rotate_impulse_factor = 4e2;
-	const btScalar jump_units = 1.5e3;
-	const btScalar max_move_velocity = 8.5f;
-	const btScalar max_jump_velocity = 6.0f;
-	float hp = 1.0f, rec_dmg = 1.0f;
+	btScalar move_impulse_factor = 2e3;
+	btScalar rotate_impulse_factor = 4e2;
+	btScalar jump_units = 1.5e3;
+	btScalar max_move_velocity = 8.5f;
+	btScalar max_jump_velocity = 6.0f;
+	float hp = 1.0f, rec_dmg = 1.0f, max_hp = 1.0f;
 	float jump_cd = 0.0;
 	MeshRenderer *mesh = nullptr;
 
@@ -162,6 +162,16 @@ class Entity : public GameObject {
 	virtual void set_hp(float hp) noexcept
 	{
 		this->hp = hp;
+	}
+
+	virtual float get_max_hp() const noexcept
+	{
+		return max_hp;
+	}
+
+	virtual void set_max_hp(float max_hp) noexcept
+	{
+		this->max_hp = max_hp;
 	}
 
 	virtual void shoot()
