@@ -8,6 +8,19 @@
 #include <components/PointLight.h>
 #include <components/FollowComponent.h>
 
+btScalar MOVE_IMPULSE_FACTOR = 1.2e4;
+btScalar ROTATE_IMPULSE_FACTOR = 2.5e2;
+
+#define RT_IMP_F 3e3
+
+#ifdef MV_IMP_F
+MOVE_IMPULSE_FACTOR = MV_IMP_F;
+#endif
+
+#ifdef RT_IMP_F
+ROTATE_IMPULSE_FACTOR = RT_IMP_F;
+#endif
+
 class EnemyEntity : public Entity {
 	bool should_shoot = false;
 	bool shot_hit = false;
@@ -26,8 +39,8 @@ class EnemyEntity : public Entity {
 		this->max_hp = 100.0f;
 		this->rec_dmg = 0.05f;
 		rigid_body->setDamping(0.0f, 0.0f);
-		this->move_impulse_factor = 1e4;
-		this->rotate_impulse_factor = 7e3;
+		this->move_impulse_factor = MOVE_IMPULSE_FACTOR;
+		this->rotate_impulse_factor = ROTATE_IMPULSE_FACTOR;
 	}
 
 	void input(float delta) override
@@ -40,10 +53,10 @@ class EnemyEntity : public Entity {
 
 		int action = -1;
 		if (received_data.find("reset") != std::string::npos) {
-			p_ent->set_hp(0.0025f * 3);
-			p_ent->set_max_hp(0.0025f * 3);
-			this->set_hp(0.05f * 10);
-			this->set_max_hp(0.05f * 10);
+			p_ent->set_hp(0.0025f * 150);
+			p_ent->set_max_hp(0.0025f * 150);
+			this->set_hp(0.05f * 300);
+			this->set_max_hp(0.05f * 300);
 			sock_manager.send_data(get_state());
 		} else if (received_data.find("action") != std::string::npos) {
 			std::stringstream ss(received_data);

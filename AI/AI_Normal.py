@@ -1,4 +1,3 @@
-import gymnasium
 import numpy as np
 import socket
 import configparser
@@ -7,8 +6,6 @@ import os
 import time
 
 from enum import Enum
-from gymnasium import spaces
-from stable_baselines3 import PPO
 
 BUFFER_SIZE = 2048
 
@@ -33,22 +30,13 @@ class Action(Enum):
     SHOOT = 4
     ROTATE_LEFT = 5
     ROTATE_RIGHT = 6
-    JUMP = 7  # Disabled for now
 
 
-class EnemyEnv(gymnasium.Env):
+class EnemyEnv:
     def __init__(self, config_file):
-        super(EnemyEnv, self).__init__()
-
         self.steps = 0
-        self.action_space = spaces.Discrete(7)
-        self.observation_space = spaces.Box(
-            low=-np.inf, high=np.inf, shape=(18,), dtype=np.float32
-        )
-
         self.enemy_pos = np.array([0.0, 0.0, 0.0])
         self.player_pos = np.array([0.0, 0.0, 0.0])
-        self.player_rot_quaternion = np.array([0.0, 0.0, 0.0, 0.0])
         self.player_rot_quaternion = np.array([0.0, 0.0, 0.0, 0.0])
         self.enemy_hp = 100.0
         self.player_hp = 100.0
@@ -70,7 +58,7 @@ class EnemyEnv(gymnasium.Env):
 
         pid = os.fork()
         if pid == 0:
-            time.sleep(5)
+            time.sleep(3)
             os.execv("./build/GameEngine", (r"./build/GameEngine",))
 
         self.conn = None
@@ -86,17 +74,15 @@ class EnemyEnv(gymnasium.Env):
 
     def recv(self):
         msg = self.conn.recv(BUFFER_SIZE, socket.MSG_WAITALL).strip(b"\0").decode()
-        # self.send("ACK")
         return msg
 
     def reset(self, *_, **__):
         self.send("reset")
         state = self.recv().split(",")
-        # print("Recv State:\t", state)
 
         self.update_states(state)
 
-        return self._get_obs(), {}
+        return self._get_obs()
 
     def update_states(self, state):
         try:
@@ -112,11 +98,11 @@ class EnemyEnv(gymnasium.Env):
             self.shot_hit = state[8] == "True"
             self.enemy_rot_quaternion = np.array(
                 [float(state[9]), float(state[10]), float(state[11]), float(state[12])]
-            )  # w, x, y, z
+            )
 
             self.player_rot_quaternion = np.array(
                 [float(state[13]), float(state[14]), float(state[15]), float(state[16])]
-            )  # w, x, y, z
+            )
 
             enemy_yaw = quaternion_to_yaw(self.enemy_rot_quaternion)
             player_angle = calculate_angle(self.player_pos, self.enemy_pos)
@@ -146,82 +132,64 @@ class EnemyEnv(gymnasium.Env):
             ]
         )
 
-    def step(self, action):
+    def step(self):
         done = False
         self.steps += 1
-        reward = 0.0
 
-        # print("Send ACTION:\t", action)
-        self.send(f"action,{action}")
+        enemy_yaw = quaternion_to_yaw(self.enemy_rot_quaternion)
+        player_angle = calculate_angle(self.player_pos, self.enemy_pos)
+        self.angle_diff = abs(player_angle - enemy_yaw)
+        self.angle_diff = min(self.angle_diff, 2 * np.pi - self.angle_diff)
+
+        actions = [[(Action.MOVE_FORWARD, Action.MOVE_BACKWARD)[self.steps <= 20]], []][
+            random.random() < 0.7
+        ]
+        if self.angle_diff > np.radians(12):
+            if player_angle > enemy_yaw:
+                actions += [Action.ROTATE_RIGHT] * 2
+            else:
+                actions += [Action.ROTATE_LEFT] * 2
+        else:
+            if self.distance_to_player > 15:
+                actions += [
+                    random.choice([Action.MOVE_FORWARD, Action.MOVE_BACKWARD])
+                ] * 2
+            else:
+                actions.append(
+                    random.choice(
+                        [
+                            Action.MOVE_LEFT,
+                            Action.MOVE_RIGHT,
+                            Action.MOVE_FORWARD,
+                            Action.MOVE_BACKWARD,
+                        ]
+                    )
+                )
+
+        actions += [Action.SHOOT] * 3
+
+        print(self.distance_to_player, actions)
+        for action in actions:
+            self.send(f"action,{action.value}")
         state = self.recv().split(",")
-        # print("Recv State:\t", state)
 
         self.update_states(state)
 
-        reward += max(np.pi - self.angle_diff, self.angle_diff) * 30
-
-        if self.shot_hit:
-            reward += 50
-
-        if self.distance_to_player > 20.0:
-            reward -= 20
-
-        # if action == Action.JUMP:
-        #     reward -= 10
-        if action == Action.SHOOT:
-            reward += 5
-            if self.shot_hit:
-                reward += 15
-        else:
-            reward += 2
-
-        if self.enemy_hp < self.prev_hp:
-            reward -= 20
-            self.prev_hp = self.enemy_hp
-
         done = self.enemy_hp <= 0 or self.player_hp <= 0
 
-        print(
-            action,
-            done,
-            self.enemy_pos,
-            self.player_pos,
-            [
-                self.enemy_hp,
-                self.player_hp,
-                self.distance_to_player,
-                self.angle_diff,
-            ],
-            reward,
-            end="\r",
-        )
-
-        # if done:
-        #     self.reset()
-
-        return self._get_obs(), reward, done, {}, {}
+        return self._get_obs(), 0.0, done, {}
 
     def close(self):
         self.conn.close()
 
 
 if __name__ == "__main__":
-    try:
-        print("Attempting build")
-        os.system("cmake --build build")
-    except:
-        pass
+    os.system("cmake --build build")
     os.system("clear")
     env = EnemyEnv("config.conf")
 
-    model = PPO("MlpPolicy", env, verbose=1)
-    model.learn(total_timesteps=500000)
-    model.save(f"enemy_rl_model_{time.time()}")
-    print("\n\nTraining Done\n\n")
-
-    obs, _ = env.reset()
+    obs = env.reset()
     done = False
     while not done:
-        action, _ = model.predict(obs)
-        obs, reward, done, info, _ = env.step(action)
-    print("Done")
+        obs, reward, done, info = env.step()
+    print("AI finished execution.")
