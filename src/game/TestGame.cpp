@@ -41,8 +41,9 @@ TestGame::TestGame()
 	for (auto &[_, path] : mesh_assets) {
 		Mesh::pre_load(path);
 	}
-
+#ifndef MULTIPLAYER
 	SocketManager::get_instance().initialize("config.conf");
+#endif
 }
 
 void TestGame::init()
@@ -58,7 +59,7 @@ void TestGame::init()
 
 	GameObject *floor = new Terrain(mesh_assets.at("arena"), tex_paths);
 
-	DirectionalLight *dl = new DirectionalLight("#18f", 0.1f);
+	DirectionalLight *dl = new DirectionalLight("#00f", 0.1f);
 	GameObject *lighting_object2 = new GameObject();
 	lighting_object2->add_component(dl)->transform.set_rotation(
 		Quaternion::Rotation_Quaternion({ 1, 0, 0 },

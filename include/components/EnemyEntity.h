@@ -8,17 +8,18 @@
 #include <components/PointLight.h>
 #include <components/FollowComponent.h>
 
-btScalar MOVE_IMPULSE_FACTOR = 1.2e4;
-btScalar ROTATE_IMPULSE_FACTOR = 2.5e2;
-
 #define RT_IMP_F 3e3
 
 #ifdef MV_IMP_F
-MOVE_IMPULSE_FACTOR = MV_IMP_F;
+btScalar MOVE_IMPULSE_FACTOR = MV_IMP_F;
+#else
+btScalar MOVE_IMPULSE_FACTOR = 1.2e4;
 #endif
 
 #ifdef RT_IMP_F
-ROTATE_IMPULSE_FACTOR = RT_IMP_F;
+btScalar ROTATE_IMPULSE_FACTOR = RT_IMP_F;
+#else
+btScalar ROTATE_IMPULSE_FACTOR = 2.5e2;
 #endif
 
 class EnemyEntity : public Entity {
@@ -45,6 +46,7 @@ class EnemyEntity : public Entity {
 
 	void input(float delta) override
 	{
+#ifndef MULTIPLAYER
 		static SocketManager &sock_manager =
 			SocketManager::get_instance();
 		static Entity *p_ent =
@@ -52,6 +54,7 @@ class EnemyEntity : public Entity {
 		std::string received_data = sock_manager.receive_data();
 
 		int action = -1;
+		float factor = 1.0f;
 		if (received_data.find("reset") != std::string::npos) {
 			p_ent->set_hp(0.0025f * 150);
 			p_ent->set_max_hp(0.0025f * 150);
@@ -64,6 +67,7 @@ class EnemyEntity : public Entity {
 
 			std::getline(ss, command, ',');
 			ss >> action;
+			ss >> factor;
 		}
 		if (hp > 0) {
 			if (should_shoot) {
@@ -79,36 +83,39 @@ class EnemyEntity : public Entity {
 			}
 
 			if (action == 0) {
-				move_forward(delta);
+				move_forward(delta * factor);
 			} else if (action == 1) {
-				move_backward(delta);
+				move_backward(delta * factor);
 			} else if (action == 2) {
-				move_left(delta);
+				move_left(delta * factor);
 			} else if (action == 3) {
-				move_right(delta);
+				move_right(delta * factor);
 			} else if (action == 4) {
 				shoot();
 			} else if (action == 5) {
-				rotate_left(delta);
+				rotate_left(delta * factor);
 			} else if (action == 6) {
-				rotate_right(delta);
+				rotate_right(delta * factor);
 			} else if (action == 7) {
-				jump(delta);
+				jump(delta * factor);
 			}
 
 			Entity::input(delta);
 		}
+#else
+		Entity::input(delta);
+#endif
 	}
 
 	void update(float delta) override
 	{
 		update_material();
-
+#ifndef MULTIPLAYER
 		static SocketManager &sock_manager =
 			SocketManager::get_instance();
 
 		sock_manager.send_data(get_state());
-
+#endif
 		Entity::update(delta);
 	}
 

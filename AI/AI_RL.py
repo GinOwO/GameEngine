@@ -211,6 +211,7 @@ if __name__ == "__main__":
     try:
         print("Attempting build")
         os.system("cmake --build build")
+        os.system("cp ./build/GameEngine ./AI/GameEngine")
     except:
         pass
     os.system("clear")

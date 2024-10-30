@@ -78,6 +78,7 @@ set(PHYSICS_SOURCES
 
 set(MISC_SOURCES
 	${PROJECT_SOURCE_DIR}/src/misc/glad.c
+	${PROJECT_SOURCE_DIR}/src/multiplayer/AWS.cpp
 )
 
 add_library(GameEngineLib STATIC
@@ -111,6 +112,22 @@ include_directories(${IMATH_INCLUDE_DIRS})
 find_package(OpenEXR REQUIRED)
 include_directories(${OPENEXR_INCLUDE_DIRS})
 
+# Find AWS SDK libraries
+find_package(AWSSDK REQUIRED COMPONENTS core s3 dynamodb cognito-identity cognito-idp lambda)
+include_directories(${AWSSDK_INCLUDE_DIRS})
+
+# Find the jwt-cpp package
+find_package(jwt-cpp REQUIRED)
+include_directories(${jwt-cpp_INCLUDE_DIRS})
+
+# Find and link libcurl
+find_package(CURL REQUIRED)
+include_directories(${CURL_INCLUDE_DIRS})
+
+# Find and link jsoncpp
+find_package(jsoncpp REQUIRED)
+include_directories(${JsonCpp_INCLUDE_DIRS})
+
 # Add executable target
 add_executable(GameEngine ${PROJECT_SOURCE_DIR}/main.cpp)
 
@@ -126,6 +143,10 @@ target_link_libraries(GameEngine
 	${OPENEXR_LIBRARIES}
 	${Imath_LIBRARIES}
 	${BULLET_LIBRARIES}
+	${AWSSDK_LINK_LIBRARIES}
+	${jwt-cpp_LIBRARIES}
+	${CURL_LIBRARIES} 
+	jsoncpp_lib
 )
 
 # Add include directories
@@ -142,8 +163,9 @@ add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
 # # Add test directory
 # add_subdirectory(tests)
 
+SET(MULTIPLAYER "-DMULTIPLAYER -DAWS_DEBUG")
 SET(GCC_COMPILE_FLAGS "-g -O0")
 SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL -ldl")
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS} ${MULTIPLAYER}")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_LINK_FLAGS}")

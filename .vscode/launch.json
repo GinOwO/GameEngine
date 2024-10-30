@@ -46,6 +46,33 @@
 			"internalConsoleOptions": "openOnSessionStart"
 		},
 		{
+			"name": "Launch GameEngine(Multiplayer)",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/GameEngine",
+			"args": [
+				"-u",
+				"abcd",
+				"-p",
+				"Abc@1234"
+			],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"miDebuggerPath": "/usr/bin/gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"preLaunchTask": "build",
+			"internalConsoleOptions": "openOnSessionStart"
+		},
+		{
 			"name": "Python Debugger",
 			"type": "debugpy",
 			"request": "launch",
