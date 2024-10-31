@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #define KB_SIZE 350
 
 class Input {
@@ -34,21 +36,21 @@ class Input {
 	Input();
 
     public:
-	const int NUM_KEYS = KB_SIZE;
+	const int32_t NUM_KEYS = KB_SIZE;
 
-	bool is_key_pressed(int key_code) const noexcept;
+	bool is_key_pressed(int32_t key_code) const noexcept;
 
-	bool is_key_down(int key_code) const noexcept;
+	bool is_key_down(int32_t key_code) const noexcept;
 
-	bool is_key_up(int key_code) const noexcept;
+	bool is_key_up(int32_t key_code) const noexcept;
 
 	const bool *get_pressed() const noexcept;
 
-	bool is_mouse_pressed(int mouse_code) const noexcept;
+	bool is_mouse_pressed(int32_t mouse_code) const noexcept;
 
-	bool is_mouse_down(int mouse_code) const noexcept;
+	bool is_mouse_down(int32_t mouse_code) const noexcept;
 
-	bool is_mouse_up(int mouse_code) const noexcept;
+	bool is_mouse_up(int32_t mouse_code) const noexcept;
 
 	const double (*get_mouse_scroll() const noexcept)[2];
 
@@ -60,11 +62,13 @@ class Input {
 
 	const bool *get_mouse_pressed() const noexcept;
 
-	void key_callback(int key, int scancode, int action, int mods);
+	void key_callback(int32_t key, int32_t scancode, int32_t action,
+			  int32_t mods);
 
 	void mouse_motion_callback(double xpos, double ypos) noexcept;
 
-	void mouse_button_callback(int button, int action, int mods) noexcept;
+	void mouse_button_callback(int32_t button, int32_t action,
+				   int32_t mods) noexcept;
 
 	void mouse_scroll_callback(double xoffset, double yoffset) noexcept;
 };

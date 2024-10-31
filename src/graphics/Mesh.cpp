@@ -18,21 +18,22 @@
 #include <cstdlib>
 #include <exception>
 
-std::unordered_map<std::string, int> loaded_file_ids;
+std::unordered_map<std::string, int32_t> loaded_file_ids;
 
-std::unordered_map<int, std::weak_ptr<MeshResource> > mesh_cache{};
+std::unordered_map<int32_t, std::weak_ptr<MeshResource> > mesh_cache{};
 
-std::unordered_map<int, std::pair<std::vector<btScalar>, std::vector<int> > >
+std::unordered_map<int32_t,
+		   std::pair<std::vector<btScalar>, std::vector<int32_t> > >
 	all_bullet_vertices{};
 
-std::unordered_map<int, std::vector<Vertex> > all_vertices{};
+std::unordered_map<int32_t, std::vector<Vertex> > all_vertices{};
 
 void Mesh::pre_load(const std::string &file_path)
 {
 	if (loaded_file_ids.count(file_path))
 		return;
 
-	static int id = -1;
+	static int32_t id = -1;
 	loaded_file_ids[file_path] = ++id;
 	std::cout << "Preloading Mesh Asset (" << id << "): " << file_path
 		  << '\n';
@@ -61,7 +62,7 @@ void Mesh::pre_load(const std::string &file_path)
 	all_vertices[id] = {};
 	auto &vertices = all_vertices[id];
 
-	for (int i = 0; i < model.positions.size(); i++) {
+	for (int32_t i = 0; i < model.positions.size(); i++) {
 		Vertex vertex(model.positions[i], model.texCoords[i],
 			      model.normals[i]);
 		vertex.boneIndices = model.bone_indices[i];
@@ -84,7 +85,7 @@ Mesh Mesh::load_mesh(const std::string &file_path,
 		     MeshPhysicsType mesh_physics_type)
 {
 	pre_load(file_path);
-	int id = loaded_file_ids[file_path];
+	int32_t id = loaded_file_ids[file_path];
 
 	Mesh mesh;
 	mesh.mesh_physics_type = mesh_physics_type;
@@ -110,7 +111,7 @@ Mesh Mesh::load_mesh(const std::string &file_path,
 	return mesh;
 }
 
-void Mesh::update_physics(int id)
+void Mesh::update_physics(int32_t id)
 {
 	btRigidBody *rigid_body = nullptr;
 	SharedGlobals &globals = SharedGlobals::get_instance();
@@ -120,7 +121,7 @@ void Mesh::update_physics(int id)
 	case Mesh::MeshPhysicsType::ENTITY: {
 		btConvexHullShape *shape = new btConvexHullShape(
 			bullet_vertices.data(),
-			static_cast<int>(bullet_vertices.size() / 3),
+			static_cast<int32_t>(bullet_vertices.size() / 3),
 			sizeof(btScalar) * 3);
 
 		btDefaultMotionState *motion_state = new btDefaultMotionState();
@@ -138,9 +139,9 @@ void Mesh::update_physics(int id)
 
 	case Mesh::MeshPhysicsType::TERRAIN: {
 		auto *index_vertex_array = new btTriangleIndexVertexArray(
-			static_cast<int>(indices.size() / 3), indices.data(),
-			sizeof(int) * 3,
-			static_cast<int>(bullet_vertices.size() / 3),
+			static_cast<int32_t>(indices.size() / 3),
+			indices.data(), sizeof(int32_t) * 3,
+			static_cast<int32_t>(bullet_vertices.size() / 3),
 			bullet_vertices.data(), sizeof(btScalar) * 3);
 
 		btBvhTriangleMeshShape *shape =
@@ -165,8 +166,9 @@ void Mesh::update_physics(int id)
 	globals.current_rigid_body = rigid_body;
 }
 
-void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
-			bool normals, MeshPhysicsType mesh_physics_type)
+void Mesh::add_vertices(std::vector<Vertex> vertices,
+			std::vector<int32_t> indices, bool normals,
+			MeshPhysicsType mesh_physics_type)
 {
 	if (buffers == nullptr) {
 		this->reset_mesh();
@@ -184,7 +186,7 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 
 	std::vector<float> buffer(buffers->size * Vertex::SIZE);
 
-	int i = 0;
+	int32_t i = 0;
 	for (const Vertex &v : vertices) {
 		Vector3f pos = v.get_pos();
 		Vector3f normal = v.get_normal();
@@ -198,10 +200,10 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 		buffer[i++] = normal.getY();
 		buffer[i++] = normal.getZ();
 
-		for (int j = 0; j < 4; ++j) {
+		for (int32_t j = 0; j < 4; ++j) {
 			buffer[i++] = v.boneIndices[j];
 		}
-		for (int j = 0; j < 4; ++j) {
+		for (int32_t j = 0; j < 4; ++j) {
 			buffer[i++] = v.boneWeights[j];
 		}
 	}
@@ -236,7 +238,7 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 
 	glGenBuffers(1, &buffers->ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers->ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int),
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int32_t),
 		     indices.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -245,8 +247,9 @@ void Mesh::add_vertices(std::vector<Vertex> vertices, std::vector<int> indices,
 
 Mesh::Mesh() {};
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<int> &indices,
-	   bool normals, MeshPhysicsType mesh_physics_type)
+Mesh::Mesh(const std::vector<Vertex> &vertices,
+	   const std::vector<int32_t> &indices, bool normals,
+	   MeshPhysicsType mesh_physics_type)
 {
 	this->mesh_physics_type = mesh_physics_type;
 	this->add_vertices(vertices, indices, normals, mesh_physics_type);
@@ -270,10 +273,10 @@ void Mesh::draw() const
 }
 
 void Mesh::calculate_normals(std::vector<Vertex> &vertices,
-			     std::vector<int> &indices)
+			     std::vector<int32_t> &indices)
 {
-	for (int i = 0; i < indices.size(); i += 3) {
-		int a = indices[i], b = indices[i + 1], c = indices[i + 2];
+	for (int32_t i = 0; i < indices.size(); i += 3) {
+		int32_t a = indices[i], b = indices[i + 1], c = indices[i + 2];
 		Vector3f v1 = vertices[b].get_pos() - vertices[a].get_pos();
 		Vector3f v2 = vertices[c].get_pos() - vertices[a].get_pos();
 

@@ -35,19 +35,21 @@ class Window {
 
 	void swap_buffers();
 
-	void set_key_callback(void (*key_callback)(GLFWwindow *, int, int, int,
-						   int));
+	void set_key_callback(void (*key_callback)(GLFWwindow *, int32_t,
+						   int32_t, int32_t, int32_t));
 
 	void set_mouse_callback(
 		void (*mouse_motion_callback)(GLFWwindow *, double, double),
-		void (*mouse_button_callback)(GLFWwindow *, int, int, int),
+		void (*mouse_button_callback)(GLFWwindow *, int32_t, int32_t,
+					      int32_t),
 		void (*mouse_scroll_callback)(GLFWwindow *, double, double));
 
-	void set_focus_callback(void (*handle_window_focus)(GLFWwindow *, int));
+	void set_focus_callback(void (*handle_window_focus)(GLFWwindow *,
+							    int32_t));
 
-	int get_window_height() const noexcept;
+	int32_t get_window_height() const noexcept;
 
-	int get_window_width() const noexcept;
+	int32_t get_window_width() const noexcept;
 
 	Vector2f get_window_center() const noexcept;
 

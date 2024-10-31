@@ -65,7 +65,7 @@ OBJModel::OBJModel(const std::string &file_path)
 					    std::stof(tokens[2]),
 					    std::stof(tokens[3]) });
 		} else if (tokens[0] == "f") {
-			for (int i = 0; i < tokens.size() - 3; i++) {
+			for (int32_t i = 0; i < tokens.size() - 3; i++) {
 				indices.push_back(parse_obj_index(tokens[1]));
 				indices.push_back(
 					parse_obj_index(tokens[2 + i]));
@@ -79,12 +79,12 @@ OBJModel::OBJModel(const std::string &file_path)
 IndexedModel OBJModel::to_indexed_model()
 {
 	IndexedModel model, normal_model;
-	std::unordered_map<IndexedModel::Index, int,
+	std::unordered_map<IndexedModel::Index, int32_t,
 			   IndexedModel::Index::__hash__>
 		model_index_map;
-	std::unordered_map<int, int> normal_index_map, index_map;
+	std::unordered_map<int32_t, int32_t> normal_index_map, index_map;
 
-	for (int i = 0; i < indices.size(); i++) {
+	for (int32_t i = 0; i < indices.size(); i++) {
 		IndexedModel::Index &current_index = indices[i];
 
 		Vector3f position = positions[current_index.vertex_index];
@@ -123,7 +123,7 @@ IndexedModel OBJModel::to_indexed_model()
 	if (!has_normals) {
 		normal_model.calculate_normals();
 
-		for (int i = 0; i < model.positions.size(); i++) {
+		for (int32_t i = 0; i < model.positions.size(); i++) {
 			model.normals[i] = normal_model.normals[index_map[i]];
 		}
 	}

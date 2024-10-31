@@ -24,7 +24,7 @@ class SocketManager {
 
 	void initialize(const std::string &config_file)
 	{
-		int port = read_config(config_file);
+		int32_t port = read_config(config_file);
 		create_socket(port);
 	}
 
@@ -68,12 +68,12 @@ class SocketManager {
 	}
 
     private:
-	int sock_fd = -1;
+	int32_t sock_fd = -1;
 	sockaddr_in server_address;
 
 	SocketManager() {};
 
-	void create_socket(int port)
+	void create_socket(int32_t port)
 	{
 		if ((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 			throw std::runtime_error("Socket creation error");
@@ -91,7 +91,7 @@ class SocketManager {
 		std::cout << "Connected to server on port " << port << '\n';
 	}
 
-	int read_config(const std::string &config_file)
+	int32_t read_config(const std::string &config_file)
 	{
 		std::ifstream file(config_file);
 		if (!file.is_open()) {

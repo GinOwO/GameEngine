@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <array>
 
 class Vector2f {

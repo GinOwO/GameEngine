@@ -53,7 +53,7 @@ class EnemyEntity : public Entity {
 			static_cast<Entity *>(SharedGlobals::player_entity);
 		std::string received_data = sock_manager.receive_data();
 
-		int action = -1;
+		int32_t action = -1;
 		float factor = 1.0f;
 		if (received_data.find("reset") != std::string::npos) {
 			p_ent->set_hp(0.0025f * 150);
@@ -186,7 +186,7 @@ class EnemyEntity : public Entity {
 	void update_material()
 	{
 		static Material &mat = mesh->get_material();
-		static int old_stage = 4, new_stage = 4;
+		static int32_t old_stage = 4, new_stage = 4;
 		static const std::string diffuses[] = {
 			"./assets/objects/Main_model_0.png",
 			"./assets/objects/Main_model_25.png",

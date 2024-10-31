@@ -57,7 +57,7 @@ class PlayerEntity : public Entity {
 	void update(float delta) override
 	{
 		static Material &mat = mesh->get_material();
-		static int old_stage = 4, new_stage = 4;
+		static int32_t old_stage = 4, new_stage = 4;
 		static const std::string diffuses[] = {
 			"./assets/objects/Main_model_0.png",
 			"./assets/objects/Main_model_25.png",

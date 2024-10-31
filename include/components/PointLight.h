@@ -12,7 +12,7 @@
 #include <algorithm>
 
 struct PointLight : public BaseLight {
-	const int COLOR_DEPTH = 1 << 16;
+	const int32_t COLOR_DEPTH = 1 << 16;
 
 	PointLight() = default;
 

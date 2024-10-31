@@ -18,7 +18,7 @@ class Skeleton {
     public:
 	Skeleton(const aiScene *scene);
 
-	std::unordered_map<std::string, int> boneMapping;
+	std::unordered_map<std::string, int32_t> boneMapping;
 	std::vector<Bone> bones;
 	Matrix4f globalInverseTransform;
 

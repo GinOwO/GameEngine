@@ -11,9 +11,9 @@ class Matrix4f {
 
 	Matrix4f(const float m[4][4]);
 
-	void set(int x, int y, float a);
+	void set(int32_t x, int32_t y, float a);
 
-	float get(int x, int y) const;
+	float get(int32_t x, int32_t y) const;
 
 	static Matrix4f Identity_Matrix();
 
@@ -46,8 +46,8 @@ class Matrix4f {
 
 	constexpr bool operator==(const Matrix4f &m) const noexcept
 	{
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
+		for (int32_t i = 0; i < 4; i++) {
+			for (int32_t j = 0; j < 4; j++) {
 				if (this->matrix[i][j] != m.matrix[i][j])
 					return false;
 			}

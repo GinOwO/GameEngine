@@ -9,8 +9,8 @@
 Matrix4f from_aiMatrix4x4(const aiMatrix4x4 &am)
 {
 	float m[4][4];
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for (int32_t i = 0; i < 4; i++) {
+		for (int32_t j = 0; j < 4; j++) {
 			m[i][j] = am[i][j];
 		}
 	}
@@ -45,11 +45,11 @@ inline constexpr float determinant(float **m)
 	       m[0][0] * m[1][1] * m[2][2] * m[3][3];
 }
 
-void cofactor(float **m, float **temp, int p, int q, int n)
+void cofactor(float **m, float **temp, int32_t p, int32_t q, int32_t n)
 {
-	int i = 0, j = 0;
-	for (int row = 0; row < n; row++) {
-		for (int col = 0; col < n; col++) {
+	int32_t i = 0, j = 0;
+	for (int32_t row = 0; row < n; row++) {
+		for (int32_t col = 0; col < n; col++) {
 			if (row != p && col != q) {
 				temp[i][j++] = m[row][col];
 				if (j == n - 1) {
@@ -65,9 +65,9 @@ void cofactor(float **m, float **temp, int p, int q, int n)
 void adjugate(float **m, float adj[4][4])
 {
 	float temp[4][4];
-	int sign = 1;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	int32_t sign = 1;
+	for (int32_t i = 0; i < 4; i++) {
+		for (int32_t j = 0; j < 4; j++) {
 			cofactor(m, (float **)((void *)temp), i, j, 4);
 			sign = ((i + j) % 2 == 0) ? 1 : -1;
 			adj[j][i] =
@@ -88,8 +88,8 @@ Matrix4f inverse(const Matrix4f &mat)
 	float adj[4][4];
 	adjugate(m, adj);
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for (int32_t i = 0; i < 4; i++) {
+		for (int32_t j = 0; j < 4; j++) {
 			inv[i][j] = adj[i][j] / det;
 		}
 	}
@@ -107,7 +107,7 @@ Skeleton::Skeleton(const aiScene *scene)
 void Skeleton::read_bones(const aiMesh *mesh)
 {
 	bones.resize(mesh->mNumBones);
-	for (unsigned int i = 0; i < mesh->mNumBones; i++) {
+	for (uint32_t i = 0; i < mesh->mNumBones; i++) {
 		aiBone *bone = mesh->mBones[i];
 		std::string boneName = bone->mName.data;
 		boneMapping[boneName] = i;
@@ -128,7 +128,7 @@ void Skeleton::update_bone_transform(float time, const aiNode *node,
 
 	// Retrieve the bone's transformation based on the animation data
 	const aiNodeAnim *nodeAnim = nullptr;
-	for (unsigned int i = 0; i < animation->mNumChannels; i++) {
+	for (uint32_t i = 0; i < animation->mNumChannels; i++) {
 		if (std::string(animation->mChannels[i]->mNodeName.data) ==
 		    nodeName) {
 			nodeAnim = animation->mChannels[i];
@@ -162,21 +162,21 @@ void Skeleton::update_bone_transform(float time, const aiNode *node,
 	Matrix4f globalTransformation = parentTransform * nodeTransformation;
 
 	if (boneMapping.find(nodeName) != boneMapping.end()) {
-		int boneIndex = boneMapping[nodeName];
+		int32_t boneIndex = boneMapping[nodeName];
 		bones[boneIndex].finalTransformation =
 			globalInverseTransform * globalTransformation *
 			bones[boneIndex].offsetMatrix;
 	}
 
-	for (unsigned int i = 0; i < node->mNumChildren; i++) {
+	for (uint32_t i = 0; i < node->mNumChildren; i++) {
 		update_bone_transform(time, node->mChildren[i],
 				      globalTransformation);
 	}
 }
 
-int FindPositionKey(float time, const aiNodeAnim *nodeAnim)
+int32_t FindPositionKey(float time, const aiNodeAnim *nodeAnim)
 {
-	for (int i = 0; i < nodeAnim->mNumPositionKeys - 1; ++i) {
+	for (int32_t i = 0; i < nodeAnim->mNumPositionKeys - 1; ++i) {
 		if (time < nodeAnim->mPositionKeys[i + 1].mTime) {
 			return i;
 		}
@@ -184,9 +184,9 @@ int FindPositionKey(float time, const aiNodeAnim *nodeAnim)
 	return 0;
 }
 
-int FindRotationKey(float time, const aiNodeAnim *nodeAnim)
+int32_t FindRotationKey(float time, const aiNodeAnim *nodeAnim)
 {
-	for (int i = 0; i < nodeAnim->mNumRotationKeys - 1; ++i) {
+	for (int32_t i = 0; i < nodeAnim->mNumRotationKeys - 1; ++i) {
 		if (time < nodeAnim->mRotationKeys[i + 1].mTime) {
 			return i;
 		}
@@ -194,9 +194,9 @@ int FindRotationKey(float time, const aiNodeAnim *nodeAnim)
 	return 0;
 }
 
-int FindScalingKey(float time, const aiNodeAnim *nodeAnim)
+int32_t FindScalingKey(float time, const aiNodeAnim *nodeAnim)
 {
-	for (int i = 0; i < nodeAnim->mNumScalingKeys - 1; ++i) {
+	for (int32_t i = 0; i < nodeAnim->mNumScalingKeys - 1; ++i) {
 		if (time < nodeAnim->mScalingKeys[i + 1].mTime) {
 			return i;
 		}
@@ -216,8 +216,8 @@ aiVector3D Skeleton::InterpolatePosition(float time, const aiNodeAnim *nodeAnim)
 	}
 
 	// Find position keyframes surrounding the current time
-	int positionIndex = FindPositionKey(time, nodeAnim);
-	int nextPositionIndex =
+	int32_t positionIndex = FindPositionKey(time, nodeAnim);
+	int32_t nextPositionIndex =
 		(positionIndex + 1) % nodeAnim->mNumPositionKeys;
 
 	// Get the position keys
@@ -249,8 +249,8 @@ aiQuaternion Skeleton::InterpolateRotation(float time,
 	}
 
 	// Find rotation keyframes surrounding the current time
-	int rotationIndex = FindRotationKey(time, nodeAnim);
-	int nextRotationIndex =
+	int32_t rotationIndex = FindRotationKey(time, nodeAnim);
+	int32_t nextRotationIndex =
 		(rotationIndex + 1) % nodeAnim->mNumRotationKeys;
 
 	// Get the rotation keys
@@ -280,8 +280,9 @@ aiVector3D Skeleton::InterpolateScaling(float time, const aiNodeAnim *nodeAnim)
 	}
 
 	// Find scaling keyframes surrounding the current time
-	int scalingIndex = FindScalingKey(time, nodeAnim);
-	int nextScalingIndex = (scalingIndex + 1) % nodeAnim->mNumScalingKeys;
+	int32_t scalingIndex = FindScalingKey(time, nodeAnim);
+	int32_t nextScalingIndex =
+		(scalingIndex + 1) % nodeAnim->mNumScalingKeys;
 
 	// Get the scaling keys
 	const aiVectorKey &scalingKey = nodeAnim->mScalingKeys[scalingIndex];

@@ -58,7 +58,7 @@ class Shader {
 
 	GLuint get_uniform(const std::string &uniform) const;
 
-	void set_uniform(const std::string &uniform, int value);
+	void set_uniform(const std::string &uniform, int32_t value);
 
 	void set_uniform(const std::string &uniform, float value);
 
@@ -69,7 +69,7 @@ class Shader {
 	void set_uniform(const std::string &uniform, const Specular &specular);
 
 	void set_uniform(const std::string &uniform, const Matrix4f &matrix,
-			 int count);
+			 int32_t count);
 
 	virtual void update_uniforms(Transform *transform,
 				     const Material &material) = 0;

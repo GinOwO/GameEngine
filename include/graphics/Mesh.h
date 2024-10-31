@@ -17,7 +17,7 @@ class Mesh {
 	std::shared_ptr<MeshResource> buffers;
 
 	void calculate_normals(std::vector<Vertex> &vertices,
-			       std::vector<int> &indices);
+			       std::vector<int32_t> &indices);
 
     public:
 	enum class MeshPhysicsType {
@@ -28,17 +28,17 @@ class Mesh {
 
 	Mesh();
 	Mesh(const std::vector<Vertex> &vertices,
-	     const std::vector<int> &indices, bool normals = false,
+	     const std::vector<int32_t> &indices, bool normals = false,
 	     MeshPhysicsType mesh_physics_type = MeshPhysicsType::NO_PHYSICS);
 
 	void draw() const;
 
 	void reset_mesh();
 
-	void update_physics(int id);
+	void update_physics(int32_t id);
 
 	void add_vertices(std::vector<Vertex> vertices,
-			  std::vector<int> indices, bool normals = false,
+			  std::vector<int32_t> indices, bool normals = false,
 			  MeshPhysicsType mesh_physics_type =
 				  MeshPhysicsType::NO_PHYSICS);
 

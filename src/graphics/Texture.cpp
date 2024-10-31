@@ -72,8 +72,8 @@ std::shared_ptr<void> Texture::load_texture(const std::string &file_path)
 		try {
 			Imf::RgbaInputFile exrFile(file_path.c_str());
 			Imath::Box2i dw = exrFile.dataWindow();
-			int width = dw.max.x - dw.min.x + 1;
-			int height = dw.max.y - dw.min.y + 1;
+			int32_t width = dw.max.x - dw.min.x + 1;
+			int32_t height = dw.max.y - dw.min.y + 1;
 
 			Imf::Array2D<Imf::Rgba> pixels(height, width);
 			exrFile.setFrameBuffer(&pixels[0][0] - dw.min.x -
@@ -106,7 +106,7 @@ std::shared_ptr<void> Texture::load_texture(const std::string &file_path)
 	} else if (extension == "png" || extension == "jpg" ||
 		   extension == "jpeg") {
 		// Load PNG with stb_image
-		int width, height, channels;
+		int32_t width, height, channels;
 		unsigned char *data = stbi_load(file_path.c_str(), &width,
 						&height, &channels, 0);
 

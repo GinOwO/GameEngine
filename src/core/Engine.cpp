@@ -25,7 +25,7 @@ Input &input_handler = Input::get_instance();
 bool paused = false;
 bool Engine::created = false;
 
-void handle_window_focus(GLFWwindow *window, int focused)
+void handle_window_focus(GLFWwindow *window, int32_t focused)
 {
 	paused = focused != GLFW_TRUE;
 #if _DEBUG_FPS_ON
@@ -33,8 +33,8 @@ void handle_window_focus(GLFWwindow *window, int focused)
 #endif
 }
 
-void key_callback(GLFWwindow *window, int key, int scancode, int action,
-		  int mods)
+void key_callback(GLFWwindow *window, int32_t key, int32_t scancode,
+		  int32_t action, int32_t mods)
 {
 	input_handler.key_callback(key, scancode, action, mods);
 }
@@ -44,7 +44,8 @@ void mouse_motion_callback(GLFWwindow *window, double xpos, double ypos)
 	input_handler.mouse_motion_callback(xpos, ypos);
 }
 
-void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
+void mouse_button_callback(GLFWwindow *window, int32_t button, int32_t action,
+			   int32_t mods)
 {
 	input_handler.mouse_button_callback(button, action, mods);
 }
@@ -82,7 +83,7 @@ void Engine::run()
 	game->init();
 	RenderingEngine &rendering_engine = RenderingEngine::get_instance();
 
-	int frames = 0;
+	int32_t frames = 0;
 	double frame_counter = 0;
 	double frame_time = 1.0f / this->FRAME_CAP;
 	// glfwSwapInterval(0); // Disable Vsync

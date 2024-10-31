@@ -60,7 +60,7 @@ GLuint Shader::create_shader_module(const std::string &shader_source,
 	glShaderSource(shader_module, 1, &shader_source_char, NULL);
 	glCompileShader(shader_module);
 
-	int status;
+	int32_t status;
 	glGetShaderiv(shader_module, GL_COMPILE_STATUS, &status);
 	if (!status) {
 		char error_log[1024];
@@ -183,7 +183,7 @@ GLuint Shader::get_uniform(const std::string &uniform) const
 	return shader_resource->uniforms.at(uniform);
 }
 
-void Shader::set_uniform(const std::string &uniform, int value)
+void Shader::set_uniform(const std::string &uniform, int32_t value)
 {
 	use_program();
 	if (!shader_resource->uniforms.count(uniform)) {
@@ -240,7 +240,7 @@ void Shader::set_uniform(const std::string &uniform, const Specular &specular)
 }
 
 void Shader::set_uniform(const std::string &uniform, const Matrix4f &matrix,
-			 int count)
+			 int32_t count)
 {
 	use_program(); // Make sure the shader program is active
 

@@ -9,8 +9,8 @@ class MeshResource {
 	GLuint vbo;
 	GLuint ebo;
 
-	int size;
-	int isize;
+	int32_t size;
+	int32_t isize;
 
 	MeshResource();
 	~MeshResource();

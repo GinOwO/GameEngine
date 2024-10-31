@@ -20,7 +20,7 @@ class FBXModel {
 			  std::vector<Vector3f> &positions,
 			  std::vector<Vector2f> &texCoords,
 			  std::vector<Vector3f> &normals,
-			  std::vector<std::array<int, 4> > &bone_indices,
+			  std::vector<std::array<int32_t, 4> > &bone_indices,
 			  std::vector<std::array<float, 4> > &bone_weights,
 			  std::vector<IndexedModel::Index> &indices);
 	void process_mesh(aiMesh *mesh, const aiScene *scene,
@@ -28,7 +28,7 @@ class FBXModel {
 			  std::vector<Vector2f> &texCoords,
 			  std::vector<Vector3f> &normals,
 			  std::vector<IndexedModel::Index> &indices,
-			  std::vector<std::array<int, 4> > &boneIndices,
+			  std::vector<std::array<int32_t, 4> > &boneIndices,
 			  std::vector<std::array<float, 4> > &boneWeights);
 
     public:
@@ -36,7 +36,7 @@ class FBXModel {
 	std::vector<Vector3f> normals;
 	std::vector<Vector2f> texCoords;
 	std::vector<std::array<float, 4> > bone_weights;
-	std::vector<std::array<int, 4> > bone_indices;
+	std::vector<std::array<int32_t, 4> > bone_indices;
 	std::vector<IndexedModel::Index> indices;
 	bool has_normals;
 	bool has_texCoords;

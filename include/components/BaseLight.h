@@ -45,7 +45,7 @@ struct BaseLight : public GameComponent {
 	BaseLight(const std::string &hex, const float &intensity)
 		: intensity(intensity)
 	{
-		unsigned int red = 0, green = 0, blue = 0;
+		uint32_t red = 0, green = 0, blue = 0;
 
 		std::string hex_value = hex;
 		if (hex_value[0] == '#') {
@@ -60,7 +60,7 @@ struct BaseLight : public GameComponent {
 		if (hex_value.size() == 6) {
 			std::stringstream ss;
 			ss << std::hex << hex_value;
-			unsigned int hex_rgb;
+			uint32_t hex_rgb;
 			ss >> hex_rgb;
 			red = (hex_rgb >> 16) & 0xFF;
 			green = (hex_rgb >> 8) & 0xFF;

@@ -130,7 +130,7 @@ Matrix4f Matrix4f::Camera_Matrix(const Vector3f &forward, const Vector3f &up)
 	return { matrix };
 }
 
-void Matrix4f::set(int x, int y, float a)
+void Matrix4f::set(int32_t x, int32_t y, float a)
 {
 	if (x > 3 || y > 3 || x < 0 || y < 0) {
 		std::cerr << "Matrix setting out of bounds, exiting\n";
@@ -143,7 +143,7 @@ void Matrix4f::set(int x, int y, float a)
 	matrix[x][y] = a;
 }
 
-float Matrix4f::get(int x, int y) const
+float Matrix4f::get(int32_t x, int32_t y) const
 {
 	if (x > 3 || y > 3 || x < 0 || y < 0) {
 		std::cerr << "Matrix getting out of bounds, exiting\n";
@@ -165,9 +165,9 @@ Matrix4f Matrix4f::operator*(const Matrix4f &m) const noexcept
 Matrix4f &Matrix4f::operator*=(const Matrix4f &m) noexcept
 {
 	float tmp[4][4] = { 0 };
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			for (int k = 0; k < 4; k++) {
+	for (int32_t i = 0; i < 4; i++) {
+		for (int32_t j = 0; j < 4; j++) {
+			for (int32_t k = 0; k < 4; k++) {
 				tmp[i][j] += matrix[i][k] * m.matrix[k][j];
 			}
 		}
@@ -179,8 +179,8 @@ Matrix4f &Matrix4f::operator*=(const Matrix4f &m) noexcept
 Matrix4f Matrix4f::flip_matrix(const Matrix4f &m)
 {
 	float tmp[4][4];
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for (int32_t i = 0; i < 4; i++) {
+		for (int32_t j = 0; j < 4; j++) {
 			tmp[i][j] = m.get(j, i);
 		}
 	}

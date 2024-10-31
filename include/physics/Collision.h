@@ -10,7 +10,7 @@ class CollisionCallback : public btCollisionWorld::ContactResultCallback {
     public:
 	btScalar addSingleResult(btManifoldPoint &cp,
 				 const btCollisionObjectWrapper *colObj0Wrap,
-				 int partId0, int index0,
+				 int32_t partId0, int32_t index0,
 				 const btCollisionObjectWrapper *colObj1Wrap,
-				 int partId1, int index1) override;
+				 int32_t partId1, int32_t index1) override;
 };

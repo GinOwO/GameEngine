@@ -21,7 +21,8 @@ Window &Window::get_instance()
 	return instance;
 }
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int32_t width,
+			       int32_t height)
 {
 	SharedGlobals::get_instance().w_height = height;
 	SharedGlobals::get_instance().w_width = width;
@@ -76,15 +77,15 @@ void Window::swap_buffers()
 	glfwSwapBuffers(this->window);
 }
 
-void Window::set_key_callback(void (*key_callback)(GLFWwindow *, int, int, int,
-						   int))
+void Window::set_key_callback(void (*key_callback)(GLFWwindow *, int32_t,
+						   int32_t, int32_t, int32_t))
 {
 	glfwSetKeyCallback(window, key_callback);
 }
 
 void Window::set_mouse_callback(
 	void (*mouse_motion_callback)(GLFWwindow *, double, double),
-	void (*mouse_button_callback)(GLFWwindow *, int, int, int),
+	void (*mouse_button_callback)(GLFWwindow *, int32_t, int32_t, int32_t),
 	void (*mouse_scroll_callback)(GLFWwindow *, double, double))
 {
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
@@ -92,7 +93,8 @@ void Window::set_mouse_callback(
 	glfwSetScrollCallback(window, mouse_scroll_callback);
 }
 
-void Window::set_focus_callback(void (*handle_window_focus)(GLFWwindow *, int))
+void Window::set_focus_callback(void (*handle_window_focus)(GLFWwindow *,
+							    int32_t))
 {
 	glfwSetWindowFocusCallback(window, handle_window_focus);
 }
@@ -112,23 +114,23 @@ Window::~Window()
 	this->terminate_window();
 }
 
-int Window::get_window_height() const noexcept
+int32_t Window::get_window_height() const noexcept
 {
-	int width, height;
+	int32_t width, height;
 	glfwGetWindowSize(window, &width, &height);
 	return height;
 }
 
-int Window::get_window_width() const noexcept
+int32_t Window::get_window_width() const noexcept
 {
-	int width, height;
+	int32_t width, height;
 	glfwGetWindowSize(window, &width, &height);
 	return width;
 }
 
 Vector2f Window::get_window_center() const noexcept
 {
-	int width, height;
+	int32_t width, height;
 	glfwGetWindowSize(window, &width, &height);
 	return { (float)width / 2.0f, (float)height / 2.0f };
 }

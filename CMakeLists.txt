@@ -76,9 +76,13 @@ set(PHYSICS_SOURCES
 	${PROJECT_SOURCE_DIR}/src/physics/Collision.cpp
 )
 
+set(MULTIPLAYER_SOURCES
+	${PROJECT_SOURCE_DIR}/src/multiplayer/AWS.cpp
+	${PROJECT_SOURCE_DIR}/src/multiplayer/MM.cpp
+)
+
 set(MISC_SOURCES
 	${PROJECT_SOURCE_DIR}/src/misc/glad.c
-	${PROJECT_SOURCE_DIR}/src/multiplayer/AWS.cpp
 )
 
 add_library(GameEngineLib STATIC
@@ -90,6 +94,7 @@ add_library(GameEngineLib STATIC
 	${GAME_SOURCES}
 	${RESOURCE_MANAGEMENT}
 	${PHYSICS_SOURCES}
+	${MULTIPLAYER_SOURCES}
 )
 
 # Bullet

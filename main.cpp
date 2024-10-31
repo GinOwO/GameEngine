@@ -24,6 +24,8 @@ int main(int argc, char const *argv[])
 	glfwTerminate();
 
 #ifdef MULTIPLAYER
+	AWS::read_active(1);
+
 	if (!AWS::signout()) {
 		return EXIT_FAILURE;
 	}

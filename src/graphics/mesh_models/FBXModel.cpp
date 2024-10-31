@@ -19,17 +19,17 @@ void FBXModel::process_node(aiNode *node, const aiScene *scene,
 			    std::vector<Vector3f> &positions,
 			    std::vector<Vector2f> &texCoords,
 			    std::vector<Vector3f> &normals,
-			    std::vector<std::array<int, 4> > &bone_indices,
+			    std::vector<std::array<int32_t, 4> > &bone_indices,
 			    std::vector<std::array<float, 4> > &bone_weights,
 			    std::vector<IndexedModel::Index> &indices)
 {
-	for (unsigned int i = 0; i < node->mNumMeshes; i++) {
+	for (uint32_t i = 0; i < node->mNumMeshes; i++) {
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
 		process_mesh(mesh, scene, positions, texCoords, normals,
 			     indices, bone_indices, bone_weights);
 	}
 
-	for (unsigned int i = 0; i < node->mNumChildren; i++) {
+	for (uint32_t i = 0; i < node->mNumChildren; i++) {
 		process_node(node->mChildren[i], scene, positions, texCoords,
 			     normals, bone_indices, bone_weights, indices);
 	}
@@ -40,14 +40,14 @@ void FBXModel::process_mesh(aiMesh *mesh, const aiScene *scene,
 			    std::vector<Vector2f> &texCoords,
 			    std::vector<Vector3f> &normals,
 			    std::vector<IndexedModel::Index> &indices,
-			    std::vector<std::array<int, 4> > &boneIndices,
+			    std::vector<std::array<int32_t, 4> > &boneIndices,
 			    std::vector<std::array<float, 4> > &boneWeights)
 {
 	// Initialize bone data for each vertex
 	boneIndices.resize(mesh->mNumVertices, { 0, 0, 0, 0 });
 	boneWeights.resize(mesh->mNumVertices, { 0.0f, 0.0f, 0.0f, 0.0f });
 
-	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+	for (uint32_t i = 0; i < mesh->mNumVertices; i++) {
 		aiVector3D pos = mesh->mVertices[i];
 		aiVector3D norm = mesh->mNormals[i];
 		aiVector3D texCoord = mesh->mTextureCoords[0][i];
@@ -57,14 +57,14 @@ void FBXModel::process_mesh(aiMesh *mesh, const aiScene *scene,
 		texCoords.push_back(Vector2f(texCoord.x, texCoord.y));
 	}
 
-	for (unsigned int i = 0; i < mesh->mNumBones; i++) {
+	for (uint32_t i = 0; i < mesh->mNumBones; i++) {
 		aiBone *bone = mesh->mBones[i];
-		int boneID = i;
-		for (unsigned int j = 0; j < bone->mNumWeights; j++) {
+		int32_t boneID = i;
+		for (uint32_t j = 0; j < bone->mNumWeights; j++) {
 			aiVertexWeight weight = bone->mWeights[j];
-			int vertexID = weight.mVertexId;
+			int32_t vertexID = weight.mVertexId;
 
-			for (int k = 0; k < 4; ++k) {
+			for (int32_t k = 0; k < 4; ++k) {
 				if (boneWeights[vertexID][k] == 0.0f) {
 					boneIndices[vertexID][k] = boneID;
 					boneWeights[vertexID][k] =
@@ -75,9 +75,9 @@ void FBXModel::process_mesh(aiMesh *mesh, const aiScene *scene,
 		}
 	}
 
-	for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+	for (uint32_t i = 0; i < mesh->mNumFaces; i++) {
 		aiFace face = mesh->mFaces[i];
-		for (unsigned int j = 0; j < face.mNumIndices; j++) {
+		for (uint32_t j = 0; j < face.mNumIndices; j++) {
 			IndexedModel::Index index;
 			index.vertex_index = face.mIndices[j];
 			index.texCoord_index = index.vertex_index;
@@ -108,17 +108,17 @@ FBXModel::FBXModel(const std::string &file_path)
 IndexedModel FBXModel::to_indexed_model()
 {
 	IndexedModel model;
-	std::unordered_map<IndexedModel::Index, int,
+	std::unordered_map<IndexedModel::Index, int32_t,
 			   IndexedModel::Index::__hash__>
 		model_index_map;
 
-	for (int i = 0; i < indices.size(); i++) {
+	for (int32_t i = 0; i < indices.size(); i++) {
 		IndexedModel::Index &current_index = indices[i];
 
 		Vector3f position = positions[current_index.vertex_index];
 		Vector2f texCoord;
 		Vector3f normal;
-		std::array<int, 4> boneIndex =
+		std::array<int32_t, 4> boneIndex =
 			bone_indices[current_index.vertex_index];
 		std::array<float, 4> boneWeight =
 			bone_weights[current_index.vertex_index];

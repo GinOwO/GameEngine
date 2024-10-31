@@ -24,22 +24,23 @@ Input::Input()
 	std::memset(up_keys, 0, sizeof(up_keys));
 }
 
-bool Input::is_key_pressed(int key_code) const noexcept
+bool Input::is_key_pressed(int32_t key_code) const noexcept
 {
 	return pressed_keys[key_code];
 }
 
-bool Input::is_key_down(int key_code) const noexcept
+bool Input::is_key_down(int32_t key_code) const noexcept
 {
 	return down_keys[key_code];
 }
 
-bool Input::is_key_up(int key_code) const noexcept
+bool Input::is_key_up(int32_t key_code) const noexcept
 {
 	return up_keys[key_code];
 }
 
-void Input::key_callback(int key, int scancode, int action, int mods)
+void Input::key_callback(int32_t key, int32_t scancode, int32_t action,
+			 int32_t mods)
 {
 	if (key >= 0 && key < NUM_KEYS) {
 		if (action == GLFW_PRESS) {
@@ -72,7 +73,8 @@ void Input::mouse_motion_callback(double xpos, double ypos) noexcept
 #endif
 }
 
-void Input::mouse_button_callback(int button, int action, int mods) noexcept
+void Input::mouse_button_callback(int32_t button, int32_t action,
+				  int32_t mods) noexcept
 {
 	mouse_buttons_pressed[button] = false;
 	if (action == GLFW_PRESS && mouse_buttons_down[button]) {
@@ -109,17 +111,17 @@ const bool *Input::get_pressed() const noexcept
 	return pressed_keys;
 }
 
-bool Input::is_mouse_pressed(int mouse_code) const noexcept
+bool Input::is_mouse_pressed(int32_t mouse_code) const noexcept
 {
 	return mouse_buttons_pressed[mouse_code];
 }
 
-bool Input::is_mouse_down(int mouse_code) const noexcept
+bool Input::is_mouse_down(int32_t mouse_code) const noexcept
 {
 	return mouse_buttons_down[mouse_code];
 }
 
-bool Input::is_mouse_up(int mouse_code) const noexcept
+bool Input::is_mouse_up(int32_t mouse_code) const noexcept
 {
 	return mouse_buttons_up[mouse_code];
 }
