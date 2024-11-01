@@ -1,4 +1,4 @@
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 
 #include <physics/Collision.h>
 

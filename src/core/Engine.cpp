@@ -10,7 +10,7 @@
 #include <core/Timer.h>
 
 #include <components/BaseCamera.h>
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 
 #include <game/TestGame.h>
 

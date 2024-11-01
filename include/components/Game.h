@@ -4,7 +4,7 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 #include <components/GameObject.h>
 
 #include <physics/Collision.h>

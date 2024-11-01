@@ -8,7 +8,7 @@
 #include <graphics/Shader.h>
 #include <graphics/Material.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 #include <components/GameComponent.h>
 
 MeshRenderer::MeshRenderer(const Mesh &mesh, const Material &material)

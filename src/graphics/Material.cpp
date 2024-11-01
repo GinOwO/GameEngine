@@ -2,7 +2,7 @@
 
 #include <math/Vector3f.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 
 #include <memory>
 #include <string>

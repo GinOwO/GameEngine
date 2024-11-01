@@ -5,7 +5,7 @@
 #include <graphics/ForwardPoint.h>
 
 #include <components/BaseLight.h>
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 
 #include <cmath>
 #include <string>

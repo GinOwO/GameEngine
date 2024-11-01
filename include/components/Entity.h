@@ -8,7 +8,7 @@
 #include <graphics/Texture.h>
 #include <graphics/Specular.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 #include <components/MeshRenderer.h>
 #include <components/GameObject.h>
 #include <components/GameComponent.h>
@@ -30,6 +30,12 @@ class Entity : public GameObject {
 	float hp = 1.0f, rec_dmg = 1.0f, max_hp = 1.0f;
 	float jump_cd = 0.0;
 	MeshRenderer *mesh = nullptr;
+
+#ifdef MULTIPLAYER
+	SafeQueue<std::pair<int32_t, float> > m_moves;
+	int32_t m_action = -1;
+	float m_delta = 0.0f;
+#endif
 
     public:
 	bool on_ground = true;
@@ -72,11 +78,24 @@ class Entity : public GameObject {
 			rigid_body->setDamping(0.1f, 0.4f);
 		}
 
+#ifdef MULTIPLAYER
+		static SharedGlobals &globals = SharedGlobals::get_instance();
+		if (player) {
+			SharedGlobals::player_entity = this;
+			globals.player_moves =
+				static_cast<void *>(&this->m_moves);
+		} else {
+			SharedGlobals::enemy_entity = this;
+			globals.enemy_moves =
+				static_cast<void *>(&this->m_moves);
+		}
+#else
 		if (player) {
 			SharedGlobals::player_entity = this;
 		} else {
 			SharedGlobals::enemy_entity = this;
 		}
+#endif
 	}
 
 	void update(float delta) override
@@ -145,6 +164,12 @@ class Entity : public GameObject {
 			jump_cd -= delta;
 
 		GameObject::input(delta);
+#ifdef MULTIPLAYER
+		if (player)
+			m_moves.push({ m_action, m_delta });
+		m_action = -1;
+		m_delta = 0;
+#endif
 	}
 
 	void handle_collision(GameObject *obj) override
@@ -205,6 +230,8 @@ class Entity : public GameObject {
 				}
 			}
 		}
+		m_action = 6;
+		m_delta = 0;
 	}
 
 	virtual void get_hit()
@@ -216,34 +243,46 @@ class Entity : public GameObject {
 	{
 		move(transform.get_rotation().get_forward(),
 		     move_impulse_factor * delta);
+		m_action = 0;
+		m_delta = delta;
 	}
 
 	void move_left(float delta)
 	{
 		move(transform.get_rotation().get_left(),
 		     move_impulse_factor * delta);
+		m_action = 1;
+		m_delta = delta;
 	}
 
 	void move_backward(float delta)
 	{
 		move(transform.get_rotation().get_backward(),
 		     move_impulse_factor * delta);
+		m_action = 2;
+		m_delta = delta;
 	}
 
 	void move_right(float delta)
 	{
 		move(transform.get_rotation().get_right(),
 		     move_impulse_factor * delta);
+		m_action = 3;
+		m_delta = delta;
 	}
 
 	void rotate_left(float delta)
 	{
 		rotate(Vector3f::z_axis, rotate_impulse_factor * delta);
+		m_action = 4;
+		m_delta = delta;
 	}
 
 	void rotate_right(float delta)
 	{
 		rotate(Vector3f::z_axis, -rotate_impulse_factor * delta);
+		m_action = 5;
+		m_delta = delta;
 	}
 
 	void jump(float delta)
@@ -254,6 +293,8 @@ class Entity : public GameObject {
 				     jump_units);
 			jump_cd = 1.5f;
 		}
+		m_action = 7;
+		m_delta = delta;
 	}
 };
 

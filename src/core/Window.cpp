@@ -7,7 +7,7 @@
 
 #include <core/Input.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 #include <components/BaseCamera.h>
 
 #include <iostream>

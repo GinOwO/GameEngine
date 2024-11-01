@@ -5,7 +5,7 @@
 #include <graphics/Material.h>
 
 #include <components/Camera.h>
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 #include <components/BaseLight.h>
 
 #include <iostream>
