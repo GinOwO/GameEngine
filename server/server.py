@@ -10,6 +10,7 @@ PORT_RANGE = [8081, 8099]
 HOST = socket.gethostbyaddr("172.31.14.233")[0]
 HOST_PORT = 8080
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind((HOST, HOST_PORT))
 sock.listen(5)
 
@@ -30,6 +31,7 @@ def get_available_port():
 
 
 def main():
+    print("Started Listening on ", HOST, " at ", HOST_PORT)
     while True:
         conn, addr = sock.accept()
         print("Connected: ", addr)
