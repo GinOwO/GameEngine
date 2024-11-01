@@ -9,7 +9,7 @@
 #include <graphics/Texture.h>
 #include <graphics/Specular.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 #include <components/MeshRenderer.h>
 #include <components/GameObject.h>
 #include <components/GameComponent.h>
@@ -51,8 +51,7 @@ class Skybox : public GameObject {
 			intensity = tmp->intensity;
 		}
 
-		SharedGlobals::get_instance().active_ambient_light = { 1, 1,
-								       1 };
+		SharedGlobals::get_instance().active_ambient_light = { 1 };
 
 		GameObject::render(shader);
 

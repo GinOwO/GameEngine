@@ -2,7 +2,7 @@
 
 #include <core/SocketManager.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 #include <components/Entity.h>
 #include <components/LookAtComponent.h>
 #include <components/PointLight.h>

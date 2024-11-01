@@ -9,7 +9,7 @@
 #include <graphics/mesh_models/FBXModel.h>
 #include <graphics/resource_management/MeshResource.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 
 #include <iostream>
 #include <fstream>

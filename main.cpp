@@ -6,29 +6,24 @@
 
 #ifdef MULTIPLAYER
 
-#include <multiplayer/AWS.h>
+#include <core/SharedGlobals.h>
+#include <multiplayer/MM.h>
 
 #endif
 
 int main(int argc, char const *argv[])
 {
 #ifdef MULTIPLAYER
-	if (!AWS::process_cli(argc, argv)) {
-		AWS::signout();
+	MatchMaking &MM = MatchMaking::get_instance();
+	if (MM.init(argc, argv)) {
 		return EXIT_FAILURE;
 	}
+
 #endif
 	glfwInit();
 	// Engine engine;
 	// engine.start();
 	glfwTerminate();
 
-#ifdef MULTIPLAYER
-	AWS::read_active(1);
-
-	if (!AWS::signout()) {
-		return EXIT_FAILURE;
-	}
-#endif
 	return EXIT_SUCCESS;
 }

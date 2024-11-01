@@ -1,17 +1,21 @@
 #pragma once
+#ifdef MULTIPLAYER
+
+#include <core/SharedGlobals.h>
 
 #include <components/Entity.h>
 #include <components/LookAtComponent.h>
 #include <components/PointLight.h>
-#include <components/FollowComponent.h>
 
 #include <misc/SafeQueue.h>
 
-class PlayerEntity : public Entity {
+#include <utility>
+
+class EnemyPlayerEntity : public Entity {
     public:
 	PlayerEntity()
 		: Entity("./assets/objects/Main_model.fbx",
-			 "./assets/objects/Main_model_100.png", true)
+			 "./assets/objects/Main_model_100.png", false)
 	{
 		this->add_child((new GameObject())
 					->add_component(new PointLight(
@@ -26,31 +30,43 @@ class PlayerEntity : public Entity {
 	{
 		static Input &input_handler = Input::get_instance();
 		static Timer &timer = Timer::get_instance();
-		if (player && hp > 0) {
-			if (input_handler.is_key_pressed(GLFW_KEY_W)) {
-				move_forward(delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_A)) {
-				move_left(delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_S)) {
-				move_backward(delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_D)) {
-				move_right(delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_E)) {
-				rotate_left(delta);
-			}
-			if (input_handler.is_key_pressed(GLFW_KEY_Q)) {
-				rotate_right(delta);
-			}
-			if (input_handler.is_mouse_down(GLFW_MOUSE_BUTTON_1)) {
-				shoot();
-			}
+		static SharedGlobals &globals = SharedGlobals::get_instance();
 
-			if (input_handler.is_key_pressed(GLFW_KEY_SPACE)) {
-				jump(delta);
+		if (globals.enemy_moves) {
+			SafeQueue<std::pair<int32_t, float> > *safe_queue =
+				static_cast<
+					SafeQueue<std::pair<int32_t, float> > *>(
+					globals.enemy_moves);
+
+			if (!queue->empty() && hp > 0) {
+				auto [action, delta] = safe_queue.pop();
+				switch (action) {
+				case 0:
+					move_forward(delta);
+					break;
+				case 1:
+					move_left(delta);
+					break;
+				case 2:
+					move_backward(delta);
+					break;
+				case 3:
+					move_right(delta);
+					break;
+				case 4:
+					rotate_left(delta);
+					break;
+				case 5:
+					rotate_right(delta);
+					break;
+				case 6:
+					shoot();
+					break;
+				case 7:
+					jump(delta);
+				default:
+					break;
+				}
 			}
 		}
 		on_ground = false;
@@ -82,3 +98,4 @@ class PlayerEntity : public Entity {
 		Entity::update(delta);
 	}
 };
+#endif

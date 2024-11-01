@@ -5,7 +5,7 @@
 #include <graphics/Texture.h>
 #include <graphics/Specular.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 #include <components/MeshRenderer.h>
 #include <components/GameObject.h>
 #include <components/GameComponent.h>

@@ -7,7 +7,7 @@
 
 #include <components/GameObject.h>
 #include <components/GameComponent.h>
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 #include <components/Camera.h>
 #include <components/FreeLook.h>
 #include <components/FreeMove.h>

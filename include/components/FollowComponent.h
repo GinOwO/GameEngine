@@ -5,7 +5,7 @@
 
 #include <graphics/Shader.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 #include <components/GameComponent.h>
 
 class FollowComponent : public GameComponent {

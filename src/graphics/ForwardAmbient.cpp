@@ -4,7 +4,7 @@
 #include <graphics/Texture.h>
 #include <graphics/Material.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 
 #include <iostream>
 

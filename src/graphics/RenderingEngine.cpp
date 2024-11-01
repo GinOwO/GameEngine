@@ -15,7 +15,7 @@
 #include <components/BaseCamera.h>
 #include <components/BaseLight.h>
 #include <components/GameObject.h>
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 
 #include <cmath>
 

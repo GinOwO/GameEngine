@@ -35,4 +35,9 @@ class SharedGlobals {
 	void add_to_lights(void *light) noexcept;
 	std::unordered_set<void *> &get_lights();
 	void clear_lights();
+
+#ifdef MULTIPLAYER
+	void *enemy_moves = nullptr; // SafeQueue<pair<action, delta>>
+	void *player_moves = nullptr; // SafeQueue<pair<action, delta>>
+#endif
 };

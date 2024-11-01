@@ -6,7 +6,7 @@
 
 #include <physics/Skeleton.h>
 
-#include <components/SharedGlobals.h>
+#include <core/SharedGlobals.h>
 
 ForwardAnimation::ForwardAnimation()
 	: Shader()
