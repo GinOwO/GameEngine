@@ -6,7 +6,7 @@ import time
 
 
 def print(*args, **kwargs):
-    if kwargs["end"] == "\n":
+    if kwargs.get("end", "") == "\n":
         kwargs["end"] = "\n\n"
     __builtins__.print(*args, **kwargs)
 
