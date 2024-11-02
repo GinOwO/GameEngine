@@ -1,8 +1,8 @@
 from multiprocessing import Process
-import asyncio
 import socket
 import random
 import json
+import time
 
 ACTIVE_PORTS = set()
 PORT_RANGE = [8081, 8099]
@@ -19,31 +19,45 @@ RUNNING = True
 
 
 def match(player1_id, player2_id, port, alive):
-    print("Creating server for:", player1_id, player2_id, "at", port)
+    print(f"Creating server for: {player1_id} vs {player2_id} on port {port}")
     play_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     play_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     play_sock.bind((HOST, port))
     play_sock.listen(2)
     conns = {}
+
     while len(conns) < 2 and alive[0] and RUNNING:
-        conn, addr = sock.accept()
-        print("Connected: ", addr)
-        data = conn.recv(2048).decode().strip("\0")
-        print(data)
-        js = json.loads(data)
-        if js.get("player_id") == player1_id and "player1_id" not in conns:
-            conns["player1_id"] = conn
-            print("Player1", player1_id, "connected at", port)
-        elif js.get("player_id") == player2_id and "player2_id" not in conns:
-            print("Player2", player2_id, "connected at", port)
-            conns["player2_id"] = conn
-        else:
-            print("Invalid ids")
-            exit(1)
-    print(f"Match started for {player1_id} vs {player2_id}")
-    pass
+        try:
+            conn, addr = play_sock.accept()
+            print("Connected:", addr)
+            data = conn.recv(2048).decode().strip("\0")
+            js = json.loads(data)
+
+            if js.get("player_id") == player1_id and "player1_id" not in conns:
+                conns["player1_id"] = conn
+                print(f"Player1 {player1_id} connected on port {port}")
+            elif js.get("player_id") == player2_id and "player2_id" not in conns:
+                conns["player2_id"] = conn
+                print(f"Player2 {player2_id} connected on port {port}")
+            else:
+                print("Invalid IDs received, closing connection")
+                conn.close()
+                continue
+
+        except Exception as e:
+            print("Exception in match handler:", e)
+            break
+
+    print(f"Match started between {player1_id} and {player2_id} on port {port}")
+
+    # Game logic could go here
+    time.sleep(10)  # Simulate match duration
     print(f"Match ended for {player1_id} vs {player2_id}")
-    print("Killing server at port: ", port)
+
+    # Clean up
+    play_sock.close()
+    ACTIVE_PORTS.discard(port)
+    print(f"Server on port {port} closed")
 
 
 def start_match(player1_id, player2_id):
@@ -51,59 +65,49 @@ def start_match(player1_id, player2_id):
     while port in ACTIVE_PORTS:
         port = random.randint(*PORT_RANGE)
     ACTIVE_PORTS.add(port)
-    processes[(player1_id, player2_id, port)] = [[True], None]
-    process = Process(
-        target=match,
-        args=(
-            player1_id,
-            player2_id,
-            port,
-            processes[(player1_id, player2_id, port)][0],
-        ),
-    )
-    processes[(player1_id, player2_id, port)][1] = process
+
+    alive_flag = [True]
+    process = Process(target=match, args=(player1_id, player2_id, port, alive_flag))
+    processes[(player1_id, player2_id, port)] = (alive_flag, process)
     process.start()
     return port
-    # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    #     if s.connect_ex(("localhost", port)) != 0:
-    #         return port
 
 
 def remove_dead_processes():
-    print("Starting Cleaner")
-    started = set()
+    print("Starting process cleaner")
     while RUNNING:
-        for id in processes:
-            print(id)
-            process = processes[id][1]
-            if process is not None:
-                if process.is_alive():
-                    print("Adding to started: ", id)
-                    started.add(id)
-                elif id in started:
-                    print("Deleting from started: ", id)
-                    del processes[id]
-                    started.remove(id)
-                    break
+        time.sleep(5)  # Polling interval
+        for key in list(processes.keys()):
+            alive_flag, process = processes[key]
+            if process.is_alive():
+                continue
+            else:
+                del processes[key]
+                print(f"Cleaned up process for {key}")
     print("Exiting cleaner")
 
 
 def main():
-    print("Started Listening on ", HOST, " at ", HOST_PORT)
-    Process(target=remove_dead_processes).start()
+    print(f"Server started on {HOST}:{HOST_PORT}")
+    Process(target=remove_dead_processes, daemon=True).start()
     try:
-        while True:
+        while RUNNING:
             conn, addr = sock.accept()
-            print("Connected: ", addr)
+            print("Connected:", addr)
             req = conn.recv(2048).rstrip(b"\0").decode()
             js = json.loads(req)
-            print(json.dumps(js, indent=2))
-            port = start_match(int(js["player1_id"]), int(js["player2_id"]))
-            print(port)
-            conn.send(json.dumps({"Port": port}).encode())
+            print("Received request:", json.dumps(js, indent=2))
+
+            player1_id = js["player1_id"]
+            player2_id = js["player2_id"]
+
+            port = start_match(player1_id, player2_id)
+            response = json.dumps({"Port": port}).encode()
+            conn.send(response)
             conn.close()
     except Exception as e:
-        print("Exception in main:", e)
+        print("Exception in main server:", e)
+    finally:
         RUNNING = False
         sock.close()
 
