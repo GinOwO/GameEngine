@@ -28,8 +28,8 @@ def match(player1_id, player2_id, port, alive):
     play_sock.listen(2)
     conns = {}
 
-    while len(conns) < 2 and alive[0] and RUNNING:
-        try:
+    try:
+        while len(conns) < 2 and alive[0] and RUNNING:
             conn, addr = play_sock.accept()
             print("Match Server:\tConnected:", addr)
             data = conn.recv(2048).decode().strip("\0")
@@ -47,23 +47,22 @@ def match(player1_id, player2_id, port, alive):
                 conn.close()
                 continue
 
-        except Exception as e:
-            print("Match Server:\tException in match handler:", e)
-            break
+            print("Match Server:\t", conns)
+            print(
+                f"Match Server:\tMatch started between {player1_id} and {player2_id} on port {port}"
+            )
 
-    print("Match Server:\t", conns)
-    print(
-        f"Match Server:\tMatch started between {player1_id} and {player2_id} on port {port}"
-    )
+            # Game logic could go here
+            time.sleep(10)  # Simulate match duration
+            print(f"Match Server:\tMatch ended for {player1_id} vs {player2_id}")
 
-    # Game logic could go here
-    time.sleep(10)  # Simulate match duration
-    print(f"Match Server:\tMatch ended for {player1_id} vs {player2_id}")
+    except Exception as e:
+        print("Match Server:\tException in match handler:", e)
 
-    # Clean up
-    play_sock.close()
-    ACTIVE_PORTS.discard(port)
-    print(f"Match Server:\tServer on port {port} closed")
+    finally:
+        play_sock.close()
+        ACTIVE_PORTS.discard(port)
+        print(f"Match Server:\tServer on port {port} closed")
 
 
 def start_match(player1_id, player2_id):
