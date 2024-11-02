@@ -88,6 +88,7 @@ def remove_dead_processes():
 
 
 def main():
+    global RUNNING
     print(f"Server started on {HOST}:{HOST_PORT}")
     Process(target=remove_dead_processes, daemon=True).start()
     try:
