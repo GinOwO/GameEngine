@@ -10,11 +10,30 @@
 
 #include <cstdint>
 #include <iostream>
+#include <string>
+#include <thread>
+#include <chrono>
+#include <random>
+#include <iomanip>
+#include <sstream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 
 MatchMaking &MatchMaking::get_instance()
 {
 	static MatchMaking mm;
 	return mm;
+}
+
+MatchMaking::~MatchMaking()
+{
+	match_running = false;
+	if (player_thread != nullptr && player_thread->joinable()) {
+		player_thread->join();
+	}
+	delete player_thread;
 }
 
 int32_t MatchMaking::init(int argc, char const *argv[])
@@ -26,11 +45,12 @@ int32_t MatchMaking::init(int argc, char const *argv[])
 	return 0;
 }
 
-void MatchMaking::sync()
+void MatchMaking::sync_player_queue()
 {
 	static SharedGlobals &globals = SharedGlobals::get_instance();
 	SafeQueue<std::pair<int32_t, float> > *player_queue = nullptr;
 	SafeQueue<std::pair<int32_t, float> > *enemy_queue = nullptr;
+
 	while (!player_queue || !enemy_queue) {
 		player_queue =
 			static_cast<SafeQueue<std::pair<int32_t, float> > *>(
@@ -38,28 +58,120 @@ void MatchMaking::sync()
 		enemy_queue =
 			static_cast<SafeQueue<std::pair<int32_t, float> > *>(
 				globals.enemy_moves);
+
+		if (!player_queue || !enemy_queue) {
+			std::this_thread::sleep_for(
+				std::chrono::milliseconds(10));
+		}
 	}
+
+	sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (sock < 0) {
+		perror("Socket creation failed");
+		return;
+	}
+
+	int opt = 1;
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+	sockaddr_in addr{};
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr("0.0.0.0");
+	std::random_device rd;
+	std::uniform_int_distribution<int> port_dist(8000, 8099);
+	addr.sin_port = htons(port_dist(rd));
+
+	if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+		perror("Bind failed");
+		close(sock);
+		return;
+	}
+
+	sockaddr_in server_addr{};
+	server_addr.sin_family = AF_INET;
+	inet_pton(AF_INET, this->connect_url.c_str(), &server_addr.sin_addr);
+	server_addr.sin_port = htons(
+		atoi(this->connect_url.substr(this->connect_url.find(':') + 1)
+			     .c_str()));
+
+	if (connect(sock, (struct sockaddr *)&server_addr,
+		    sizeof(server_addr)) < 0) {
+		perror("Connection failed");
+		close(sock);
+		return;
+	}
+
+	std::thread enemy_thread(&MatchMaking::sync_enemy_queue, this,
+				 enemy_queue);
 
 	while (match_running) {
-		if (player_queue->size()) {
-			// Send player queue to other player over sockets
+		if (!player_queue->size())
+			continue;
+
+		auto [x, y] = player_queue->pop();
+		std::ostringstream oss;
+		oss << x << ',' << std::fixed << std::setprecision(6) << y;
+
+		std::string message = oss.str();
+		if (message.size() < 128) {
+			message.append(128 - message.size(), '\0');
+		} else if (message.size() > 128) {
+			message = message.substr(0, 127) + "\0";
 		}
-		// Get and store incoming other player moves
+
+		if (send(sock, message.c_str(), message.size(), 0) < 0) {
+			perror("Send failed");
+			break;
+		}
 	}
+
+	if (enemy_thread.joinable()) {
+		enemy_thread.join();
+	}
+
+	close(sock);
+	sock = -1;
 }
 
-std::map<std::string, std::string> MatchMaking::get_opponents()
+void MatchMaking::sync_enemy_queue(
+	SafeQueue<std::pair<int32_t, float> > *enemy_queue)
 {
-	std::map<std::string, std::string> player_name_id;
-	Json::Value opponents = AWS::read_active(1);
-	for (std::string &key : opponents.getMemberNames()) {
-		player_name_id[opponents[key]["PlayerID"]["S"].asString()] =
-			opponents[key]["Nickname"]["S"].asString();
+	static char buffer[128];
+	while (match_running) {
+		struct timeval timeout = { 10, 0 };
+		setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO,
+			   (const char *)&timeout, sizeof timeout);
+
+		int recv_size = recv(sock, buffer, sizeof(buffer) - 1, 0);
+		if (recv_size <= 0) {
+			if (recv_size == 0 || errno == EWOULDBLOCK ||
+			    errno == EAGAIN) {
+#ifdef AWS_DEBUG
+				std::cerr
+					<< "No data received in 10 seconds. Ending match.\n";
+#endif
+				this->match_outcome = -1;
+			}
+			break;
+		}
+
+		buffer[recv_size] = '\0';
+		std::string received_data(buffer);
+		if (recv_size < 1)
+			continue;
+
+		size_t comma_pos = received_data.find(',');
+		if (comma_pos != std::string::npos) {
+			int32_t x =
+				std::stoi(received_data.substr(0, comma_pos));
+			float y =
+				std::stof(received_data.substr(comma_pos + 1));
+			enemy_queue->push({ x, y });
+		}
 	}
-	return player_name_id;
 }
 
-void display_menu(int highlight, std::vector<std::string> opponents)
+void display_menu(int highlight, std::vector<std::string> &opponents)
 {
 	clear();
 	static const char header[] = "Idle Online Players";
@@ -76,28 +188,87 @@ void display_menu(int highlight, std::vector<std::string> opponents)
 	refresh();
 }
 
-void MatchMaking::match_making()
+std::map<std::string, std::string> MatchMaking::get_opponents()
+{
+	challenged_by = "";
+	std::map<std::string, std::string> player_name_id;
+	Json::Value opponents = AWS::read_active();
+	for (std::string &key : opponents.getMemberNames()) {
+		if (opponents[key]["PlayerID"]["S"].asString() ==
+		    AWS::get_player_id()) {
+			challenged_by =
+				opponents[key]["ChallengedBy"].asString();
+		} else if (opponents[key]["Idle"]["BOOL"].asString() ==
+			   "True") {
+			player_name_id[opponents[key]["Nickname"]["S"]
+					       .asString()] =
+				opponents[key]["PlayerID"]["S"].asString();
+		}
+	}
+	return player_name_id;
+}
+
+std::string MatchMaking::match_making()
 {
 	static const std::string &player_id = AWS::get_player_id();
-	std::vector<std::string> opponents_menu{ "REFRESH" };
-
-	for (auto &[id, name] : get_opponents()) {
-		if (id != player_id)
-			opponents_menu.push_back(name);
-	}
+	std::map<std::string, std::string> opponents;
+	std::vector<std::string> opponents_menu;
+	std::string connect_url;
+	Json::Value response;
+	int32_t opp = -1;
+	int32_t highlight = 0;
+	int32_t choice = -1;
+	bool quit = false;
 
 	initscr();
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
 
-	int32_t highlight = 0;
-	int32_t choice = 0;
-	int32_t opp = -1;
+	auto last_refresh_time = std::chrono::steady_clock::now();
+	while (!quit) {
+		if (std::chrono::steady_clock::now() - last_refresh_time >=
+		    std::chrono::seconds(3)) {
+			last_refresh_time = std::chrono::steady_clock::now();
+			opponents_menu.clear();
+			opponents = get_opponents();
+			for (const auto &[id, name] : opponents) {
+				opponents_menu.push_back(name);
+			}
 
-	while (choice >= 0) {
+			if (!this->challenged_by.empty()) {
+				int response = -1;
+				WINDOW *popup = newwin(5, 40, 10, 10);
+				box(popup, 0, 0);
+				mvwprintw(popup, 1, 1,
+					  "You have a match request from %s.",
+					  challenged_by.c_str());
+				mvwprintw(popup, 2, 1, "Accept? (y/n)");
+				wrefresh(popup);
+
+				while (response == -1) {
+					int ch = wgetch(popup);
+					if (ch == 'y' || ch == 'Y') {
+						response = 0;
+					} else if (ch == 'n' || ch == 'N') {
+						response = 1;
+					}
+				}
+
+				delwin(popup);
+
+				if (response == 0) {
+					connect_url = AWS::accept_match(
+						challenged_by);
+					quit = true;
+					break;
+				} else {
+					AWS::reject_match(challenged_by);
+				}
+			}
+		}
+
 		display_menu(highlight, opponents_menu);
-
 		int32_t input = getch();
 		switch (input) {
 		case KEY_UP:
@@ -111,24 +282,31 @@ void MatchMaking::match_making()
 					    highlight + 1;
 			break;
 		case 10:
-			choice = highlight;
-			if (choice == 0) {
-				opponents_menu = { "REFRESH" };
-				for (auto &[id, name] : get_opponents()) {
-					if (id != player_id)
-						opponents_menu.push_back(name);
-				}
-			} else {
-				opp = choice;
-				choice = -1;
-				break;
-			}
+			opp = highlight;
+			choice = -1;
+			break;
 		default:
 			break;
 		}
+
+		refresh();
+		if (choice == -1) {
+			static const char match_req[] =
+				"Requesting Match, please wait...";
+			mvprintw(0, 2, match_req);
+			response = AWS::request_match(
+				opponents[opponents_menu[opp]]);
+			if (response["message"].asString() ==
+			    "Challenge accepted") {
+				connect_url =
+					response["connect_url"].asString();
+				quit = true;
+			}
+		}
 	}
-	nocbreak();
-	echo();
+
 	endwin();
-	std::cout << opp << "\r\n";
+	match_running = true;
+	player_thread = new std::thread(&MatchMaking::sync_player_queue, this);
+	return connect_url;
 }

@@ -2,6 +2,8 @@ from multiprocessing import Process
 import socket
 import random
 import json
+import socket
+import select
 import time
 
 ACTIVE_PORTS = set()
@@ -15,6 +17,37 @@ sock.bind((HOST, HOST_PORT))
 sock.listen(5)
 
 RUNNING = True
+
+
+def play(conns):
+    conn1, conn2 = conns
+
+    try:
+        conn1.setblocking(False)
+        conn2.setblocking(False)
+
+        while True:
+            ready_sockets, _, _ = select.select(conns, [], [], 0.5)
+
+            for sock in ready_sockets:
+                try:
+                    data = sock.recv(128)
+                    if not data:
+                        print("Connection closed by client.")
+                        return
+
+                    target_conn = conn2 if sock is conn1 else conn1
+                    target_conn.sendall(data)
+
+                except socket.error as e:
+                    print(f"Play:\t\tSocket error: {e}")
+                    raise Exception("Exit")
+    except:
+        pass
+    finally:
+        conn1.close()
+        conn2.close()
+        print("Connections closed.")
 
 
 def match(player1_id, player2_id, port):
@@ -51,7 +84,7 @@ def match(player1_id, player2_id, port):
             f"Match Server:\tMatch started between {player1_id} and {player2_id} on port {port}"
         )
 
-        time.sleep(10)
+        play(conns)
         print(f"Match Server:\tMatch ended for {player1_id} vs {player2_id}")
 
     except Exception as e:

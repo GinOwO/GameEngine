@@ -88,5 +88,6 @@
                 "*.ipp": "cpp",
                 "codecvt": "cpp",
                 "coroutine": "cpp"
-        }
+        },
+        "C_Cpp.errorSquiggles": "enabled"
 }

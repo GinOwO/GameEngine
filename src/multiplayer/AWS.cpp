@@ -11,9 +11,6 @@
 #include <aws/dynamodb/model/AttributeValue.h>
 #include <aws/dynamodb/model/DeleteItemRequest.h>
 
-#include <websocketpp/config/asio_no_tls.hpp>
-#include <websocketpp/server.hpp>
-
 #include <jwt-cpp/jwt.h>
 #include <curl/curl.h>
 #include <json/json.h>
@@ -22,6 +19,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <thread>
 #include <map>
 
 std::string AWS::token = "";
@@ -53,7 +52,9 @@ bool AWS::process_cli(const int32_t argc, const char *argv[])
 #endif
 	AWS::token = authenticate_player(values["username"], values["passwd"]);
 	if (AWS::token.empty()) {
+#ifdef AWS_DEBUG
 		std::cout << "Couldn't log in\r\n";
+#endif
 		return false;
 	}
 	AWS::player_id =
@@ -91,8 +92,10 @@ std::string AWS::authenticate_player(const std::string &username,
 			.GetAuthenticationResult()
 			.GetIdToken();
 	} else {
+#ifdef AWS_DEBUG
 		std::cerr << "Authentication failed:\r\n"
 			  << authOutcome.GetError().GetMessage() << "\r\n";
+#endif
 		return "";
 	}
 }
@@ -106,12 +109,13 @@ std::string get_session_id_from_token(const std::string &token)
 			return decoded_token.get_payload_claim("sessionid")
 				.as_string();
 		} else {
-			std::cerr << "Token does not contain a session ID."
-				  << "\r\n";
-			return "";
+			throw std::runtime_error(
+				"Token does not contain a session ID.\r\n");
 		}
 	} catch (const std::exception &e) {
+#ifdef AWS_DEBUG
 		std::cerr << "Failed to decode token: " << e.what() << "\r\n";
+#endif
 		return "";
 	}
 }
@@ -136,7 +140,6 @@ bool send_request(const std::string &lambda_url,
 	curl_easy_setopt(curl, CURLOPT_URL, lambda_url.c_str());
 	curl_easy_setopt(curl, CURLOPT_POST, 1L);
 
-	// Prepare the JSON payload
 	Json::Value json_payload;
 	for (const auto &[key, value] : mp)
 		json_payload[key] = value;
@@ -152,13 +155,18 @@ bool send_request(const std::string &lambda_url,
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_str);
 
 	res = curl_easy_perform(curl);
+
+#ifdef AWS_DEBUG
 	if (res != CURLE_OK) {
 		std::cerr << "Request failed: " << curl_easy_strerror(res)
 			  << "\r\n";
-		return false;
 	} else {
 		std::cout << "Request sent successfully" << "\r\n";
 	}
+#endif
+
+	if (res != CURLE_OK)
+		return false;
 
 	curl_slist_free_all(headers);
 	curl_easy_cleanup(curl);
@@ -166,47 +174,95 @@ bool send_request(const std::string &lambda_url,
 	return true;
 }
 
-bool AWS::request_match(const std::string &requesterId,
-			const std::string &targetId)
-{
-	Aws::SDKOptions options;
-	Aws::InitAPI(options);
-	Aws::DynamoDB::DynamoDBClient dynamoClient;
-
-	Aws::DynamoDB::Model::GetItemRequest getRequest;
-	getRequest.SetTableName("ActivePlayers");
-	getRequest.AddKey("PlayerID",
-			  Aws::DynamoDB::Model::AttributeValue(targetId));
-
-	auto getOutcome = dynamoClient.GetItem(getRequest);
-	if (getOutcome.IsSuccess() &&
-	    getOutcome.GetResult().GetItem().size() > 0) {
-		std::cout << "Match request sent from " << requesterId << " to "
-			  << targetId << "\r\n";
-
-	} else {
-		std::cerr << "Target player is not active or does not exist."
-			  << "\r\n";
-	}
-	Aws::ShutdownAPI(options);
-	return false;
-}
-
-using server = websocketpp::server<websocketpp::config::asio>;
-void AWS::on_message(server *s, websocketpp::connection_hdl hdl,
-		     server::message_ptr msg)
-{
-	std::cout << "Received: " << msg->get_payload() << "\r\n";
-	s->send(hdl, "Data received!", websocketpp::frame::opcode::text);
-}
-
-static const std::string modify_lambda =
+static const std::string update_lambda =
 	"https://5rmyu3pght4flefb4djguiurq40twlwo.lambda-url.ap-south-1.on.aws/";
+
+Json::Value AWS::request_match(const std::string &opponent_id)
+{
+	std::string response;
+	if (send_request(update_lambda,
+			 { { "operation", "CHALLENGE" },
+			   { "player1_id", AWS::player_id },
+			   { "player2_id", opponent_id } },
+			 response)) {
+		Json::Value json_response;
+		Json::CharReaderBuilder reader_builder;
+		std::string errors;
+		std::istringstream response_stream(response);
+
+		if (Json::parseFromStream(reader_builder, response_stream,
+					  &json_response, &errors)) {
+#ifdef AWS_DEBUG
+			std::cout << "Parsed JSON Response(Match Request): "
+				  << json_response.toStyledString()
+				  << "\r\n\r\n";
+#endif
+			return json_response;
+		}
+	}
+#ifdef AWS_DEBUG
+	std::cout << "Match " << AWS::player_id << " logged out\r\n";
+#endif
+
+	return "";
+}
+
+std::string AWS::accept_match(const std::string &opponent_id)
+{
+	std::string response;
+	if (send_request(update_lambda,
+			 { { "operation", "CHALLENGE_RESP" },
+			   { "player1_id", opponent_id },
+			   { "player2_id", AWS::player_id },
+			   { "status", "ACCEPT" } },
+			 response)) {
+		Json::Value json_response;
+		Json::CharReaderBuilder reader_builder;
+		std::string errors;
+		std::istringstream response_stream(response);
+
+		if (Json::parseFromStream(reader_builder, response_stream,
+					  &json_response, &errors)) {
+#ifdef AWS_DEBUG
+			std::cout << "Parsed JSON Response(Match Accept): "
+				  << json_response.toStyledString()
+				  << "\r\n\r\n";
+#endif
+			return json_response["connect_url"].asString();
+		}
+	}
+	return "";
+}
+
+void AWS::reject_match(const std::string &opponent_id)
+{
+	std::string response;
+	if (send_request(update_lambda,
+			 { { "operation", "CHALLENGE_RESP" },
+			   { "player1_id", opponent_id },
+			   { "player2_id", AWS::player_id },
+			   { "status", "REJECT" } },
+			 response)) {
+#ifdef AWS_DEBUG
+		Json::Value json_response;
+		Json::CharReaderBuilder reader_builder;
+		std::string errors;
+		std::istringstream response_stream(response);
+
+		if (Json::parseFromStream(reader_builder, response_stream,
+					  &json_response, &errors)) {
+			std::cout << "Parsed JSON Response(Match Accept): "
+				  << json_response.toStyledString()
+				  << "\r\n\r\n";
+#endif
+		}
+	}
+}
 
 bool AWS::signout()
 {
 	std::string response;
-	if (send_request(modify_lambda,
+	if (send_request(update_lambda,
 			 { { "operation", "DELETE" },
 			   { "playerid", AWS::player_id } },
 			 response)) {
@@ -214,24 +270,6 @@ bool AWS::signout()
 		std::cout << "Player " << AWS::player_id << " logged out\r\n";
 #endif
 		AWS::token = AWS::player_id = "";
-		return true;
-	}
-	return false;
-}
-
-bool AWS::toggle_idle()
-{
-	std::string response;
-	if (send_request(modify_lambda,
-			 { { "operation", "UPDATE_IDLE" },
-			   { "playerid", AWS::player_id },
-			   { "state", AWS::idle ? "False" : "True" } },
-			 response)) {
-		AWS::idle = !AWS::idle;
-#ifdef AWS_DEBUG
-		std::cout << "Player " << AWS::player_id << " idle? "
-			  << AWS::idle << "\r\n";
-#endif
 		return true;
 	}
 	return false;
@@ -250,7 +288,7 @@ Json::Value AWS::read_active(int32_t idle)
 	else if (idle == 1)
 		req["idle_only"] = "True";
 
-	if (send_request(modify_lambda, req, response)) {
+	if (send_request(update_lambda, req, response)) {
 #ifdef AWS_DEBUG
 		std::cout << response << "\r\n\r\n";
 #endif

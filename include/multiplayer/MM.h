@@ -3,24 +3,31 @@
 #include <map>
 #include <string>
 #include <cstdint>
+#include <thread>
 
 class MatchMaking {
 	MatchMaking() = default;
 
     private:
-	bool match_running = false;
+	std::string challenged_by;
+	std::string connect_url;
+	std::thread *player_thread = nullptr;
+	std::atomic<bool> match_running = false;
+	int32_t match_outcome = 0;
+	int32_t sock = -1;
 
-	bool send_challenge(const std::string &player_id);
 	std::map<std::string, std::string> get_opponents();
-	void end_match();
-	void sync();
+	void sync_player_queue();
+	void
+	sync_enemy_queue(SafeQueue<std::pair<int32_t, float> > *enemy_queue);
 
     public:
+	~MatchMaking();
 	MatchMaking(const MatchMaking &) = delete;
 	MatchMaking &operator=(const MatchMaking &) = delete;
 
 	static MatchMaking &get_instance();
 
 	int32_t init(int argc, char const *argv[]);
-	void match_making();
+	std::string match_making();
 };

@@ -32,4 +32,10 @@ template <typename T> class SafeQueue {
 		std::unique_lock<std::mutex> lock(m_mutex);
 		return m_queue.size();
 	}
+
+	void wait_for_items()
+	{
+		std::unique_lock<std::mutex> lock(m_mutex);
+		m_cond.wait(lock, [this]() { return !m_queue.empty(); });
+	}
 };
