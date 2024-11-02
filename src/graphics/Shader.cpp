@@ -36,13 +36,13 @@ std::string Shader::read_shader(const std::string &filepath) const
 
 	file.open(filepath);
 	if (!file.good()) {
-		std::cerr << "File Does not exist: " << filepath << '\n';
+		std::cerr << "File Does not exist: " << filepath << "\r\n";
 		throw std::runtime_error("File Does not exist");
 		throw std::runtime_error("File Does not exist");
 	}
 
 	while (std::getline(file, line)) {
-		bufferedLines << line << '\n';
+		bufferedLines << line << "\r\n";
 	}
 
 	file.close();
@@ -66,8 +66,8 @@ GLuint Shader::create_shader_module(const std::string &shader_source,
 		char error_log[1024];
 		glGetShaderInfoLog(shader_module, 1024, NULL, error_log);
 		std::cerr << "Error: Shader module compilation error("
-			  << module_type << "):\n"
-			  << error_log << '\n';
+			  << module_type << "):\r\n"
+			  << error_log << "\r\n";
 		throw std::runtime_error("Shader module compilation error");
 		throw std::runtime_error("Shader module compilation error");
 	}
@@ -110,8 +110,8 @@ void Shader::load(const std::string &vertex_filepath,
 	glGetProgramiv(shader, GL_LINK_STATUS, &success);
 	if (!success) {
 		glGetProgramInfoLog(shader, 512, NULL, infoLog);
-		std::cerr << "ERROR: Shader linking failed:\n"
-			  << infoLog << '\n';
+		std::cerr << "ERROR: Shader linking failed:\r\n"
+			  << infoLog << "\r\n";
 		throw std::runtime_error("Shader linking failed");
 		throw std::runtime_error("Shader linking failed");
 	}
@@ -154,7 +154,7 @@ void Shader::add_uniform(const std::string &uniform)
 
 		glGetActiveUniform(shader_resource->shader_program, i, bufSize,
 				   &length, &size, &type, name);
-		std::cout << "Uniform #" << i << ": Name: " << name << '\n';
+		std::cout << "Uniform #" << i << ": Name: " << name << "\r\n";
 	}
 #endif
 
@@ -163,7 +163,7 @@ void Shader::add_uniform(const std::string &uniform)
 
 	if (uniform_location == -1) {
 		std::cerr << "Error: Couldn't add uniform: \"" << uniform
-			  << "\"\n";
+			  << "\r\n";
 		throw std::runtime_error("Couldn't add uniform");
 		throw std::runtime_error("Couldn't add uniform");
 	}
@@ -176,7 +176,7 @@ GLuint Shader::get_uniform(const std::string &uniform) const
 	use_program();
 	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
-			  << "\"\n";
+			  << "\r\n";
 		throw std::runtime_error("Uniform Does not exist");
 		throw std::runtime_error("Uniform Does not exist");
 	}
@@ -188,7 +188,7 @@ void Shader::set_uniform(const std::string &uniform, int32_t value)
 	use_program();
 	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
-			  << "\"\n";
+			  << "\r\n";
 		throw std::runtime_error("Uniform Does not exist");
 		throw std::runtime_error("Uniform Does not exist");
 	}
@@ -200,7 +200,7 @@ void Shader::set_uniform(const std::string &uniform, float value)
 	use_program();
 	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
-			  << "\"\n";
+			  << "\r\n";
 		throw std::runtime_error("Uniform Does not exist");
 		throw std::runtime_error("Uniform Does not exist");
 	}
@@ -212,7 +212,7 @@ void Shader::set_uniform(const std::string &uniform, Vector3f vec)
 	use_program();
 	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
-			  << "\"\n";
+			  << "\r\n";
 		throw std::runtime_error("Uniform Does not exist");
 		throw std::runtime_error("Uniform Does not exist");
 	}
@@ -225,7 +225,7 @@ void Shader::set_uniform(const std::string &uniform, Matrix4f matrix)
 	use_program();
 	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
-			  << "\"\n";
+			  << "\r\n";
 		throw std::runtime_error("Uniform Does not exist");
 		throw std::runtime_error("Uniform Does not exist");
 	}
@@ -246,7 +246,7 @@ void Shader::set_uniform(const std::string &uniform, const Matrix4f &matrix,
 
 	if (!shader_resource->uniforms.count(uniform)) {
 		std::cerr << "Error: Uniform Does not exist: \"" << uniform
-			  << "\"\n";
+			  << "\r\n";
 		throw std::runtime_error("Uniform Does not exist");
 	}
 

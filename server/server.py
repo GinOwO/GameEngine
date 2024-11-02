@@ -14,11 +14,10 @@ sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind((HOST, HOST_PORT))
 sock.listen(5)
 
-processes = {}
 RUNNING = True
 
 
-def match(player1_id, player2_id, port, alive):
+def match(player1_id, player2_id, port):
     print(
         f"Match Server:\tCreating server for: {player1_id} vs {player2_id} on port {port}"
     )
@@ -29,7 +28,7 @@ def match(player1_id, player2_id, port, alive):
     conns = {}
 
     try:
-        while len(conns) < 2 and alive[0] and RUNNING:
+        while len(conns) < 2 and RUNNING:
             conn, addr = play_sock.accept()
             print("Match Server:\tConnected:", addr)
             data = conn.recv(2048).decode().strip("\0")
@@ -47,13 +46,9 @@ def match(player1_id, player2_id, port, alive):
                 conn.close()
                 continue
 
-        print("\nMatch Server:\tconns:", conns)
-        print("Match Server:\tlen conns:", len(conns))
-        print("Match Server:\talive:", alive[0])
-        print("Match Server:\trunning:", RUNNING)
-
+        print("Match Server:\tConnections:", conns)
         print(
-            f"\nMatch Server:\tMatch started between {player1_id} and {player2_id} on port {port}"
+            f"Match Server:\tMatch started between {player1_id} and {player2_id} on port {port}"
         )
 
         time.sleep(10)
@@ -73,41 +68,23 @@ def start_match(player1_id, player2_id):
     while port in ACTIVE_PORTS:
         port = random.randint(*PORT_RANGE)
     ACTIVE_PORTS.add(port)
-    print("MatchMaker:\tCreating Match for:", (player1_id, player2_id), " at ", port)
-
-    alive_flag = [True]
-    process = Process(target=match, args=(player1_id, player2_id, port, alive_flag))
-    processes[(player1_id, player2_id, port)] = (alive_flag, process)
+    print("MatchMaker:\tCreating Server for:", (player1_id, player2_id), " at ", port)
+    process = Process(target=match, args=(player1_id, player2_id, port))
     print("MatchMaker:\tStarting Server")
     process.start()
-    print("MatchMaker:\tReturning to main")
+    print("MatchMaker:\tServer Made, Returning to main")
     return port
-
-
-def remove_dead_processes():
-    print("Cleaner:\tStarting process cleaner")
-    while RUNNING:
-        time.sleep(5)
-        for key in list(processes.keys()):
-            alive_flag, process = processes[key]
-            if process.is_alive():
-                continue
-            else:
-                del processes[key]
-                print(f"Cleaner:\tCleaned up process for {key}")
-    print("Cleaner:\tExiting cleaner")
 
 
 def main():
     global RUNNING
     print(f"Main:\t\tServer started on {HOST}:{HOST_PORT}")
-    Process(target=remove_dead_processes, daemon=True).start()
     try:
         while RUNNING:
             conn, addr = sock.accept()
-            print("Main:\t\tConnected:", addr)
+            print("Main:\t\t(Lambda) Connected:", addr)
             req = conn.recv(2048).rstrip(b"\0").decode()
-            print("Main:\t\tReceived request:", req)
+            print("Main:\t\t(Lambda) Received request:", req)
             js = json.loads(req)
 
             player1_id = js["player1_id"]
@@ -115,10 +92,10 @@ def main():
 
             port = start_match(player1_id, player2_id)
             response = json.dumps({"Port": port}).encode()
-            print("Main:\t\tSending Response:", response)
+            print("Main:\t\t(Lambda) Sending Response:", response)
             conn.send(response)
             conn.close()
-            print("Main:\t\tDisconnected")
+            print("Main:\t\t(Lambda) Disconnected")
     except Exception as e:
         print("Main:\t\tException in server:", e)
     finally:

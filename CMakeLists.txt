@@ -28,6 +28,7 @@ set(CORE_SOURCES
 	${PROJECT_SOURCE_DIR}/src/core/Engine.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Timer.cpp
 	${PROJECT_SOURCE_DIR}/src/core/Input.cpp
+	${PROJECT_SOURCE_DIR}/src/core/SharedGlobals.cpp
 )
 
 set(RESOURCE_MANAGEMENT
@@ -68,7 +69,6 @@ set(COMPONENT_SOURCES
 	${PROJECT_SOURCE_DIR}/src/components/GameObject.cpp
 	${PROJECT_SOURCE_DIR}/src/components/Camera.cpp
 	${PROJECT_SOURCE_DIR}/src/components/MeshRenderer.cpp
-	${PROJECT_SOURCE_DIR}/src/components/SharedGlobals.cpp
 )
 
 set(PHYSICS_SOURCES
@@ -133,6 +133,10 @@ include_directories(${CURL_INCLUDE_DIRS})
 find_package(jsoncpp REQUIRED)
 include_directories(${JsonCpp_INCLUDE_DIRS})
 
+# Find and link ncurses
+find_package(Curses REQUIRED)
+include_directories(${CURSES_INCLUDE_DIR})
+
 # Add executable target
 add_executable(GameEngine ${PROJECT_SOURCE_DIR}/main.cpp)
 
@@ -152,6 +156,7 @@ target_link_libraries(GameEngine
 	${jwt-cpp_LIBRARIES}
 	${CURL_LIBRARIES} 
 	jsoncpp_lib
+	${CURSES_LIBRARIES}
 )
 
 # Add include directories

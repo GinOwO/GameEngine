@@ -38,7 +38,7 @@ class SocketManager {
 			strncpy(buffer, data.c_str(), data.size());
 			send(sock_fd, buffer, sizeof(buffer), 0) < 0;
 		} catch (std::exception) {
-			std::cout << "Error\n";
+			std::cout << "Error\r\n";
 		}
 
 		// std::string ack = receive_data();
@@ -88,7 +88,7 @@ class SocketManager {
 			throw std::runtime_error("Connection to server failed");
 		}
 
-		std::cout << "Connected to server on port " << port << '\n';
+		std::cout << "Connected to server on port " << port << "\r\n";
 	}
 
 	int32_t read_config(const std::string &config_file)

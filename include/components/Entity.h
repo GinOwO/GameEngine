@@ -13,6 +13,8 @@
 #include <components/GameObject.h>
 #include <components/GameComponent.h>
 
+#include <misc/SafeQueue.h>
+
 #include <string>
 #include <cmath>
 #include <algorithm>

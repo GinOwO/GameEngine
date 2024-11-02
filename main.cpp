@@ -7,6 +7,8 @@
 #ifdef MULTIPLAYER
 
 #include <core/SharedGlobals.h>
+
+#include <multiplayer/AWS.h>
 #include <multiplayer/MM.h>
 
 #endif
@@ -18,12 +20,16 @@ int main(int argc, char const *argv[])
 	if (MM.init(argc, argv)) {
 		return EXIT_FAILURE;
 	}
-
+	MM.match_making();
 #endif
 	glfwInit();
 	// Engine engine;
 	// engine.start();
 	glfwTerminate();
+
+#ifdef MULTIPLAYER
+	AWS::signout();
+#endif
 
 	return EXIT_SUCCESS;
 }

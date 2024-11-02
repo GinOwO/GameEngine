@@ -29,7 +29,7 @@ void handle_window_focus(GLFWwindow *window, int32_t focused)
 {
 	paused = focused != GLFW_TRUE;
 #if _DEBUG_FPS_ON
-	std::cout << "Paused: " << paused << '\n';
+	std::cout << "Paused: " << paused << "\r\n";
 #endif
 }
 
@@ -60,12 +60,13 @@ Engine::Engine()
 	, window(Window::get_instance())
 {
 	if (!glfwInit()) {
-		std::cerr << "Error: Failed to initialize GLFW\n";
-		throw std::runtime_error("Error: Failed to initialize GLFW\n");
+		std::cerr << "Error: Failed to initialize GLFW\r\n";
+		throw std::runtime_error(
+			"Error: Failed to initialize GLFW\r\n");
 	}
 	if (Engine::created) {
-		std::cerr << "Error: Engine Already Created\n";
-		throw std::runtime_error("Error: Engine Already Created\n");
+		std::cerr << "Error: Engine Already Created\r\n";
+		throw std::runtime_error("Error: Engine Already Created\r\n");
 	}
 	paused = false;
 	this->running = false;
@@ -111,7 +112,7 @@ void Engine::run()
 			if (frame_counter >= 1) {
 #if _DEBUG_FPS_ON
 				std::cout << "FPS: " << frames << ' '
-					  << frame_counter << '\n';
+					  << frame_counter << "\r\n";
 #endif
 				frames = 0;
 				frame_counter = 0;
@@ -131,16 +132,16 @@ void Engine::run()
 void Engine::start()
 {
 	if (!window.gl_create_window()) {
-		std::cerr << "Error: Failed to create window\n";
-		throw std::runtime_error("Failed to create window\n");
+		std::cerr << "Error: Failed to create window\r\n";
+		throw std::runtime_error("Failed to create window\r\n");
 	}
 	if (!window.set_window_context()) {
-		std::cerr << "Error: Failed to set window context\n";
-		throw std::runtime_error("Failed to set window context\n");
+		std::cerr << "Error: Failed to set window context\r\n";
+		throw std::runtime_error("Failed to set window context\r\n");
 	}
 	if (running) {
-		std::cerr << "Error: Engine Already Running\n";
-		throw std::runtime_error("Engine Already Running\n");
+		std::cerr << "Error: Engine Already Running\r\n";
+		throw std::runtime_error("Engine Already Running\r\n");
 	}
 
 	window.set_key_callback(key_callback);

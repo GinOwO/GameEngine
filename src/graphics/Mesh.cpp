@@ -36,14 +36,14 @@ void Mesh::pre_load(const std::string &file_path)
 	static int32_t id = -1;
 	loaded_file_ids[file_path] = ++id;
 	std::cout << "Preloading Mesh Asset (" << id << "): " << file_path
-		  << '\n';
+		  << "\r\n";
 
 	IndexedModel model;
 	if (file_path.ends_with(".obj")) {
 		std::ifstream file(file_path);
 		if (!file.good()) {
 			std::cerr << "File does not exist: " << file_path
-				  << '\n';
+				  << "\r\n";
 			throw std::runtime_error("File does not exist");
 		}
 		file.close();
@@ -53,11 +53,11 @@ void Mesh::pre_load(const std::string &file_path)
 		model = FBXModel{ file_path }.to_indexed_model();
 	} else {
 		std::cerr << "Error: File type is not supported: " << file_path
-			  << '\n';
+			  << "\r\n";
 		throw std::runtime_error("File type is not supported");
 	}
 
-	std::cout << "Preloading (" << id << "): Loaded into memory\n";
+	std::cout << "Preloading (" << id << "): Loaded into memory\r\n";
 
 	all_vertices[id] = {};
 	auto &vertices = all_vertices[id];
@@ -78,7 +78,7 @@ void Mesh::pre_load(const std::string &file_path)
 		bullet_vertices.push_back(vertex.get_pos().getZ());
 	}
 
-	std::cout << "Preloading (" << id << "): Done\n";
+	std::cout << "Preloading (" << id << "): Done\r\n";
 }
 
 Mesh Mesh::load_mesh(const std::string &file_path,
@@ -174,7 +174,7 @@ void Mesh::add_vertices(std::vector<Vertex> vertices,
 		this->reset_mesh();
 	}
 	if (buffers->size) {
-		std::cerr << "Existing Mesh Found, creating new Mesh\n";
+		std::cerr << "Existing Mesh Found, creating new Mesh\r\n";
 		this->reset_mesh();
 	}
 	if (normals) {
@@ -263,8 +263,8 @@ void Mesh::reset_mesh()
 void Mesh::draw() const
 {
 	if (buffers->vao == 0) {
-		std::cerr << "VAO not initialized\n";
-		throw std::runtime_error("VAO not initialized\n");
+		std::cerr << "VAO not initialized\r\n";
+		throw std::runtime_error("VAO not initialized\r\n");
 	}
 
 	glBindVertexArray(buffers->vao);

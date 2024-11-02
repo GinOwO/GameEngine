@@ -69,7 +69,7 @@ void Input::mouse_motion_callback(double xpos, double ypos) noexcept
 
 #ifdef _DEBUG_INPUT_ON
 	std::cout << mouse_pos[0][0] << ' ' << mouse_pos[0][1] << ' '
-		  << mouse_pos[1][0] << ' ' << mouse_pos[1][1] << '\n';
+		  << mouse_pos[1][0] << ' ' << mouse_pos[1][1] << "\r\n";
 #endif
 }
 
@@ -86,7 +86,7 @@ void Input::mouse_button_callback(int32_t button, int32_t action,
 	if (action == GLFW_PRESS) {
 		mouse_buttons_down[button] = true;
 #ifdef _DEBUG_INPUT_ON
-		std::cout << button << '\n';
+		std::cout << button << "\r\n";
 #endif
 	} else if (action == GLFW_RELEASE) {
 		mouse_buttons_up[button] = true;
@@ -102,7 +102,7 @@ void Input::mouse_scroll_callback(double xoffset, double yoffset) noexcept
 	mouse_scroll[1][1] += yoffset;
 
 #ifdef _DEBUG_INPUT_ON
-	std::cout << mouse_scroll[1][0] << ' ' << mouse_scroll[1][1] << '\n';
+	std::cout << mouse_scroll[1][0] << ' ' << mouse_scroll[1][1] << "\r\n";
 #endif
 }
 

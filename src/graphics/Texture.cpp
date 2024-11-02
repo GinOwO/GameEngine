@@ -100,7 +100,7 @@ std::shared_ptr<void> Texture::load_texture(const std::string &file_path)
 			glGenerateMipmap(GL_TEXTURE_2D);
 		} catch (const std::exception &e) {
 			std::cerr << "Failed to load EXR texture: " << e.what()
-				  << '\n';
+				  << "\r\n";
 			throw std::runtime_error("Failed to load EXR texture");
 		}
 	} else if (extension == "png" || extension == "jpg" ||
@@ -112,7 +112,7 @@ std::shared_ptr<void> Texture::load_texture(const std::string &file_path)
 
 		if (!data) {
 			std::cerr << "Failed to load PNG texture: " << file_path
-				  << '\n';
+				  << "\r\n";
 			throw std::runtime_error("Failed to load PNG texture");
 		}
 
@@ -146,7 +146,7 @@ std::shared_ptr<void> Texture::load_texture(const std::string &file_path)
 
 	else {
 		std::cerr << "Unsupported texture format: " << file_path
-			  << '\n';
+			  << "\r\n";
 		throw std::runtime_error("Unsupported texture format");
 	}
 

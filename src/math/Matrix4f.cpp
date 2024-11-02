@@ -133,12 +133,12 @@ Matrix4f Matrix4f::Camera_Matrix(const Vector3f &forward, const Vector3f &up)
 void Matrix4f::set(int32_t x, int32_t y, float a)
 {
 	if (x > 3 || y > 3 || x < 0 || y < 0) {
-		std::cerr << "Matrix setting out of bounds, exiting\n";
+		std::cerr << "Matrix setting out of bounds, exiting\r\n";
 		throw std::invalid_argument(
-			"Matrix setting out of bounds, exiting\n");
-		std::cerr << "Matrix setting out of bounds, exiting\n";
+			"Matrix setting out of bounds, exiting\r\n");
+		std::cerr << "Matrix setting out of bounds, exiting\r\n";
 		throw std::invalid_argument(
-			"Matrix setting out of bounds, exiting\n");
+			"Matrix setting out of bounds, exiting\r\n");
 	}
 	matrix[x][y] = a;
 }
@@ -146,12 +146,12 @@ void Matrix4f::set(int32_t x, int32_t y, float a)
 float Matrix4f::get(int32_t x, int32_t y) const
 {
 	if (x > 3 || y > 3 || x < 0 || y < 0) {
-		std::cerr << "Matrix getting out of bounds, exiting\n";
+		std::cerr << "Matrix getting out of bounds, exiting\r\n";
 		throw std::invalid_argument(
-			"Matrix getting out of bounds, exiting\n");
-		std::cerr << "Matrix getting out of bounds, exiting\n";
+			"Matrix getting out of bounds, exiting\r\n");
+		std::cerr << "Matrix getting out of bounds, exiting\r\n";
 		throw std::invalid_argument(
-			"Matrix getting out of bounds, exiting\n");
+			"Matrix getting out of bounds, exiting\r\n");
 	}
 	return matrix[x][y];
 }

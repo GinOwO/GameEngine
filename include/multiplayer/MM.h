@@ -1,18 +1,17 @@
 #pragma once
 
-#include <json/json.h>
+#include <map>
+#include <string>
+#include <cstdint>
 
 class MatchMaking {
 	MatchMaking() = default;
-	~MatchMaking();
 
     private:
 	bool match_running = false;
-	Json::Value player_list;
 
 	bool send_challenge(const std::string &player_id);
-	void get_opponents();
-	void match_making();
+	std::map<std::string, std::string> get_opponents();
 	void end_match();
 	void sync();
 
@@ -23,4 +22,5 @@ class MatchMaking {
 	static MatchMaking &get_instance();
 
 	int32_t init(int argc, char const *argv[]);
+	void match_making();
 };

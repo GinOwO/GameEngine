@@ -25,5 +25,6 @@ class AWS {
 
 	static bool signout();
 	static bool toggle_idle();
+	static std::string get_player_id();
 	static Json::Value read_active(int32_t idle = -1);
 };

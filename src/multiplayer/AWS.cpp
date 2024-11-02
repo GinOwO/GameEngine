@@ -39,7 +39,7 @@ bool AWS::process_cli(const int32_t argc, const char *argv[])
 		if (mp.count(args[i])) {
 			if (i + 1 > argc) {
 				std::cerr << "Invalid arg at " << i << ": "
-					  << args[i] << '\n';
+					  << args[i] << "\r\n";
 				return false;
 			}
 			values[mp[args[i]]] = args[i + 1];
@@ -49,18 +49,18 @@ bool AWS::process_cli(const int32_t argc, const char *argv[])
 	if (values.size() != mp.size())
 		return false;
 #ifdef AWS_DEBUG
-	std::cout << "Logging in to server\n";
+	std::cout << "Logging in to server\r\n";
 #endif
 	AWS::token = authenticate_player(values["username"], values["passwd"]);
 	if (AWS::token.empty()) {
-		std::cout << "Couldn't log in\n";
+		std::cout << "Couldn't log in\r\n";
 		return false;
 	}
 	AWS::player_id =
 		jwt::decode(AWS::token).get_payload_claim("sub").as_string();
 #ifdef AWS_DEBUG
-	std::cout << "Logged in with \n\nToken: " << AWS::token
-		  << "\n\nPlayer ID: " << AWS::player_id << '\n';
+	std::cout << "Logged in with \r\n\r\nToken: " << AWS::token
+		  << "\r\n\r\nPlayer ID: " << AWS::player_id << "\r\n";
 #endif
 	return true;
 }
@@ -91,8 +91,8 @@ std::string AWS::authenticate_player(const std::string &username,
 			.GetAuthenticationResult()
 			.GetIdToken();
 	} else {
-		std::cerr << "Authentication failed:\n"
-			  << authOutcome.GetError().GetMessage() << '\n';
+		std::cerr << "Authentication failed:\r\n"
+			  << authOutcome.GetError().GetMessage() << "\r\n";
 		return "";
 	}
 }
@@ -107,11 +107,11 @@ std::string get_session_id_from_token(const std::string &token)
 				.as_string();
 		} else {
 			std::cerr << "Token does not contain a session ID."
-				  << '\n';
+				  << "\r\n";
 			return "";
 		}
 	} catch (const std::exception &e) {
-		std::cerr << "Failed to decode token: " << e.what() << '\n';
+		std::cerr << "Failed to decode token: " << e.what() << "\r\n";
 		return "";
 	}
 }
@@ -153,10 +153,11 @@ bool send_request(const std::string &lambda_url,
 
 	res = curl_easy_perform(curl);
 	if (res != CURLE_OK) {
-		// std::cerr << "Request failed: " << curl_easy_strerror(res) << '\n';
+		std::cerr << "Request failed: " << curl_easy_strerror(res)
+			  << "\r\n";
 		return false;
 	} else {
-		// std::cout << "Request sent successfully" << '\n';
+		std::cout << "Request sent successfully" << "\r\n";
 	}
 
 	curl_slist_free_all(headers);
@@ -181,11 +182,11 @@ bool AWS::request_match(const std::string &requesterId,
 	if (getOutcome.IsSuccess() &&
 	    getOutcome.GetResult().GetItem().size() > 0) {
 		std::cout << "Match request sent from " << requesterId << " to "
-			  << targetId << '\n';
+			  << targetId << "\r\n";
 
 	} else {
 		std::cerr << "Target player is not active or does not exist."
-			  << '\n';
+			  << "\r\n";
 	}
 	Aws::ShutdownAPI(options);
 	return false;
@@ -195,7 +196,7 @@ using server = websocketpp::server<websocketpp::config::asio>;
 void AWS::on_message(server *s, websocketpp::connection_hdl hdl,
 		     server::message_ptr msg)
 {
-	std::cout << "Received: " << msg->get_payload() << '\n';
+	std::cout << "Received: " << msg->get_payload() << "\r\n";
 	s->send(hdl, "Data received!", websocketpp::frame::opcode::text);
 }
 
@@ -210,7 +211,7 @@ bool AWS::signout()
 			   { "playerid", AWS::player_id } },
 			 response)) {
 #ifdef AWS_DEBUG
-		std::cout << "Player " << AWS::player_id << " logged out\n";
+		std::cout << "Player " << AWS::player_id << " logged out\r\n";
 #endif
 		AWS::token = AWS::player_id = "";
 		return true;
@@ -229,7 +230,7 @@ bool AWS::toggle_idle()
 		AWS::idle = !AWS::idle;
 #ifdef AWS_DEBUG
 		std::cout << "Player " << AWS::player_id << " idle? "
-			  << AWS::idle << "\n";
+			  << AWS::idle << "\r\n";
 #endif
 		return true;
 	}
@@ -251,7 +252,7 @@ Json::Value AWS::read_active(int32_t idle)
 
 	if (send_request(modify_lambda, req, response)) {
 #ifdef AWS_DEBUG
-		std::cout << response << "\n\n";
+		std::cout << response << "\r\n\r\n";
 #endif
 		Json::CharReaderBuilder reader_builder;
 		std::string errors;
@@ -261,13 +262,19 @@ Json::Value AWS::read_active(int32_t idle)
 					  &json_response, &errors)) {
 #ifdef AWS_DEBUG
 			std::cout << "Parsed JSON Response: "
-				  << json_response.toStyledString() << "\n\n";
+				  << json_response.toStyledString()
+				  << "\r\n\r\n";
 #endif
-			return json_response["Items"];
+			return json_response;
 		} else {
 			std::cerr << "Failed to parse JSON: " << errors
-				  << "\n\n";
+				  << "\r\n\r\n";
 		}
 	}
 	return Json::Value();
+}
+
+std::string AWS::get_player_id()
+{
+	return AWS::player_id;
 }

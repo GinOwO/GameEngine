@@ -102,12 +102,12 @@ class CameraObject : public GameObject {
 		yaw = yaw * (180.0 / M_PI);
 
 		// Output the Euler angles
-		std::cout << "Euler Angles (degrees):" << '\n';
-		std::cout << "Roll:  " << roll << '\n';
-		std::cout << "Pitch: " << pitch << '\n';
-		std::cout << "Yaw:   " << yaw << '\n';
+		std::cout << "Euler Angles (degrees):" << "\r\n";
+		std::cout << "Roll:  " << roll << "\r\n";
+		std::cout << "Pitch: " << pitch << "\r\n";
+		std::cout << "Yaw:   " << yaw << "\r\n";
 		std::cout << "WXYZ:  " << w << " " << x << " " << y << " " << z
-			  << '\n';
+			  << "\r\n";
 #endif // CAMERA_DEBUG
 	}
 };

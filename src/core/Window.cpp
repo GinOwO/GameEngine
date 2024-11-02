@@ -39,7 +39,7 @@ bool Window::gl_create_window()
 	this->window = glfwCreateWindow(1920, 1080, "Engine", nullptr, nullptr);
 
 	if (window == nullptr) {
-		std::cerr << "Failed to create GLFW window\n";
+		std::cerr << "Failed to create GLFW window\r\n";
 		glfwTerminate();
 		return false;
 	}
@@ -53,7 +53,7 @@ bool Window::set_window_context()
 	glfwSetFramebufferSizeCallback(this->window, framebuffer_size_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		std::cerr << "Failed to initialize GLAD\n";
+		std::cerr << "Failed to initialize GLAD\r\n";
 		return false;
 	}
 	return true;
@@ -102,9 +102,9 @@ void Window::set_focus_callback(void (*handle_window_focus)(GLFWwindow *,
 Window::Window()
 {
 	if (!glfwInit()) {
-		std::cerr << "Failed to initialize GLFW\n";
-		throw std::runtime_error("Failed to initialize GLFW\n");
-		throw std::runtime_error("Failed to initialize GLFW\n");
+		std::cerr << "Failed to initialize GLFW\r\n";
+		throw std::runtime_error("Failed to initialize GLFW\r\n");
+		throw std::runtime_error("Failed to initialize GLFW\r\n");
 	}
 	this->window = nullptr;
 }
