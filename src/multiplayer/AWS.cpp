@@ -15,6 +15,8 @@
 #include <curl/curl.h>
 #include <json/json.h>
 
+#include <misc/Log.h>
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -27,6 +29,8 @@ std::string AWS::token = "";
 std::string AWS::player_id = "";
 bool AWS::idle = true;
 
+Logger &Log(Logger::get_instance());
+
 bool AWS::process_cli(const int32_t argc, const char *argv[])
 {
 	std::vector<std::string> args{ argv, argv + argc };
@@ -37,8 +41,8 @@ bool AWS::process_cli(const int32_t argc, const char *argv[])
 	for (int32_t i = 0; i < argc; i++) {
 		if (mp.count(args[i])) {
 			if (i + 1 > argc) {
-				std::cerr << "Invalid arg at " << i << ": "
-					  << args[i] << "\r\n";
+				Log << "(AWS) Invalid arg at " << i << ": "
+				    << args[i] << "\r\n";
 				return false;
 			}
 			values[mp[args[i]]] = args[i + 1];
@@ -48,20 +52,20 @@ bool AWS::process_cli(const int32_t argc, const char *argv[])
 	if (values.size() != mp.size())
 		return false;
 #ifdef AWS_DEBUG
-	std::cout << "Logging in to server\r\n";
+	Log << "(AWS) Logging in to server\r\n";
 #endif
 	AWS::token = authenticate_player(values["username"], values["passwd"]);
 	if (AWS::token.empty()) {
 #ifdef AWS_DEBUG
-		std::cout << "Couldn't log in\r\n";
+		Log << "(AWS) Couldn't log in\r\n";
 #endif
 		return false;
 	}
 	AWS::player_id =
 		jwt::decode(AWS::token).get_payload_claim("sub").as_string();
 #ifdef AWS_DEBUG
-	std::cout << "Logged in with \r\n\r\nToken: " << AWS::token
-		  << "\r\n\r\nPlayer ID: " << AWS::player_id << "\r\n";
+	Log << "(AWS) Logged in with \r\n\r\nToken: " << AWS::token
+	    << "\r\n\r\nPlayer ID: " << AWS::player_id << "\r\n";
 #endif
 	return true;
 }
@@ -93,8 +97,8 @@ std::string AWS::authenticate_player(const std::string &username,
 			.GetIdToken();
 	} else {
 #ifdef AWS_DEBUG
-		std::cerr << "Authentication failed:\r\n"
-			  << authOutcome.GetError().GetMessage() << "\r\n";
+		Log << "(AWS) Authentication failed:\r\n"
+		    << authOutcome.GetError().GetMessage() << "\r\n";
 #endif
 		return "";
 	}
@@ -114,7 +118,7 @@ std::string get_session_id_from_token(const std::string &token)
 		}
 	} catch (const std::exception &e) {
 #ifdef AWS_DEBUG
-		std::cerr << "Failed to decode token: " << e.what() << "\r\n";
+		Log << "(AWS) Failed to decode token: " << e.what() << "\r\n";
 #endif
 		return "";
 	}
@@ -158,10 +162,10 @@ bool send_request(const std::string &lambda_url,
 
 #ifdef AWS_DEBUG
 	if (res != CURLE_OK) {
-		std::cerr << "Request failed: " << curl_easy_strerror(res)
-			  << "\r\n";
+		Log << "(AWS) Request failed: " << curl_easy_strerror(res)
+		    << "\r\n";
 	} else {
-		std::cout << "Request sent successfully" << "\r\n";
+		Log << "(AWS) Request sent successfully" << "\r\n";
 	}
 #endif
 
@@ -193,15 +197,14 @@ Json::Value AWS::request_match(const std::string &opponent_id)
 		if (Json::parseFromStream(reader_builder, response_stream,
 					  &json_response, &errors)) {
 #ifdef AWS_DEBUG
-			std::cout << "Parsed JSON Response(Match Request): "
-				  << json_response.toStyledString()
-				  << "\r\n\r\n";
+			Log << "(AWS) Parsed JSON Response(Match Request): "
+			    << json_response.toStyledString() << "\r\n\r\n";
 #endif
 			return json_response;
 		}
 	}
 #ifdef AWS_DEBUG
-	std::cout << "Match " << AWS::player_id << " logged out\r\n";
+	Log << "(AWS) Match " << AWS::player_id << " logged out\r\n";
 #endif
 
 	return "";
@@ -224,9 +227,8 @@ std::string AWS::accept_match(const std::string &opponent_id)
 		if (Json::parseFromStream(reader_builder, response_stream,
 					  &json_response, &errors)) {
 #ifdef AWS_DEBUG
-			std::cout << "Parsed JSON Response(Match Accept): "
-				  << json_response.toStyledString()
-				  << "\r\n\r\n";
+			Log << "(AWS) Parsed JSON Response(Match Accept): "
+			    << json_response.toStyledString() << "\r\n\r\n";
 #endif
 			return json_response["connect_url"].asString();
 		}
@@ -251,9 +253,8 @@ void AWS::reject_match(const std::string &opponent_id)
 
 		if (Json::parseFromStream(reader_builder, response_stream,
 					  &json_response, &errors)) {
-			std::cout << "Parsed JSON Response(Match Accept): "
-				  << json_response.toStyledString()
-				  << "\r\n\r\n";
+			Log << "(AWS) Parsed JSON Response(Match Accept): "
+			    << json_response.toStyledString() << "\r\n\r\n";
 #endif
 		}
 	}
@@ -267,7 +268,7 @@ bool AWS::signout()
 			   { "playerid", AWS::player_id } },
 			 response)) {
 #ifdef AWS_DEBUG
-		std::cout << "Player " << AWS::player_id << " logged out\r\n";
+		Log << "(AWS) Player " << AWS::player_id << " logged out\r\n";
 #endif
 		AWS::token = AWS::player_id = "";
 		return true;
@@ -290,7 +291,7 @@ Json::Value AWS::read_active(int32_t idle)
 
 	if (send_request(update_lambda, req, response)) {
 #ifdef AWS_DEBUG
-		std::cout << response << "\r\n\r\n";
+		Log << "(AWS) " << response << "\r\n\r\n";
 #endif
 		Json::CharReaderBuilder reader_builder;
 		std::string errors;
@@ -299,14 +300,13 @@ Json::Value AWS::read_active(int32_t idle)
 		if (Json::parseFromStream(reader_builder, response_stream,
 					  &json_response, &errors)) {
 #ifdef AWS_DEBUG
-			std::cout << "Parsed JSON Response: "
-				  << json_response.toStyledString()
-				  << "\r\n\r\n";
+			Log << "(AWS) Parsed JSON Response: "
+			    << json_response.toStyledString() << "\r\n\r\n";
 #endif
 			return json_response;
 		} else {
-			std::cerr << "Failed to parse JSON: " << errors
-				  << "\r\n\r\n";
+			Log << "(AWS) Failed to parse JSON: " << errors
+			    << "\r\n\r\n";
 		}
 	}
 	return Json::Value();

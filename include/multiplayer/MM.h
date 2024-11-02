@@ -1,5 +1,7 @@
 #pragma once
 
+#include <misc/SafeQueue.h>
+
 #include <map>
 #include <string>
 #include <cstdint>
@@ -9,8 +11,9 @@ class MatchMaking {
 	MatchMaking() = default;
 
     private:
-	std::string challenged_by;
 	std::string connect_url;
+	std::string player_name;
+	std::string challenged_by;
 	std::thread *player_thread = nullptr;
 	std::atomic<bool> match_running = false;
 	int32_t match_outcome = 0;

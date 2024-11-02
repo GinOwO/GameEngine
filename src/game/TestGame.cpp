@@ -31,8 +31,7 @@ const std::unordered_map<std::string, std::string> mesh_assets = {
 	{ "terrain_test", "./assets/terrain/test_floor.fbx" },
 	{ "arena", "./assets/terrain/arena.fbx" },
 	{ "player", "./assets/Player E04.fbx" },
-	{ "mech", "./assets/objects/Main_model.fbx" },
-	{ "bullet", "./assets/objects/bullet.fbx" }
+	{ "mech", "./assets/objects/Main_model.fbx" }
 };
 
 TestGame::TestGame()

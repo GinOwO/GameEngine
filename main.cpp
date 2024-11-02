@@ -20,14 +20,15 @@ int main(int argc, char const *argv[])
 	if (MM.init(argc, argv)) {
 		return EXIT_FAILURE;
 	}
-	MM.match_making();
+	if (!MM.match_making().empty()) {
 #endif
-	glfwInit();
-	// Engine engine;
-	// engine.start();
-	glfwTerminate();
+		glfwInit();
+		Engine engine;
+		engine.start();
+		glfwTerminate();
 
 #ifdef MULTIPLAYER
+	}
 	AWS::signout();
 #endif
 

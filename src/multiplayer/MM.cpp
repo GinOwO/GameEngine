@@ -147,8 +147,8 @@ void MatchMaking::sync_enemy_queue(
 			if (recv_size == 0 || errno == EWOULDBLOCK ||
 			    errno == EAGAIN) {
 #ifdef AWS_DEBUG
-				std::cerr
-					<< "No data received in 10 seconds. Ending match.\n";
+				std::cout
+					<< "(AWS) No data received in 10 seconds. Ending match.\n";
 #endif
 				this->match_outcome = -1;
 			}
@@ -197,9 +197,10 @@ std::map<std::string, std::string> MatchMaking::get_opponents()
 		if (opponents[key]["PlayerID"]["S"].asString() ==
 		    AWS::get_player_id()) {
 			challenged_by =
-				opponents[key]["ChallengedBy"].asString();
-		} else if (opponents[key]["Idle"]["BOOL"].asString() ==
-			   "True") {
+				opponents[key]["ChallengedBy"]["S"].asString();
+			player_name =
+				opponents[key]["Nickname"]["S"].asString();
+		} else if (opponents[key]["Idle"]["BOOL"].asBool()) {
 			player_name_id[opponents[key]["Nickname"]["S"]
 					       .asString()] =
 				opponents[key]["PlayerID"]["S"].asString();
@@ -211,11 +212,16 @@ std::map<std::string, std::string> MatchMaking::get_opponents()
 std::string MatchMaking::match_making()
 {
 	static const std::string &player_id = AWS::get_player_id();
-	std::map<std::string, std::string> opponents;
-	std::vector<std::string> opponents_menu;
+	std::map<std::string, std::string> opponents = get_opponents(),
+					   rev_opponents;
+	std::vector<std::string> opponents_menu{ player_name + " (You)" };
+	for (const auto &[name, id] : opponents) {
+		opponents_menu.push_back(name);
+		rev_opponents[id] = name;
+	}
 	std::string connect_url;
 	Json::Value response;
-	int32_t opp = -1;
+	int32_t opp;
 	int32_t highlight = 0;
 	int32_t choice = -1;
 	bool quit = false;
@@ -225,24 +231,28 @@ std::string MatchMaking::match_making()
 	noecho();
 	keypad(stdscr, TRUE);
 
-	auto last_refresh_time = std::chrono::steady_clock::now();
-	while (!quit) {
+	auto update = [&] {
+		static auto last_refresh_time =
+			std::chrono::steady_clock::now();
 		if (std::chrono::steady_clock::now() - last_refresh_time >=
 		    std::chrono::seconds(3)) {
 			last_refresh_time = std::chrono::steady_clock::now();
 			opponents_menu.clear();
+			rev_opponents.clear();
+			opponents_menu.push_back(player_name + " (You)");
 			opponents = get_opponents();
-			for (const auto &[id, name] : opponents) {
+			for (const auto &[name, id] : opponents) {
 				opponents_menu.push_back(name);
+				rev_opponents[id] = name;
 			}
 
 			if (!this->challenged_by.empty()) {
 				int response = -1;
-				WINDOW *popup = newwin(5, 40, 10, 10);
+				WINDOW *popup = newwin(5, 40, 15, 15);
 				box(popup, 0, 0);
 				mvwprintw(popup, 1, 1,
 					  "You have a match request from %s.",
-					  challenged_by.c_str());
+					  rev_opponents[challenged_by].c_str());
 				mvwprintw(popup, 2, 1, "Accept? (y/n)");
 				wrefresh(popup);
 
@@ -261,14 +271,14 @@ std::string MatchMaking::match_making()
 					connect_url = AWS::accept_match(
 						challenged_by);
 					quit = true;
-					break;
 				} else {
 					AWS::reject_match(challenged_by);
 				}
 			}
 		}
+	};
 
-		display_menu(highlight, opponents_menu);
+	auto input = [&] {
 		int32_t input = getch();
 		switch (input) {
 		case KEY_UP:
@@ -282,27 +292,42 @@ std::string MatchMaking::match_making()
 					    highlight + 1;
 			break;
 		case 10:
-			opp = highlight;
-			choice = -1;
+			if (highlight <= 0 ||
+			    highlight >= opponents_menu.size()) {
+				highlight = 0;
+			} else {
+				opp = highlight;
+				choice = -1;
+			}
 			break;
 		default:
 			break;
 		}
 
 		refresh();
-		if (choice == -1) {
-			static const char match_req[] =
-				"Requesting Match, please wait...";
-			mvprintw(0, 2, match_req);
-			response = AWS::request_match(
-				opponents[opponents_menu[opp]]);
-			if (response["message"].asString() ==
-			    "Challenge accepted") {
-				connect_url =
-					response["connect_url"].asString();
-				quit = true;
+	};
+
+	while (!quit) {
+		opp = -1;
+		while (!quit && opp == -1) {
+			update();
+			if (!quit) {
+				display_menu(highlight, opponents_menu);
+				input();
 			}
 		}
+		if (choice != -1 || quit)
+			continue;
+		static const char match_req[] =
+			"Requesting Match, please wait...";
+		mvprintw(0, 2, match_req);
+		refresh();
+		response = AWS::request_match(opponents[opponents_menu[opp]]);
+		if (response["message"].asString() == "Challenge accepted") {
+			connect_url = response["connect_url"].asString();
+			quit = true;
+		}
+		refresh();
 	}
 
 	endwin();
