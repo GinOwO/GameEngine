@@ -4,13 +4,6 @@ import random
 import json
 import time
 
-
-def print(*args, **kwargs):
-    if kwargs.get("end", "") == "\n":
-        kwargs["end"] = "\n\n"
-    __builtins__.print(*args, **kwargs)
-
-
 ACTIVE_PORTS = set()
 PORT_RANGE = [8081, 8099]
 
@@ -40,6 +33,7 @@ def match(player1_id, player2_id, port, alive):
             conn, addr = play_sock.accept()
             print("Match Server:\tConnected:", addr)
             data = conn.recv(2048).decode().strip("\0")
+            print("Match Server:\tRecv Data:\n", data, "\n\n")
             js = json.loads(data)
 
             if js.get("player_id") == player1_id and "player1_id" not in conns:
@@ -91,7 +85,7 @@ def start_match(player1_id, player2_id):
 def remove_dead_processes():
     print("Cleaner:\tStarting process cleaner")
     while RUNNING:
-        time.sleep(5)  # Polling interval
+        time.sleep(5)
         for key in list(processes.keys()):
             alive_flag, process = processes[key]
             if process.is_alive():
@@ -104,14 +98,14 @@ def remove_dead_processes():
 
 def main():
     global RUNNING
-    print(f"Main:\tServer started on {HOST}:{HOST_PORT}")
+    print(f"Main:\t\tServer started on {HOST}:{HOST_PORT}")
     Process(target=remove_dead_processes, daemon=True).start()
     try:
         while RUNNING:
             conn, addr = sock.accept()
-            print("Main:\tConnected:", addr)
+            print("Main:\t\tConnected:", addr)
             req = conn.recv(2048).rstrip(b"\0").decode()
-            print("Main:\tReceived request:", req)
+            print("Main:\t\tReceived request:", req)
             js = json.loads(req)
 
             player1_id = js["player1_id"]
@@ -119,12 +113,12 @@ def main():
 
             port = start_match(player1_id, player2_id)
             response = json.dumps({"Port": port}).encode()
-            print("Main:\tSending Response:", response)
+            print("Main:\t\tSending Response:", response)
             conn.send(response)
             conn.close()
-            print("Main:\tDisconnected")
+            print("Main:\t\tDisconnected")
     except Exception as e:
-        print("Main:\tException in server:", e)
+        print("Main:\t\tException in server:", e)
     finally:
         RUNNING = False
         sock.close()
