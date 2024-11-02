@@ -96,8 +96,8 @@ def main():
             conn, addr = sock.accept()
             print("Connected:", addr)
             req = conn.recv(2048).rstrip(b"\0").decode()
+            print("Received request:", req)
             js = json.loads(req)
-            print("Received request:", json.dumps(js, indent=2))
 
             player1_id = js["player1_id"]
             player2_id = js["player2_id"]
