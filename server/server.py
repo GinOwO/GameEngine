@@ -47,18 +47,17 @@ def match(player1_id, player2_id, port, alive):
                 conn.close()
                 continue
 
-            print("\nMatch Server:\tconns:", conns)
-            print("Match Server:\tlen conns:", len(conns))
-            print("Match Server:\talive:", alive[0])
-            print("Match Server:\trunning:", RUNNING)
+        print("\nMatch Server:\tconns:", conns)
+        print("Match Server:\tlen conns:", len(conns))
+        print("Match Server:\talive:", alive[0])
+        print("Match Server:\trunning:", RUNNING)
 
-            print(
-                f"\nMatch Server:\tMatch started between {player1_id} and {player2_id} on port {port}"
-            )
+        print(
+            f"\nMatch Server:\tMatch started between {player1_id} and {player2_id} on port {port}"
+        )
 
-            # Game logic could go here
-            time.sleep(10)  # Simulate match duration
-            print(f"Match Server:\tMatch ended for {player1_id} vs {player2_id}")
+        time.sleep(10)
+        print(f"Match Server:\tMatch ended for {player1_id} vs {player2_id}")
 
     except Exception as e:
         print("Match Server:\tException in match handler:", e)
