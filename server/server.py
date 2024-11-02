@@ -47,9 +47,13 @@ def match(player1_id, player2_id, port, alive):
                 conn.close()
                 continue
 
-            print("Match Server:\t", conns)
+            print("\nMatch Server:\tconns:", conns)
+            print("Match Server:\tlen conns:", len(conns))
+            print("Match Server:\talive:", alive[0])
+            print("Match Server:\trunning:", RUNNING)
+
             print(
-                f"Match Server:\tMatch started between {player1_id} and {player2_id} on port {port}"
+                f"\nMatch Server:\tMatch started between {player1_id} and {player2_id} on port {port}"
             )
 
             # Game logic could go here
