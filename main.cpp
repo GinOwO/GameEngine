@@ -20,7 +20,11 @@ int main(int argc, char const *argv[])
 	if (MM.init(argc, argv)) {
 		return EXIT_FAILURE;
 	}
-	if (!MM.match_making().empty()) {
+	MM.match_making();
+	while (MM.is_handshaking() && MM.is_success())
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+
+	if (MM.is_success()) {
 #endif
 		glfwInit();
 		Engine engine;
@@ -29,7 +33,18 @@ int main(int argc, char const *argv[])
 
 #ifdef MULTIPLAYER
 	}
-	AWS::signout();
+	switch (MM.get_match_outcome() == -1) {
+	case -1:
+		std::cout << "Match cancelled\n";
+		break;
+	case 1:
+		std::cout << "Player 1 won\n";
+		break;
+	case 2:
+		std::cout << "Player 2 won\n";
+		break;
+	default:
+	}
 #endif
 
 	return EXIT_SUCCESS;

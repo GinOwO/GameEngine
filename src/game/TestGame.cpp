@@ -26,6 +26,12 @@
 #include <iostream>
 #include <cmath>
 
+#ifdef MULTIPLAYER
+
+#include <components/EnemyPlayerEntity.h>
+
+#endif
+
 const std::unordered_map<std::string, std::string> mesh_assets = {
 	{ "skybox", "./assets/Skybox/fskybg/source/skybox.fbx" },
 	{ "terrain_test", "./assets/terrain/test_floor.fbx" },
@@ -68,7 +74,12 @@ void TestGame::init()
 
 	Entity *player_entity = new PlayerEntity();
 
-	Entity *enemy_entity = new EnemyEntity();
+	Entity *enemy_entity =
+#ifdef MULTIPLAYER
+		new EnemyPlayerEntity();
+#else
+		new EnemyEntity();
+#endif
 
 	CameraObject *camera_object = new CameraObject(85.0f);
 

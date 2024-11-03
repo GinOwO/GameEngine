@@ -13,7 +13,7 @@
 
 class EnemyPlayerEntity : public Entity {
     public:
-	PlayerEntity()
+	EnemyPlayerEntity()
 		: Entity("./assets/objects/Main_model.fbx",
 			 "./assets/objects/Main_model_100.png", false)
 	{
@@ -38,8 +38,8 @@ class EnemyPlayerEntity : public Entity {
 					SafeQueue<std::pair<int32_t, float> > *>(
 					globals.enemy_moves);
 
-			if (!queue->empty() && hp > 0) {
-				auto [action, delta] = safe_queue.pop();
+			if (safe_queue->size() && hp > 0) {
+				auto [action, delta] = safe_queue->pop();
 				switch (action) {
 				case 0:
 					move_forward(delta);

@@ -14,10 +14,12 @@ class MatchMaking {
 	std::string connect_url;
 	std::string player_name;
 	std::string challenged_by;
-	std::thread *player_thread = nullptr;
-	std::atomic<bool> match_running = false;
-	int32_t match_outcome = 0;
 	int32_t sock = -1;
+	int32_t match_outcome = 0;
+	std::atomic<bool> error = 0;
+	std::atomic<bool> handshaked = false;
+	std::atomic<bool> match_running = false;
+	std::thread *player_thread = nullptr;
 
 	std::map<std::string, std::string> get_opponents();
 	void sync_player_queue();
@@ -33,4 +35,8 @@ class MatchMaking {
 
 	int32_t init(int argc, char const *argv[]);
 	std::string match_making();
+	bool is_success();
+	bool is_handshaking();
+	bool is_match_running();
+	int32_t get_match_outcome();
 };

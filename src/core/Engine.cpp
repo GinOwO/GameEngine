@@ -19,6 +19,12 @@
 #include <exception>
 #include <string>
 
+#ifdef MULTIPLAYER
+
+#include <multiplayer/MM.h>
+
+#endif
+
 #define _DEBUG_FPS_ON 0
 
 Input &input_handler = Input::get_instance();
@@ -83,6 +89,9 @@ void Engine::run()
 	Timer &timer = Timer::get_instance();
 	game->init();
 	RenderingEngine &rendering_engine = RenderingEngine::get_instance();
+#ifdef MULTIPLAYER
+	MatchMaking &MM = MatchMaking::get_instance();
+#endif
 
 	int32_t frames = 0;
 	double frame_counter = 0;
@@ -90,12 +99,19 @@ void Engine::run()
 	// glfwSwapInterval(0); // Disable Vsync
 
 	timer.reset();
-	while (this->running) {
+
+	while (this->running
+#ifdef MULTIPLAYER
+	       && MM.is_match_running()
+#endif
+	) {
 		glfwPollEvents();
+#ifndef MULTIPLAYER
 		if (paused) {
 			timer.reset();
 			continue;
 		}
+#endif
 		bool render_frame = false;
 
 		while (timer.can_render_frame(frame_time)) {
