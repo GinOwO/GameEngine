@@ -19,7 +19,7 @@
 #include <cmath>
 #include <algorithm>
 
-#define SPAWN_POS { 0.0f, 5.0f, 10.0f }
+#define DEFAULT_ENTITY_SPAWN_POS { 0.0f, 5.0f, 10.0f }
 
 class Entity : public GameObject {
     protected:
@@ -44,11 +44,12 @@ class Entity : public GameObject {
 	bool player;
 
 	Entity(const std::string &mesh_path, const std::string &diffuse_path,
-	       bool player = false)
+
+	       const Vector3f &spawn_pos, bool player = false)
 		: player(player)
 	{
 		this->physics_type = 20; // Physics for Entity entities
-		transform.set_translation(Vector3f(SPAWN_POS));
+		transform.set_translation(Vector3f(spawn_pos));
 
 		Mesh mesh = Mesh::load_mesh(mesh_path,
 					    Mesh::MeshPhysicsType::ENTITY);
@@ -71,7 +72,9 @@ class Entity : public GameObject {
 
 			btTransform transform;
 			transform.setIdentity();
-			transform.setOrigin(btVector3(SPAWN_POS));
+			transform.setOrigin(
+				btVector3({ spawn_pos.getX(), spawn_pos.getY(),
+					    spawn_pos.getZ() }));
 			rigid_body->setWorldTransform(transform);
 
 			SharedGlobals::get_instance().rigid_bodies.push_back(
@@ -299,5 +302,3 @@ class Entity : public GameObject {
 		m_delta = delta;
 	}
 };
-
-#undef SPAWN_POS

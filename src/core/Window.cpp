@@ -15,6 +15,12 @@
 #include <exception>
 #include <string>
 
+#ifdef MULTIPLAYER
+
+#include <multiplayer/MM.h>
+
+#endif
+
 Window &Window::get_instance()
 {
 	static Window instance;
@@ -111,6 +117,9 @@ Window::Window()
 
 Window::~Window()
 {
+#ifdef MULTIPLAYER
+	MatchMaking::get_instance().set_match_running(false);
+#endif
 	this->terminate_window();
 }
 

@@ -29,6 +29,7 @@
 #ifdef MULTIPLAYER
 
 #include <components/EnemyPlayerEntity.h>
+#include <multiplayer/MM.h>
 
 #endif
 
@@ -72,15 +73,24 @@ void TestGame::init()
 
 	get_root_object()->add_child(lighting_object2);
 
+#ifdef MULTIPLAYER
+#define player1_spawn { 0.0f, 5.0f, 10.0f }
+#define player2_spawn { 0.0f, -5.0f, 10.0f }
+	Entity *player_entity, *enemy_entity;
+	if (MatchMaking::get_instance().get_player_number() == 1) {
+		player_entity = new PlayerEntity(player1_spawn);
+		enemy_entity = new EnemyPlayerEntity(player2_spawn);
+	} else {
+		player_entity = new PlayerEntity(player2_spawn);
+		enemy_entity = new EnemyPlayerEntity(player1_spawn);
+	}
+#undef player1_spawn
+#undef player2_spawn
+#else
 	Entity *player_entity = new PlayerEntity();
 
-	Entity *enemy_entity =
-#ifdef MULTIPLAYER
-		new EnemyPlayerEntity();
-#else
-		new EnemyEntity();
+	Entity *enemy_entity = new EnemyEntity();
 #endif
-
 	CameraObject *camera_object = new CameraObject(85.0f);
 
 	camera_object->add_component(

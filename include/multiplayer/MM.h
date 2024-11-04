@@ -16,6 +16,7 @@ class MatchMaking {
 	std::string challenged_by;
 	int32_t sock = -1;
 	int32_t match_outcome = 0;
+	int32_t player_number = -1;
 	std::atomic<bool> error = 0;
 	std::atomic<bool> handshaked = false;
 	std::atomic<bool> match_running = false;
@@ -38,5 +39,7 @@ class MatchMaking {
 	bool is_success();
 	bool is_handshaking();
 	bool is_match_running();
+	void set_match_running(bool state);
 	int32_t get_match_outcome();
+	int32_t get_player_number();
 };

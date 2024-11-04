@@ -27,9 +27,10 @@ class EnemyEntity : public Entity {
 	bool shot_hit = false;
 
     public:
-	EnemyEntity()
+	EnemyEntity(const Vector3f &spawn_pos = DEFAULT_ENTITY_SPAWN_POS)
 		: Entity("./assets/objects/Main_model.fbx",
-			 "./assets/objects/Main_model_100.png", false)
+			 "./assets/objects/Main_model_100.png", spawn_pos,
+			 false)
 	{
 		this->add_child((new GameObject())
 					->add_component(new PointLight(

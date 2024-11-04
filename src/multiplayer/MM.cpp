@@ -301,6 +301,7 @@ std::string MatchMaking::match_making()
 					connect_url = AWS::accept_match(
 						challenged_by);
 					quit = true;
+					player_number = 2;
 				} else {
 					AWS::reject_match(challenged_by);
 				}
@@ -356,6 +357,7 @@ std::string MatchMaking::match_making()
 		if (response["message"].asString() == "Challenge accepted") {
 			connect_url = response["connect_url"].asString();
 			quit = true;
+			player_number = 1;
 		}
 		refresh();
 	}
@@ -385,7 +387,17 @@ bool MatchMaking::is_match_running()
 	return match_running;
 }
 
+void MatchMaking::set_match_running(bool state)
+{
+	match_running = state;
+}
+
 int32_t MatchMaking::get_match_outcome()
 {
 	return match_outcome;
+}
+
+int32_t MatchMaking::get_player_number()
+{
+	return player_number;
 }
