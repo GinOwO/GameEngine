@@ -45,6 +45,13 @@ void key_callback(GLFWwindow *window, int32_t key, int32_t scancode,
 	input_handler.key_callback(key, scancode, action, mods);
 }
 
+void handle_window_close(GLFWwindow *window)
+{
+#ifdef MULTIPLAYER
+	MatchMaking::get_instance().set_match_running(false);
+#endif
+}
+
 void mouse_motion_callback(GLFWwindow *window, double xpos, double ypos)
 {
 	input_handler.mouse_motion_callback(xpos, ypos);
@@ -164,6 +171,7 @@ void Engine::start()
 	window.set_mouse_callback(mouse_motion_callback, mouse_button_callback,
 				  mouse_scroll_callback);
 	window.set_focus_callback(handle_window_focus);
+	window.set_close_callback(handle_window_close);
 	SharedGlobals::get_instance().window = static_cast<void *>(&window);
 	running = true;
 	this->run();

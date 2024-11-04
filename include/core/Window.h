@@ -47,6 +47,8 @@ class Window {
 	void set_focus_callback(void (*handle_window_focus)(GLFWwindow *,
 							    int32_t));
 
+	void set_close_callback(void (*handle_window_close)(GLFWwindow *));
+
 	int32_t get_window_height() const noexcept;
 
 	int32_t get_window_width() const noexcept;

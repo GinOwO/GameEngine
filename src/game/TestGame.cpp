@@ -74,8 +74,8 @@ void TestGame::init()
 	get_root_object()->add_child(lighting_object2);
 
 #ifdef MULTIPLAYER
-#define player1_spawn { 0.0f, 5.0f, 10.0f }
-#define player2_spawn { 0.0f, -5.0f, 10.0f }
+#define player1_spawn { -2.5f, 5.0f, 10.0f }
+#define player2_spawn { 2.5f, 5.0f, 10.0f }
 	Entity *player_entity, *enemy_entity;
 	if (MatchMaking::get_instance().get_player_number() == 1) {
 		player_entity = new PlayerEntity(player1_spawn);

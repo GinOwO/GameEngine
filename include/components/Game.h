@@ -22,15 +22,23 @@ class Game {
 
 	void input(float delta = 0)
 	{
+#ifdef MULTIPLAYER
+		get_root_object()->input(1.0f / 60.0f);
+#else
 		get_root_object()->input(delta);
+#endif
 	};
 
 	void update(float delta = 0)
 	{
 		SharedGlobals &globals = SharedGlobals::get_instance();
+#ifdef MULTIPLAYER
+		globals.dynamics_world->stepSimulation(1.0f / 60.0f);
+		get_root_object()->update(1.0f / 60.0f);
+#else
 		globals.dynamics_world->stepSimulation(delta);
-
 		get_root_object()->update(delta);
+#endif
 	};
 
 	void render(Shader &shader)

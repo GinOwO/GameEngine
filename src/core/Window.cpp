@@ -105,6 +105,11 @@ void Window::set_focus_callback(void (*handle_window_focus)(GLFWwindow *,
 	glfwSetWindowFocusCallback(window, handle_window_focus);
 }
 
+void Window::set_close_callback(void (*handle_window_close)(GLFWwindow *))
+{
+	glfwSetWindowCloseCallback(window, handle_window_close);
+}
+
 Window::Window()
 {
 	if (!glfwInit()) {
@@ -117,9 +122,6 @@ Window::Window()
 
 Window::~Window()
 {
-#ifdef MULTIPLAYER
-	MatchMaking::get_instance().set_match_running(false);
-#endif
 	this->terminate_window();
 }
 
