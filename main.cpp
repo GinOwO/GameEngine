@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
 
 #ifdef MULTIPLAYER
 	}
-	switch (MM.get_match_outcome() == -1) {
+	switch (MM.get_match_outcome()) {
 	case -1:
 		std::cout << "Match cancelled\n";
 		break;
