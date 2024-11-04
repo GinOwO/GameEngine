@@ -44,6 +44,7 @@ int main(int argc, char const *argv[])
 		std::cout << "Player 2 won\n";
 		break;
 	default:
+		break;
 	}
 #endif
 
