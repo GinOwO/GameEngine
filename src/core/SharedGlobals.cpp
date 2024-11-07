@@ -78,5 +78,5 @@ uint8_t SharedGlobals::get_tick()
 
 void SharedGlobals::increment_tick()
 {
-	tick = (tick + 1) % TICK_RATE;
+	tick = (tick + 1) % SYNC_TICK;
 }

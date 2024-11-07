@@ -83,7 +83,7 @@ def match(player1_id: str, player2_id: str, port: int):
                 conn.send()
                 conn.close()
                 continue
-            if time.time() - start_time >= 300:
+            if time.time() - start_time >= 15:
                 RUNNING = False
 
         if RUNNING:

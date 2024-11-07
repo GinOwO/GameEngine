@@ -22,6 +22,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <exception>
 
 constexpr int32_t INSTR_BUFFER_SIZE = 129;
 
@@ -38,7 +39,6 @@ MatchMaking::~MatchMaking()
 		player_thread->join();
 	}
 	delete player_thread;
-	AWS::signout();
 }
 
 int32_t MatchMaking::init(int argc, char const *argv[])
@@ -91,6 +91,7 @@ void MatchMaking::sync_player_queue()
 		perror("Connection failed");
 		close(sock);
 		error = true;
+		Logger::get_instance() << this->connect_url;
 		return;
 	}
 
@@ -198,23 +199,23 @@ void MatchMaking::sync_enemy_queue(
 			continue;
 		size_t comma_pos = received_data.find(',');
 		if (comma_pos != std::string::npos) {
-			int32_t x =
-				std::stoi(received_data.substr(0, comma_pos));
-			std::vector<float> y;
-			std::string floats_part =
-				received_data.substr(comma_pos + 1);
-			std::istringstream ss(floats_part);
-			std::string token;
-			while (std::getline(ss, token, ',')) {
-				try {
+			try {
+				int32_t x = std::stoi(
+					received_data.substr(0, comma_pos));
+
+				std::vector<float> y;
+				std::string floats_part =
+					received_data.substr(comma_pos + 1);
+				std::istringstream ss(floats_part);
+				std::string token;
+				while (std::getline(ss, token, ',')) {
 					y.push_back(std::stof(token));
-				} catch (const std::invalid_argument &e) {
-					std::cerr
-						<< "Invalid float in the received data: "
-						<< token << std::endl;
 				}
+				enemy_queue->push({ x, y });
+			} catch (const std::invalid_argument &e) {
+				std::cerr << "MM:\t\tMalformed state received: "
+					  << received_data << '\n';
 			}
-			enemy_queue->push({ x, y });
 		}
 	}
 }
@@ -371,7 +372,8 @@ std::string MatchMaking::match_making()
 		mvprintw(0, 2, match_req);
 		refresh();
 		response = AWS::request_match(opponents[opponents_menu[opp]]);
-		if (response["message"].asString() == "Challenge accepted") {
+		if (!response.asString().empty() &&
+		    response["message"].asString() == "Challenge accepted") {
 			connect_url = response["connect_url"].asString();
 			quit = true;
 			player_number = 1;

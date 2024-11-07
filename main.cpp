@@ -4,6 +4,10 @@
 #include <core/Engine.h>
 #include <graphics/Shader.h>
 
+#include <csignal>
+#include <cstdlib>
+#include <iostream>
+
 #ifdef MULTIPLAYER
 
 #include <core/SharedGlobals.h>
@@ -13,8 +17,28 @@
 
 #endif
 
+void signal_handler(int signal)
+{
+	std::cerr << "Caught signal " << signal << ", executing cleanup.\n";
+#ifdef MULTIPLAYER
+	AWS::signout();
+#endif
+	std::exit(EXIT_FAILURE);
+}
+
+void setup_signal_handlers()
+{
+	const int signals[] = { SIGINT,	 SIGTERM, SIGILL,
+				SIGABRT, SIGFPE,  SIGPIPE };
+
+	for (int sig : signals) {
+		std::signal(sig, signal_handler);
+	}
+}
+
 int main(int argc, char const *argv[])
 {
+	setup_signal_handlers();
 #ifdef MULTIPLAYER
 	MatchMaking &MM = MatchMaking::get_instance();
 	if (MM.init(argc, argv)) {
@@ -46,7 +70,7 @@ int main(int argc, char const *argv[])
 	default:
 		break;
 	}
+	AWS::signout();
 #endif
-
 	return EXIT_SUCCESS;
 }

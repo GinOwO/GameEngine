@@ -177,26 +177,27 @@ class Entity : public GameObject {
 
 		GameObject::input(delta);
 #ifdef MULTIPLAYER
-		if (player)
+		if (player) {
 			m_moves.push({ m_action, { m_delta } });
-		m_action = -1;
-		m_delta = 0;
-
-		if (SharedGlobals::get_instance().get_tick() == 0) {
-			EntityState state = get_entity_state();
-			m_moves.push({ 9, { state.position.x(),
-					    state.position.y(),
-					    state.position.z(),
-					    state.orientation.x(),
-					    state.orientation.y(),
-					    state.orientation.z(),
-					    state.orientation.w(),
-					    state.velocity.x(),
-					    state.velocity.y(),
-					    state.velocity.z(),
-					    state.angular_velocity.x(),
-					    state.angular_velocity.y(),
-					    state.angular_velocity.z() } });
+			if (SharedGlobals::get_instance().get_tick() == 0) {
+				EntityState state = get_entity_state();
+				m_moves.push(
+					{ 9, { state.position.x(),
+					       state.position.y(),
+					       state.position.z(),
+					       state.orientation.x(),
+					       state.orientation.y(),
+					       state.orientation.z(),
+					       state.orientation.w(),
+					       state.velocity.x(),
+					       state.velocity.y(),
+					       state.velocity.z(),
+					       state.angular_velocity.x(),
+					       state.angular_velocity.y(),
+					       state.angular_velocity.z() } });
+			}
+			m_action = -1;
+			m_delta = 0;
 		}
 #endif
 	}

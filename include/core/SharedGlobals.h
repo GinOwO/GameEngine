@@ -25,7 +25,7 @@ class SharedGlobals {
 	btRigidBody *current_rigid_body = nullptr;
 	const int32_t GRAVITY = 1.0f;
 
-	const int TICK_RATE = 64;
+	const int SYNC_TICK = 16;
 	Vector3f active_ambient_light;
 	void *active_light = nullptr;
 	void *main_camera = nullptr;

@@ -174,7 +174,7 @@ add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
 # add_subdirectory(tests)
 
 SET(MULTIPLAYER "-DMULTIPLAYER -DAWS_DEBUG")
-SET(GCC_COMPILE_FLAGS "-g -O0")
+SET(GCC_COMPILE_FLAGS "-g -O3 -std=c++20")
 SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL -ldl -lpthread")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS} ${MULTIPLAYER}")
