@@ -1,5 +1,5 @@
 from multiprocessing import Process
-from typing import Dict, Tuple
+from typing import Dict, List
 import socket
 import random
 import json
@@ -21,14 +21,14 @@ sock.listen(5)
 RUNNING = True
 
 
-def play(conns: Dict[str, socket.socket]):
+def play(conns: Dict[str, socket.socket], RUNNING: List[bool]):
     conn1, conn2 = conns.values()
 
     try:
         conn1.setblocking(False)
         conn2.setblocking(False)
 
-        while True:
+        while RUNNING[0]:
             ready_sockets, _, _ = select.select(conns.values(), [], [], 0.5)
 
             for sock in ready_sockets:
@@ -54,7 +54,7 @@ def play(conns: Dict[str, socket.socket]):
 
 
 def match(player1_id: str, player2_id: str, port: int):
-    RUNNING = True
+    RUNNING = [True]
     print(
         f"Match Server:\tCreating server for: {player1_id} vs {player2_id} on port {port}"
     )
@@ -67,7 +67,7 @@ def match(player1_id: str, player2_id: str, port: int):
 
     try:
         play_sock.setblocking(False)
-        while len(conns) < 2 and RUNNING:
+        while len(conns) < 2 and RUNNING[0]:
             conn, addr = play_sock.accept()
             print("\nMatch Server:\tConnected:", addr)
             data = conn.recv(2048).decode().strip("\0")
@@ -85,9 +85,9 @@ def match(player1_id: str, player2_id: str, port: int):
                 conn.close()
                 continue
             if time.time() - start_time >= 15:
-                RUNNING = False
+                RUNNING[0] = False
 
-        if RUNNING:
+        if RUNNING[0]:
             print("Match Server:\tSending start to both clients")
             for _, conn in conns.items():
                 conn.send(b"START\0")
@@ -96,7 +96,7 @@ def match(player1_id: str, player2_id: str, port: int):
                 f"Match Server:\tMatch started between {player1_id} and {player2_id} on port {port}"
             )
 
-            play(conns)
+            play(conns, RUNNING)
             print(f"Match Server:\tMatch ended for {player1_id} vs {player2_id}")
 
     except Exception as e:
