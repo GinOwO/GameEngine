@@ -213,8 +213,8 @@ void MatchMaking::sync_enemy_queue(
 				}
 				enemy_queue->push({ x, y });
 			} catch (const std::invalid_argument &e) {
-				std::cerr << "MM:\t\tMalformed state received: "
-					  << received_data << '\n';
+				// std::cerr << "MM:\t\tMalformed state received: "
+				// 	  << received_data << '\n';
 			}
 		}
 	}

@@ -19,6 +19,7 @@ sock.bind((HOST, HOST_PORT))
 sock.listen(5)
 
 RUNNING = True
+MSG_LEN = 129
 
 
 def play(conns: Dict[str, socket.socket], RUNNING: List[bool]):
@@ -33,7 +34,7 @@ def play(conns: Dict[str, socket.socket], RUNNING: List[bool]):
 
             for sock in ready_sockets:
                 try:
-                    data = sock.recv(128)
+                    data = sock.recv(MSG_LEN)
                     print(data)
                     if not data:
                         print("Connection closed by client.")

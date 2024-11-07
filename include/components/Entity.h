@@ -178,8 +178,10 @@ class Entity : public GameObject {
 		GameObject::input(delta);
 #ifdef MULTIPLAYER
 		if (player) {
-			m_moves.push({ m_action, { m_delta } });
-			if (SharedGlobals::get_instance().get_tick() == 0) {
+			if (m_action == 6)
+				m_moves.push({ m_action, { m_delta } });
+			// if (SharedGlobals::get_instance().get_tick() == 0)
+			{
 				EntityState state = get_entity_state();
 				m_moves.push(
 					{ 9, { state.position.x(),
