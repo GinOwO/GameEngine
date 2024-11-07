@@ -372,7 +372,7 @@ std::string MatchMaking::match_making()
 		mvprintw(0, 2, match_req);
 		refresh();
 		response = AWS::request_match(opponents[opponents_menu[opp]]);
-		if (!response.asString().empty() &&
+		if (response.size() &&
 		    response["message"].asString() == "Challenge accepted") {
 			connect_url = response["connect_url"].asString();
 			quit = true;
