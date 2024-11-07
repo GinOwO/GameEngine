@@ -38,8 +38,8 @@ class SharedGlobals {
 	std::unordered_set<void *> &get_lights();
 	void clear_lights();
 
-	inline uint8_t get_tick();
-	inline void increment_tick();
+	uint8_t get_tick();
+	void increment_tick();
 
 #ifdef MULTIPLAYER
 	void *enemy_moves = nullptr; // SafeQueue<pair<action, delta>>
