@@ -34,7 +34,7 @@ class Entity : public GameObject {
 	MeshRenderer *mesh = nullptr;
 
 #ifdef MULTIPLAYER
-	SafeQueue<std::pair<int32_t, float> > m_moves;
+	SafeQueue<std::pair<int32_t, std::vector<float> > > m_moves;
 	int32_t m_action = -1;
 	float m_delta = 0.0f;
 #endif
@@ -42,6 +42,13 @@ class Entity : public GameObject {
     public:
 	bool on_ground = true;
 	bool player;
+
+	struct EntityState {
+		btVector3 position;
+		btQuaternion orientation;
+		btVector3 velocity;
+		btVector3 angular_velocity;
+	};
 
 	Entity(const std::string &mesh_path, const std::string &diffuse_path,
 
@@ -171,9 +178,26 @@ class Entity : public GameObject {
 		GameObject::input(delta);
 #ifdef MULTIPLAYER
 		if (player)
-			m_moves.push({ m_action, m_delta });
+			m_moves.push({ m_action, { m_delta } });
 		m_action = -1;
 		m_delta = 0;
+
+		if (SharedGlobals::get_instance().get_tick() == 0) {
+			EntityState state = get_entity_state();
+			m_moves.push({ 9, { state.position.x(),
+					    state.position.y(),
+					    state.position.z(),
+					    state.orientation.x(),
+					    state.orientation.y(),
+					    state.orientation.z(),
+					    state.orientation.w(),
+					    state.velocity.x(),
+					    state.velocity.y(),
+					    state.velocity.z(),
+					    state.angular_velocity.x(),
+					    state.angular_velocity.y(),
+					    state.angular_velocity.z() } });
+		}
 #endif
 	}
 
@@ -300,5 +324,30 @@ class Entity : public GameObject {
 		}
 		m_action = 7;
 		m_delta = delta;
+	}
+
+	EntityState get_entity_state()
+	{
+		EntityState state;
+
+		btTransform transform = rigid_body->getWorldTransform();
+		state.position = transform.getOrigin();
+		state.orientation = transform.getRotation();
+
+		state.velocity = rigid_body->getLinearVelocity();
+		state.angular_velocity = rigid_body->getAngularVelocity();
+
+		return state;
+	}
+
+	void apply_entity_state(const EntityState &state)
+	{
+		btTransform transform;
+		transform.setOrigin(state.position);
+		transform.setRotation(state.orientation);
+		rigid_body->setWorldTransform(transform);
+
+		rigid_body->setLinearVelocity(state.velocity);
+		rigid_body->setAngularVelocity(state.angular_velocity);
 	}
 };

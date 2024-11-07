@@ -33,8 +33,9 @@ class Game {
 	{
 		SharedGlobals &globals = SharedGlobals::get_instance();
 #ifdef MULTIPLAYER
-		globals.dynamics_world->stepSimulation(1.0f / 60.0f);
-		get_root_object()->update(1.0f / 60.0f);
+		globals.dynamics_world->stepSimulation(1.0f /
+						       globals.TICK_RATE);
+		get_root_object()->update(1.0f / globals.TICK_RATE);
 #else
 		globals.dynamics_world->stepSimulation(delta);
 		get_root_object()->update(delta);

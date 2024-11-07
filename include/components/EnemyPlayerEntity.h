@@ -34,37 +34,48 @@ class EnemyPlayerEntity : public Entity {
 		static SharedGlobals &globals = SharedGlobals::get_instance();
 
 		if (globals.enemy_moves) {
-			SafeQueue<std::pair<int32_t, float> > *safe_queue =
-				static_cast<
-					SafeQueue<std::pair<int32_t, float> > *>(
+			SafeQueue<std::pair<int32_t, std::vector<float> > >
+				*safe_queue = static_cast<SafeQueue<std::pair<
+					int32_t, std::vector<float> > > *>(
 					globals.enemy_moves);
 
 			if (safe_queue->size() && hp > 0) {
 				auto [action, delta] = safe_queue->pop();
 				switch (action) {
 				case 0:
-					move_forward(delta);
+					move_forward(delta[0]);
 					break;
 				case 1:
-					move_left(delta);
+					move_left(delta[0]);
 					break;
 				case 2:
-					move_backward(delta);
+					move_backward(delta[0]);
 					break;
 				case 3:
-					move_right(delta);
+					move_right(delta[0]);
 					break;
 				case 4:
-					rotate_left(delta);
+					rotate_left(delta[0]);
 					break;
 				case 5:
-					rotate_right(delta);
+					rotate_right(delta[0]);
 					break;
 				case 6:
 					shoot();
 					break;
 				case 7:
-					jump(delta);
+					jump(delta[0]);
+					break;
+				case 9:
+					apply_entity_state(
+						{ { delta[0], delta[1],
+						    delta[2] },
+						  { delta[3], delta[4],
+						    delta[5], delta[6] },
+						  { delta[7], delta[8],
+						    delta[9] },
+						  { delta[10], delta[11],
+						    delta[12] } });
 				default:
 					break;
 				}

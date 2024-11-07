@@ -16,6 +16,7 @@ class SharedGlobals {
     private:
 	SharedGlobals();
 	std::unordered_set<void *> lights;
+	uint8_t tick = 0;
 
     public:
 	btDiscreteDynamicsWorld *dynamics_world;
@@ -24,6 +25,7 @@ class SharedGlobals {
 	btRigidBody *current_rigid_body = nullptr;
 	const int32_t GRAVITY = 1.0f;
 
+	const int TICK_RATE = 64;
 	Vector3f active_ambient_light;
 	void *active_light = nullptr;
 	void *main_camera = nullptr;
@@ -35,6 +37,9 @@ class SharedGlobals {
 	void add_to_lights(void *light) noexcept;
 	std::unordered_set<void *> &get_lights();
 	void clear_lights();
+
+	inline uint8_t get_tick();
+	inline void increment_tick();
 
 #ifdef MULTIPLAYER
 	void *enemy_moves = nullptr; // SafeQueue<pair<action, delta>>

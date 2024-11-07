@@ -9,6 +9,7 @@
 #include <json/json.h>
 #include <ncurses.h>
 
+#include <cmath>
 #include <cstdint>
 #include <iostream>
 #include <string>
@@ -22,7 +23,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-constexpr int32_t INSTR_BUFFER_SIZE = 16;
+constexpr int32_t INSTR_BUFFER_SIZE = 129;
 
 MatchMaking &MatchMaking::get_instance()
 {
@@ -111,16 +112,18 @@ void MatchMaking::sync_player_queue()
 	handshaked = true;
 
 	static SharedGlobals &globals = SharedGlobals::get_instance();
-	SafeQueue<std::pair<int32_t, float> > *player_queue = nullptr;
-	SafeQueue<std::pair<int32_t, float> > *enemy_queue = nullptr;
+	SafeQueue<std::pair<int32_t, std::vector<float> > > *player_queue =
+		nullptr;
+	SafeQueue<std::pair<int32_t, std::vector<float> > > *enemy_queue =
+		nullptr;
 
 	while (!player_queue || !enemy_queue) {
-		player_queue =
-			static_cast<SafeQueue<std::pair<int32_t, float> > *>(
-				globals.player_moves);
-		enemy_queue =
-			static_cast<SafeQueue<std::pair<int32_t, float> > *>(
-				globals.enemy_moves);
+		player_queue = static_cast<
+			SafeQueue<std::pair<int32_t, std::vector<float> > > *>(
+			globals.player_moves);
+		enemy_queue = static_cast<
+			SafeQueue<std::pair<int32_t, std::vector<float> > > *>(
+			globals.enemy_moves);
 
 		if (!player_queue || !enemy_queue) {
 			std::this_thread::sleep_for(
@@ -139,7 +142,9 @@ void MatchMaking::sync_player_queue()
 		if (x == -1)
 			continue;
 		std::ostringstream oss;
-		oss << x << ',' << std::fixed << std::setprecision(6) << y;
+		oss << x << std::fixed << std::setprecision(6);
+		for (auto &c : y)
+			oss << ',' << c;
 
 		std::string message = oss.str();
 		if (message.size() < INSTR_BUFFER_SIZE) {
@@ -164,7 +169,7 @@ void MatchMaking::sync_player_queue()
 }
 
 void MatchMaking::sync_enemy_queue(
-	SafeQueue<std::pair<int32_t, float> > *enemy_queue)
+	SafeQueue<std::pair<int32_t, std::vector<float> > > *enemy_queue)
 {
 	static char buffer[INSTR_BUFFER_SIZE];
 	while (match_running) {
@@ -188,15 +193,27 @@ void MatchMaking::sync_enemy_queue(
 
 		buffer[recv_size] = '\0';
 		std::string received_data(buffer);
+
 		if (recv_size < 1)
 			continue;
-
 		size_t comma_pos = received_data.find(',');
 		if (comma_pos != std::string::npos) {
 			int32_t x =
 				std::stoi(received_data.substr(0, comma_pos));
-			float y =
-				std::stof(received_data.substr(comma_pos + 1));
+			std::vector<float> y;
+			std::string floats_part =
+				received_data.substr(comma_pos + 1);
+			std::istringstream ss(floats_part);
+			std::string token;
+			while (std::getline(ss, token, ',')) {
+				try {
+					y.push_back(std::stof(token));
+				} catch (const std::invalid_argument &e) {
+					std::cerr
+						<< "Invalid float in the received data: "
+						<< token << std::endl;
+				}
+			}
 			enemy_queue->push({ x, y });
 		}
 	}

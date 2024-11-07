@@ -129,6 +129,7 @@ void Engine::run()
 
 			game->input(frame_time);
 			game->update(frame_time);
+			SharedGlobals::get_instance().increment_tick();
 
 			frame_counter += timer.get_delta_time();
 

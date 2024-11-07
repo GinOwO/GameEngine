@@ -70,3 +70,13 @@ SharedGlobals::SharedGlobals()
 	// Register collision near callback
 	dispatcher->setNearCallback(collision_near_callback);
 }
+
+inline uint8_t SharedGlobals::get_tick()
+{
+	return tick;
+}
+
+inline void SharedGlobals::increment_tick()
+{
+	tick = (tick + 1) % TICK_RATE;
+}

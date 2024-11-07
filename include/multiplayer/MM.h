@@ -25,7 +25,8 @@ class MatchMaking {
 	std::map<std::string, std::string> get_opponents();
 	void sync_player_queue();
 	void
-	sync_enemy_queue(SafeQueue<std::pair<int32_t, float> > *enemy_queue);
+	sync_enemy_queue(SafeQueue<std::pair<int32_t, std::vector<float> > >
+				 *enemy_queue);
 
     public:
 	~MatchMaking();
