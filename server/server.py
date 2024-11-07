@@ -6,6 +6,7 @@ import json
 import socket
 import select
 import time
+import requests
 
 ACTIVE_PORTS = set()
 PORT_RANGE = [8081, 8099]
@@ -105,13 +106,27 @@ def match(player1_id: str, player2_id: str, port: int):
         ACTIVE_PORTS.discard(port)
         print(f"Match Server:\tServer on port {port} closed")
 
+    try:
+        resp = requests.post(
+            "https://5rmyu3pght4flefb4djguiurq40twlwo.lambda-url.ap-south-1.on.aws/",
+            json={
+                "operation": "CHALLENGE_END",
+                "port_id": port,
+                "player1_id": player1_id,
+                "player2_id": player2_id,
+            },
+        )
+
+        resp.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print("Match Server:\tError in end:", e)
+
 
 def start_match(player1_id: str, player2_id: str):
-    # port = random.randint(*PORT_RANGE) // TODO: CHANGE
-    # while port in ACTIVE_PORTS:
-    #     port = random.randint(*PORT_RANGE)
-    # ACTIVE_PORTS.add(port)
-    port = 8081
+    port = random.randint(*PORT_RANGE)
+    while port in ACTIVE_PORTS:
+        port = random.randint(*PORT_RANGE)
+    ACTIVE_PORTS.add(port)
     print("MatchMaker:\tCreating Server for:", (player1_id, player2_id), " at ", port)
     process = Process(target=match, args=(player1_id, player2_id, port))
     print("MatchMaker:\tStarting Server")
