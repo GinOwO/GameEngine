@@ -66,7 +66,7 @@ def match(player1_id: str, player2_id: str, port: int):
     start_time = time.time()
 
     try:
-        play_sock.setblocking(False)
+        play_sock.settimeout(15)
         while len(conns) < 2 and RUNNING[0]:
             conn, addr = play_sock.accept()
             print("\nMatch Server:\tConnected:", addr)
