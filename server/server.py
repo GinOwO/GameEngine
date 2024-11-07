@@ -163,4 +163,14 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    # TODO: TEST
+    resp = requests.post(
+        "https://5rmyu3pght4flefb4djguiurq40twlwo.lambda-url.ap-south-1.on.aws/",
+        json={
+            "operation": "CHALLENGE_END",
+            "port_id": 8081,
+            "player1_id": "c143fdba-2001-709c-dc9d-397381af6575",
+            "player2_id": "01a33d1a-e031-70ad-06bd-cdc6560e2316",
+        },
+    )
