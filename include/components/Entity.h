@@ -48,6 +48,7 @@ class Entity : public GameObject {
 		btQuaternion orientation;
 		btVector3 velocity;
 		btVector3 angular_velocity;
+		float hp;
 	};
 
 	Entity(const std::string &mesh_path, const std::string &diffuse_path,
@@ -178,25 +179,25 @@ class Entity : public GameObject {
 		GameObject::input(delta);
 #ifdef MULTIPLAYER
 		if (player) {
-			if (m_action == 6)
-				m_moves.push({ m_action, { m_delta } });
+			// if (m_action == 6)
+			// 	m_moves.push({ m_action, { m_delta } });
 			// if (SharedGlobals::get_instance().get_tick() == 0)
 			{
 				EntityState state = get_entity_state();
-				m_moves.push(
-					{ 9, { state.position.x(),
-					       state.position.y(),
-					       state.position.z(),
-					       state.orientation.x(),
-					       state.orientation.y(),
-					       state.orientation.z(),
-					       state.orientation.w(),
-					       state.velocity.x(),
-					       state.velocity.y(),
-					       state.velocity.z(),
-					       state.angular_velocity.x(),
-					       state.angular_velocity.y(),
-					       state.angular_velocity.z() } });
+				m_moves.push({ 9, { state.position.x(),
+						    state.position.y(),
+						    state.position.z(),
+						    state.orientation.x(),
+						    state.orientation.y(),
+						    state.orientation.z(),
+						    state.orientation.w(),
+						    state.velocity.x(),
+						    state.velocity.y(),
+						    state.velocity.z(),
+						    state.angular_velocity.x(),
+						    state.angular_velocity.y(),
+						    state.angular_velocity.z(),
+						    state.hp } });
 			}
 			m_action = -1;
 			m_delta = 0;
@@ -339,6 +340,7 @@ class Entity : public GameObject {
 
 		state.velocity = rigid_body->getLinearVelocity();
 		state.angular_velocity = rigid_body->getAngularVelocity();
+		state.hp = this->hp;
 
 		return state;
 	}
@@ -352,5 +354,6 @@ class Entity : public GameObject {
 
 		rigid_body->setLinearVelocity(state.velocity);
 		rigid_body->setAngularVelocity(state.angular_velocity);
+		this->hp = state.hp;
 	}
 };
