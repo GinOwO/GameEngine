@@ -19,7 +19,7 @@ sock.bind((HOST, HOST_PORT))
 sock.listen(5)
 
 RUNNING = True
-MSG_LEN = 133
+MSG_LEN = 129
 
 
 def play(conns: Dict[str, socket.socket], RUNNING: List[bool]):

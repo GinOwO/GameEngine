@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include <exception>
 
-constexpr int32_t INSTR_BUFFER_SIZE = 133;
+constexpr int32_t INSTR_BUFFER_SIZE = 129;
 
 MatchMaking &MatchMaking::get_instance()
 {
@@ -144,17 +144,15 @@ void MatchMaking::sync_player_queue()
 			continue;
 		std::ostringstream oss;
 		oss << x << std::fixed << std::setprecision(6);
-		for (int i = 0; i < y.size() - 1; i++)
-			oss << ',' << y[i];
-		oss << ',' << static_cast<int32_t>(y.back());
+		for (auto &c : y)
+			oss << ',' << c;
 
 		std::string message = oss.str();
 		if (message.size() < INSTR_BUFFER_SIZE) {
 			message.append(INSTR_BUFFER_SIZE - message.size(),
 				       '\0');
 		} else if (message.size() > INSTR_BUFFER_SIZE) {
-			message =
-				message.substr(0, INSTR_BUFFER_SIZE - 1) + "\0";
+			message = message.substr(0, 128) + "\0";
 		}
 
 		if (send(sock, message.c_str(), message.size(), 0) < 0) {
