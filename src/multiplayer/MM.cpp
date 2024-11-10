@@ -1,5 +1,5 @@
 #include <multiplayer/MM.h>
-
+#ifdef MULTIPLAYER
 #include <core/SharedGlobals.h>
 
 #include <misc/SafeQueue.h>
@@ -420,3 +420,5 @@ int32_t MatchMaking::get_player_number()
 {
 	return player_number;
 }
+
+#endif

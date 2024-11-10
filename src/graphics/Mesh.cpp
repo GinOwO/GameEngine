@@ -128,7 +128,7 @@ void Mesh::update_physics(int32_t id)
 		btScalar mass = 200.0f;
 		btVector3 inertia(0, 0, 0);
 		shape->calculateLocalInertia(mass, inertia);
-		// shape->setMargin(5e-5);
+		shape->setMargin(5e-5);
 
 		btRigidBody::btRigidBodyConstructionInfo rigid_body_info(
 			mass, motion_state, shape, inertia);

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef MULTIPLAYER
+
 #include <misc/SafeQueue.h>
 
 #include <map>
@@ -44,3 +46,5 @@ class MatchMaking {
 	int32_t get_match_outcome();
 	int32_t get_player_number();
 };
+
+#endif

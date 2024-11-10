@@ -32,12 +32,13 @@ class Entity : public GameObject {
 	float hp = 1.0f, rec_dmg = 1.0f, max_hp = 1.0f;
 	float jump_cd = 0.0;
 	MeshRenderer *mesh = nullptr;
+	Vector3f spawn_pos;
 
 #ifdef MULTIPLAYER
 	SafeQueue<std::pair<int32_t, std::vector<float> > > m_moves;
+#endif
 	int32_t m_action = -1;
 	float m_delta = 0.0f;
-#endif
 
     public:
 	bool on_ground = true;
@@ -52,9 +53,9 @@ class Entity : public GameObject {
 	};
 
 	Entity(const std::string &mesh_path, const std::string &diffuse_path,
-
 	       const Vector3f &spawn_pos, bool player = false)
 		: player(player)
+		, spawn_pos(spawn_pos)
 	{
 		this->physics_type = 20; // Physics for Entity entities
 		transform.set_translation(Vector3f(spawn_pos));
@@ -353,5 +354,34 @@ class Entity : public GameObject {
 
 		rigid_body->setLinearVelocity(state.velocity);
 		rigid_body->setAngularVelocity(state.angular_velocity);
+	}
+
+	void reset() noexcept
+	{
+		if (rigid_body) {
+			rigid_body->clearForces();
+			rigid_body->setLinearVelocity(btVector3(0, 0, 0));
+			rigid_body->setAngularVelocity(btVector3(0, 0, 0));
+
+			btTransform transform;
+			transform.setIdentity();
+			transform.setOrigin(btVector3(spawn_pos.getX(),
+						      spawn_pos.getY(),
+						      spawn_pos.getZ()));
+			transform.setRotation(btQuaternion(0, 0, 0, 1));
+			rigid_body->setWorldTransform(transform);
+
+			this->transform.set_translation(spawn_pos);
+			this->transform.set_rotation({ 0, 0, 0, 1 });
+			move_forward(0.01);
+		}
+
+		hp = max_hp;
+		on_ground = true;
+	}
+
+	const btRigidBody *get_rigid_body()
+	{
+		return rigid_body;
 	}
 };

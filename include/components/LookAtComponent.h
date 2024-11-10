@@ -22,7 +22,7 @@ class LookAtComponent : public GameComponent {
 		current_delay += delta;
 		if (current_delay >= time_delay) {
 			if (target != nullptr) {
-				Quaternion newRot =
+				Quaternion new_rot =
 					get_parent_transform()->look_at_direction(
 						target->get_transformed_position(),
 						Vector3f{ 0, 0, 1 });
@@ -30,7 +30,7 @@ class LookAtComponent : public GameComponent {
 				get_parent_transform()->set_rotation(
 					get_parent_transform()
 						->get_rotation()
-						.slerp(newRot, delta * 5.0f,
+						.slerp(new_rot, delta * 5.0f,
 						       true));
 			}
 			current_delay -= time_delay;

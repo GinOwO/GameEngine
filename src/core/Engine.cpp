@@ -114,10 +114,10 @@ void Engine::run()
 	) {
 		glfwPollEvents();
 #ifndef MULTIPLAYER
-		if (paused) {
-			timer.reset();
-			continue;
-		}
+		// if (paused) {
+		// 	timer.reset();
+		// 	continue;
+		// }
 #endif
 		bool render_frame = false;
 

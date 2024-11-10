@@ -8,7 +8,9 @@
 #include <components/PointLight.h>
 #include <components/FollowComponent.h>
 
-#define RT_IMP_F 3e3
+#include <random>
+
+// #define RT_IMP_F 3e3
 
 #ifdef MV_IMP_F
 btScalar MOVE_IMPULSE_FACTOR = MV_IMP_F;
@@ -37,9 +39,9 @@ class EnemyEntity : public Entity {
 						"#fed", 1.0f, { 0, 0, 0.02f }))
 					->add_component(new FollowComponent(
 						{ 0, -0.5, 10 }, &transform)));
-		this->set_hp(100.0f);
-		this->max_hp = 100.0f;
-		this->rec_dmg = 0.05f;
+		this->set_hp(10000);
+		this->max_hp = 10000;
+		this->rec_dmg = 25;
 		rigid_body->setDamping(0.0f, 0.0f);
 		this->move_impulse_factor = MOVE_IMPULSE_FACTOR;
 		this->rotate_impulse_factor = ROTATE_IMPULSE_FACTOR;
@@ -57,10 +59,8 @@ class EnemyEntity : public Entity {
 		int32_t action = -1;
 		float factor = 1.0f;
 		if (received_data.find("reset") != std::string::npos) {
-			p_ent->set_hp(0.0025f * 150);
-			p_ent->set_max_hp(0.0025f * 150);
-			this->set_hp(0.05f * 300);
-			this->set_max_hp(0.05f * 300);
+			p_ent->reset();
+			this->reset();
 			sock_manager.send_data(get_state());
 		} else if (received_data.find("action") != std::string::npos) {
 			std::stringstream ss(received_data);
@@ -68,9 +68,9 @@ class EnemyEntity : public Entity {
 
 			std::getline(ss, command, ',');
 			ss >> action;
-			ss >> factor;
+			// ss >> factor;
 		}
-		if (hp > 0) {
+		if (p_ent && rigid_body && hp > 0) {
 			if (should_shoot) {
 				float p_hp = p_ent->get_hp();
 				Entity::shoot();
@@ -92,12 +92,19 @@ class EnemyEntity : public Entity {
 			} else if (action == 3) {
 				move_right(delta * factor);
 			} else if (action == 4) {
-				shoot();
+				std::random_device rd;
+				static std::mt19937 gen(rd());
+				static std::uniform_real_distribution<> dis(
+					0.0, 1.0);
+
+				if (action == 4) {
+					float probability = dis(gen);
+
+					if (probability < 0.3f) {
+						shoot();
+					}
+				}
 			} else if (action == 5) {
-				rotate_left(delta * factor);
-			} else if (action == 6) {
-				rotate_right(delta * factor);
-			} else if (action == 7) {
 				jump(delta * factor);
 			}
 
@@ -117,6 +124,37 @@ class EnemyEntity : public Entity {
 
 		sock_manager.send_data(get_state());
 #endif
+		static const btRigidBody *p_body =
+			static_cast<Entity *>(SharedGlobals::player_entity)
+				->get_rigid_body();
+
+		btVector3 rigidPos = rigid_body->getCenterOfMassPosition();
+		btVector3 targetPos = p_body->getCenterOfMassPosition();
+
+		btVector3 direction = (targetPos - rigidPos).normalized();
+
+		btVector3 forward(0, -1, 0);
+
+		btQuaternion rotation = [](const btVector3 &forward,
+					   const btVector3 &targetDir) {
+			btVector3 axis = forward.cross(targetDir);
+			if (axis.length2() < SIMD_EPSILON) {
+				return forward.dot(targetDir) > 0 ?
+					       btQuaternion::getIdentity() :
+					       btQuaternion(btVector3(0, 1, 0),
+							    SIMD_PI);
+			}
+			axis.normalize();
+			float angle = std::acos(forward.dot(targetDir));
+			return btQuaternion(axis, angle);
+		}(forward, direction);
+		rigid_body->getWorldTransform().setRotation(rotation);
+		rigid_body->setAngularVelocity(btVector3(0, 0, 0));
+
+		if (rigid_body->getWorldTransform().getOrigin().getZ() < -2 ||
+		    rigid_body->getWorldTransform().getOrigin().getZ() > 10)
+			this->reset();
+
 		Entity::update(delta);
 	}
 

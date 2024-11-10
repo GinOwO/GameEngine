@@ -33,11 +33,14 @@
 
 #endif
 
+#define player1_spawn { -2.5f, 5.0f, 10.0f }
+#define player2_spawn { 2.5f, 5.0f, 10.0f }
+
 const std::unordered_map<std::string, std::string> mesh_assets = {
 	{ "skybox", "./assets/Skybox/fskybg/source/skybox.fbx" },
-	{ "terrain_test", "./assets/terrain/test_floor.fbx" },
-	{ "arena", "./assets/terrain/arena.fbx" },
-	{ "player", "./assets/Player E04.fbx" },
+	// { "terrain_test", "./assets/terrain/test_floor.fbx" },
+	{ "arena", "./assets/terrain/arena3.fbx" },
+	// { "player", "./assets/Player E04.fbx" },
 	{ "mech", "./assets/objects/Main_model.fbx" }
 };
 
@@ -74,8 +77,6 @@ void TestGame::init()
 	get_root_object()->add_child(lighting_object2);
 
 #ifdef MULTIPLAYER
-#define player1_spawn { -2.5f, 5.0f, 10.0f }
-#define player2_spawn { 2.5f, 5.0f, 10.0f }
 	Entity *player_entity, *enemy_entity;
 	if (MatchMaking::get_instance().get_player_number() == 1) {
 		player_entity = new PlayerEntity(player1_spawn);
@@ -84,12 +85,10 @@ void TestGame::init()
 		player_entity = new PlayerEntity(player2_spawn);
 		enemy_entity = new EnemyPlayerEntity(player1_spawn);
 	}
-#undef player1_spawn
-#undef player2_spawn
 #else
-	Entity *player_entity = new PlayerEntity();
+	Entity *player_entity = new PlayerEntity(player1_spawn);
 
-	Entity *enemy_entity = new EnemyEntity();
+	Entity *enemy_entity = new EnemyEntity(player2_spawn);
 #endif
 	CameraObject *camera_object = new CameraObject(85.0f);
 
@@ -110,3 +109,5 @@ void TestGame::init()
 
 	get_root_object()->add_to_rendering_engine();
 }
+#undef player1_spawn
+#undef player2_spawn

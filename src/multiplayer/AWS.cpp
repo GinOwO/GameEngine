@@ -255,8 +255,8 @@ void AWS::reject_match(const std::string &opponent_id)
 					  &json_response, &errors)) {
 			Log << "(AWS) Parsed JSON Response(Match Reject): "
 			    << json_response.toStyledString() << "\n\n";
-#endif
 		}
+#endif
 	}
 }
 

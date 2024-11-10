@@ -73,10 +73,10 @@
 			"internalConsoleOptions": "openOnSessionStart"
 		},
 		{
-			"name": "Python Debugger",
+			"name": "Python Debugger(AI)",
 			"type": "debugpy",
 			"request": "launch",
-			"program": "./AI/AI_Mode.py",
+			"program": "./AI/AI_RL.py",
 			"console": "integratedTerminal"
 		}
 	]

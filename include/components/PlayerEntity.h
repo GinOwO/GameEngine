@@ -20,7 +20,7 @@ class PlayerEntity : public Entity {
 						{ 0, -0.5, 10 }, &transform)));
 		this->set_hp(1000);
 		this->set_max_hp(1000);
-		this->rec_dmg = 25;
+		this->rec_dmg = 0.025;
 	}
 
 	void input(float delta) override
