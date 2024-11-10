@@ -39,9 +39,9 @@ class EnemyEntity : public Entity {
 						"#fed", 1.0f, { 0, 0, 0.02f }))
 					->add_component(new FollowComponent(
 						{ 0, -0.5, 10 }, &transform)));
-		this->set_hp(10000);
-		this->max_hp = 10000;
-		this->rec_dmg = 25;
+		this->set_max_hp(250);
+		this->set_hp(this->get_max_hp());
+
 		rigid_body->setDamping(0.0f, 0.0f);
 		this->move_impulse_factor = MOVE_IMPULSE_FACTOR;
 		this->rotate_impulse_factor = ROTATE_IMPULSE_FACTOR;
@@ -92,7 +92,7 @@ class EnemyEntity : public Entity {
 			} else if (action == 3) {
 				move_right(delta * factor);
 			} else if (action == 4) {
-				std::random_device rd;
+				static std::random_device rd;
 				static std::mt19937 gen(rd());
 				static std::uniform_real_distribution<> dis(
 					0.0, 1.0);
@@ -106,6 +106,11 @@ class EnemyEntity : public Entity {
 				}
 			} else if (action == 5) {
 				jump(delta * factor);
+			} else if (action == 6) {
+				rotate_left(delta * factor);
+
+			} else if (action == 7) {
+				rotate_right(delta * factor);
 			}
 
 			Entity::input(delta);

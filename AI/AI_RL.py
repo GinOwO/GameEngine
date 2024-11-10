@@ -152,7 +152,7 @@ class EnemyEnv(gymnasium.Env):
 
         if self.enemy_hp <= 0 or self.player_hp <= 0:
             done = True
-            reward = 100 if self.enemy_hp > 0 else -100
+            reward = 100.0 if self.enemy_hp > 0 else -100.0
 
         if not done:
             if self.mode == "range":
@@ -223,5 +223,5 @@ if __name__ == "__main__":
     while not done:
         action, _ = final_model.predict(obs)
         obs, reward, done, info, _ = env.step(action)
-    print("Testing Done")
+    print("\nAI Done")
     env.close()
