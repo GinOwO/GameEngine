@@ -23,9 +23,8 @@ class EnemyPlayerEntity : public Entity {
 						"#def", 1.0f, { 0, 0, 0.02f }))
 					->add_component(new FollowComponent(
 						{ 0, -0.5, 10 }, &transform)));
-		this->set_hp(1000);
-		this->set_max_hp(1000);
-		this->rec_dmg = 25;
+		this->set_hp(100);
+		this->set_max_hp(100);
 	}
 
 	void input(float delta) override

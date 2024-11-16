@@ -78,6 +78,13 @@
 			"request": "launch",
 			"program": "./AI/AI_RL.py",
 			"console": "integratedTerminal"
+		},
+		{
+			"name": "Python Debugger(AWS)",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "./AI/AI_AWS.py",
+			"console": "integratedTerminal"
 		}
 	]
 }

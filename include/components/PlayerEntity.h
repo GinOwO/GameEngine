@@ -18,7 +18,7 @@ class PlayerEntity : public Entity {
 						"#def", 1.0f, { 0, 0, 0.02f }))
 					->add_component(new FollowComponent(
 						{ 0, -0.5, 10 }, &transform)));
-		this->set_max_hp(450);
+		this->set_max_hp(100);
 		this->set_hp(this->get_max_hp());
 	}
 

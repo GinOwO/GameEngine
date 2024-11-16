@@ -173,7 +173,8 @@ add_subdirectory(include/glfw EXCLUDE_FROM_ALL)
 # # Add test directory
 # add_subdirectory(tests)
 
-SET(MULTIPLAYER "-DMULTIPLAYER -DAWS_DEBUG")
+SET(CMAKE_BUILD_PARALLEL_LEVEL 8)
+# SET(MULTIPLAYER "-DMULTIPLAYER -DAWS_DEBUG")
 SET(GCC_COMPILE_FLAGS "-g -O3 -std=c++20")
 SET(GCC_LINK_FLAGS    "-lm -lpthread -lGL -ldl -lpthread")
 
