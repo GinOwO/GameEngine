@@ -35,3 +35,12 @@
 *.exe   binary
 *.out   binary
 *.app   binary
+
+# GItHub Linguist
+*.*     linguist-detectable=false
+*.py    linguist-detectable=true
+*.cpp   linguist-detectable=true
+CMakeLists.txt linguist-detectable=true
+*.py    linguist-language=python
+*.cpp   linguist-language=cpp
+CMakeLists.txt linguist-language=cmake

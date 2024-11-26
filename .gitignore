@@ -21,3 +21,4 @@ myenv
 config.conf
 logs/*
 GameEngine
+__pycache__
